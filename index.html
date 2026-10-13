@@ -1,0 +1,1035 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<title>ICTC 함께 · 지휘역량강화센터 일정</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* =========================================================
+   색과 글꼴
+   ========================================================= */
+:root{
+  --ink:#1c2228; --ink2:#46515c; --muted:#76818c; --line:#dfe3e7; --line2:#eceff2;
+  --bg:#f1f3f5; --card:#ffffff; --soft:#f7f8f9;
+  --fire:#c8102e; --fire-soft:#fbe9ec;
+  --edu:#1f5aa6;   --edu-bg:#e2ebf7;
+  --eval:#6a3d9f;  --eval-bg:#ece4f6;
+  --trip:#a86400;  --trip-bg:#fbeed6;
+  --leave:#1f7a4a; --leave-bg:#dff1e6;
+  --etc:#4d5b69;   --etc-bg:#e6e9ed;
+  --sun:#c8102e; --sat:#2563b0;
+  --shadow:0 1px 2px rgba(20,30,40,.06),0 6px 20px rgba(20,30,40,.06);
+  --font:'IBM Plex Sans KR','Apple SD Gothic Neo','Malgun Gothic','Noto Sans KR',system-ui,sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ink:#e8ecef; --ink2:#b9c2ca; --muted:#8b96a1; --line:#2f3740; --line2:#262d34;
+    --bg:#14181c; --card:#1b2026; --soft:#20262d;
+    --fire:#ff5a6e; --fire-soft:#3a1d23;
+    --edu:#7fb0f0; --edu-bg:#1c2f47; --eval:#c4a3ee; --eval-bg:#2e2443;
+    --trip:#f0b357; --trip-bg:#3b2c14; --leave:#6fd19a; --leave-bg:#173426;
+    --etc:#a9b5c1; --etc-bg:#2a323a; --sun:#ff6b7d; --sat:#7fb0f0;
+    --shadow:0 1px 2px rgba(0,0,0,.3);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --ink:#e8ecef; --ink2:#b9c2ca; --muted:#8b96a1; --line:#2f3740; --line2:#262d34;
+  --bg:#14181c; --card:#1b2026; --soft:#20262d;
+  --fire:#ff5a6e; --fire-soft:#3a1d23;
+  --edu:#7fb0f0; --edu-bg:#1c2f47; --eval:#c4a3ee; --eval-bg:#2e2443;
+  --trip:#f0b357; --trip-bg:#3b2c14; --leave:#6fd19a; --leave-bg:#173426;
+  --etc:#a9b5c1; --etc-bg:#2a323a; --sun:#ff6b7d; --sat:#7fb0f0;
+  --shadow:0 1px 2px rgba(0,0,0,.3);
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;-webkit-tap-highlight-color:transparent}
+:focus-visible{outline:2px solid var(--edu);outline-offset:2px}
+.hide{display:none!important}
+
+/* ---------- 머리 ---------- */
+.top{background:var(--card);border-top:4px solid var(--fire);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
+.top-in{max-width:1120px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:12px}
+.mark{display:flex;align-items:baseline;gap:8px;min-width:0}
+.mark b{font-size:19px;font-weight:700;letter-spacing:-.4px;white-space:nowrap}
+.mark b em{font-style:normal;color:var(--fire)}
+.mark span{font-size:12.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.top-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+.who{display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--card);border-radius:999px;padding:4px 10px 4px 4px;font-size:13px;font-weight:600}
+.avatar{width:26px;height:26px;border-radius:50%;background:var(--ink);color:var(--card);display:grid;place-items:center;font-size:12px;font-weight:700}
+.btn{border:1px solid transparent;border-radius:10px;padding:9px 14px;font-weight:600;font-size:14px;background:var(--soft);color:var(--ink);display:inline-flex;align-items:center;gap:6px;justify-content:center}
+.btn-ink{background:var(--ink);color:var(--card)}
+.btn-fire{background:var(--fire);color:#fff}
+.btn-line{background:var(--card);border-color:var(--line)}
+.btn-danger{background:var(--card);border-color:var(--line);color:var(--fire)}
+.btn-sm{padding:6px 10px;font-size:13px;border-radius:8px}
+
+.wrap{max-width:1120px;margin:0 auto;padding:14px 16px 110px}
+.banner{font-size:13px;border-radius:10px;padding:9px 12px;margin-bottom:12px;background:var(--trip-bg);color:var(--trip)}
+.banner b{font-weight:700}
+
+/* ---------- 오늘 상황판 ---------- */
+.board{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);display:grid;grid-template-columns:auto 1fr;overflow:hidden;margin-bottom:14px}
+.board-date{background:var(--ink);color:var(--card);padding:14px 18px;display:flex;flex-direction:column;justify-content:center;min-width:104px}
+.board-date small{font-size:12px;opacity:.75}
+.board-date strong{font-size:30px;font-weight:700;line-height:1.1;letter-spacing:-1px;font-variant-numeric:tabular-nums}
+.board-date span{font-size:13px;opacity:.9}
+.board-body{padding:12px 16px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.board-row{display:flex;gap:10px;align-items:flex-start;font-size:14px}
+.board-row > b{flex:0 0 auto;font-size:12px;color:var(--muted);font-weight:600;padding-top:3px;width:42px}
+.board-row .val{display:flex;flex-wrap:wrap;gap:6px;min-width:0}
+.tag{display:inline-flex;align-items:center;gap:5px;border-radius:6px;padding:3px 8px;font-size:13px;font-weight:600;border:0;max-width:100%}
+.tag i{font-style:normal;font-weight:500;opacity:.85;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.t-edu{background:var(--edu-bg);color:var(--edu)} .t-eval{background:var(--eval-bg);color:var(--eval)}
+.t-trip{background:var(--trip-bg);color:var(--trip)} .t-leave{background:var(--leave-bg);color:var(--leave)}
+.t-etc{background:var(--etc-bg);color:var(--etc)}
+.none{color:var(--muted);font-size:13.5px;padding-top:2px}
+
+/* ---------- 보기 전환, 필터 ---------- */
+.bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:12px}
+.seg{display:inline-flex;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:3px}
+.seg button{border:0;background:transparent;border-radius:7px;padding:7px 14px;font-weight:600;font-size:14px;color:var(--ink2)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--card)}
+.filters{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}
+.chip{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:5px 11px;font-size:13px;font-weight:600;color:var(--muted);display:inline-flex;align-items:center;gap:6px}
+.chip::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor;opacity:.35}
+.chip[aria-pressed="true"]::before{opacity:1}
+.chip[data-c="edu"][aria-pressed="true"]{color:var(--edu);border-color:currentColor}
+.chip[data-c="eval"][aria-pressed="true"]{color:var(--eval);border-color:currentColor}
+.chip[data-c="trip"][aria-pressed="true"]{color:var(--trip);border-color:currentColor}
+.chip[data-c="leave"][aria-pressed="true"]{color:var(--leave);border-color:currentColor}
+.chip[data-c="etc"][aria-pressed="true"]{color:var(--etc);border-color:currentColor}
+.chip[data-c="mine"]::before{display:none}
+.chip[data-c="mine"][aria-pressed="true"]{color:var(--card);background:var(--ink);border-color:var(--ink)}
+
+/* ---------- 월간 ---------- */
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:14px;align-items:start}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);overflow:hidden}
+.phead{display:flex;align-items:center;gap:8px;padding:12px 14px;border-bottom:1px solid var(--line2)}
+.phead h2{margin:0;font-size:18px;font-weight:700;letter-spacing:-.4px;font-variant-numeric:tabular-nums}
+.nav{width:34px;height:34px;border-radius:9px;border:1px solid var(--line);background:var(--card);font-size:18px;line-height:1;display:grid;place-items:center}
+.phead .right{margin-left:auto;display:flex;gap:6px}
+.dow{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));font-size:12px;color:var(--muted);text-align:center;padding:6px 0;border-bottom:1px solid var(--line2)}
+.dow div:first-child{color:var(--sun)} .dow div:last-child{color:var(--sat)}
+.week{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));grid-template-rows:26px repeat(3,21px) 18px;row-gap:2px;position:relative;border-bottom:1px solid var(--line2);min-height:104px}
+.week:last-child{border-bottom:0}
+.cell{grid-row:1/-1;border:0;border-right:1px solid var(--line2);background:transparent;padding:0;text-align:left;position:relative;z-index:0}
+.cell:last-of-type{border-right:0}
+.cell.out{background:var(--soft)}
+.cell.out .dn{opacity:.45}
+.cell.sel{background:var(--edu-bg)}
+.dn{position:absolute;top:4px;left:6px;font-size:12.5px;font-weight:600;font-variant-numeric:tabular-nums;display:flex;align-items:center;gap:4px;max-width:calc(100% - 8px);white-space:nowrap;overflow:hidden}
+.dn em{font-style:normal;font-size:10px;font-weight:500;color:var(--sun);overflow:hidden;text-overflow:ellipsis}
+.cell.sun .dn,.cell.hol .dn{color:var(--sun)} .cell.sat .dn{color:var(--sat)}
+.cell.today .dn b{background:var(--fire);color:#fff;border-radius:999px;padding:0 6px;font-weight:700}
+.ev{z-index:1;margin:0 2px;border:0;border-radius:4px;font-size:11.5px;font-weight:600;line-height:21px;height:21px;padding:0 6px;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.ev.cont-l{border-top-left-radius:0;border-bottom-left-radius:0;margin-left:0}
+.ev.cont-r{border-top-right-radius:0;border-bottom-right-radius:0;margin-right:0}
+.ev.edu{background:var(--edu-bg);color:var(--edu);box-shadow:inset 3px 0 0 var(--edu)}
+.ev.eval{background:var(--eval-bg);color:var(--eval);box-shadow:inset 3px 0 0 var(--eval)}
+.ev.trip{background:var(--trip-bg);color:var(--trip);box-shadow:inset 3px 0 0 var(--trip)}
+.ev.leave{background:var(--leave-bg);color:var(--leave);box-shadow:inset 3px 0 0 var(--leave)}
+.ev.etc{background:var(--etc-bg);color:var(--etc);box-shadow:inset 3px 0 0 var(--etc)}
+.ev.cont-l{box-shadow:none}
+.ev.plan{background-image:repeating-linear-gradient(135deg,transparent 0 6px,rgba(127,127,127,.12) 6px 9px)}
+.more{z-index:1;font-size:11px;color:var(--muted);padding-left:6px;align-self:center;pointer-events:none;font-weight:600}
+
+/* ---------- 선택한 날 ---------- */
+.day-head{padding:14px 16px 4px}
+.day-head h3{margin:0;font-size:17px;font-weight:700;letter-spacing:-.3px}
+.day-head p{margin:2px 0 0;font-size:12.5px;color:var(--muted)}
+.items{padding:8px 12px 14px;display:flex;flex-direction:column;gap:6px}
+.item{display:grid;grid-template-columns:4px 1fr auto;gap:10px;align-items:center;border:1px solid var(--line2);background:var(--card);border-radius:10px;padding:9px 10px 9px 0;text-align:left;width:100%;overflow:hidden}
+.item .stripe{align-self:stretch;border-radius:0 3px 3px 0}
+.item .t{display:block;font-weight:600;font-size:14px;line-height:1.35;overflow-wrap:anywhere}
+.item .m{display:block;font-size:12px;color:var(--muted);margin-top:2px}
+.item .badge{font-size:11px;font-weight:700;border-radius:5px;padding:2px 6px;white-space:nowrap}
+.s-edu{background:var(--edu)} .s-eval{background:var(--eval)} .s-trip{background:var(--trip)} .s-leave{background:var(--leave)} .s-etc{background:var(--etc)}
+.empty{padding:22px 10px;text-align:center;color:var(--muted);font-size:13.5px}
+.empty .btn{margin-top:10px}
+
+/* ---------- 연간 ---------- */
+.year{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;padding:14px}
+.mini{border:1px solid var(--line2);border-radius:12px;padding:10px;background:var(--card)}
+.mini h4{margin:0 0 6px;font-size:14px;font-weight:700;display:flex;justify-content:space-between;align-items:baseline}
+.mini h4 small{font-size:11px;color:var(--muted);font-weight:500}
+.mgrid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:2px}
+.mgrid .h{font-size:10px;text-align:center;color:var(--muted)}
+.md{border:0;background:transparent;height:28px;border-radius:5px;font-size:11px;font-variant-numeric:tabular-nums;position:relative;padding:0;font-weight:500;color:var(--ink2)}
+.md.edu{background:var(--edu-bg);color:var(--edu);font-weight:700}
+.md.eval{background:var(--eval-bg);color:var(--eval);font-weight:700}
+.md.hol,.md.sun{color:var(--sun)}
+.md.today{outline:2px solid var(--fire);outline-offset:-2px}
+.md .dots{position:absolute;bottom:2px;left:50%;transform:translateX(-50%);display:flex;gap:2px}
+.md .dots i{width:4px;height:4px;border-radius:50%}
+.md .dots .trip{background:var(--trip)} .md .dots .leave{background:var(--leave)} .md .dots .etc{background:var(--etc)}
+.mlist{margin:8px 0 0;padding:0;list-style:none;font-size:12px;color:var(--ink2);display:flex;flex-direction:column;gap:3px}
+.mlist li{display:grid;grid-template-columns:44px 1fr;gap:6px}
+.mlist li span{color:var(--muted);font-variant-numeric:tabular-nums}
+.mlist li.plan b::after{content:" (안)";color:var(--muted);font-weight:500}
+.mlist b{font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* ---------- 목록 ---------- */
+.listtools{display:flex;gap:8px;padding:12px 14px;border-bottom:1px solid var(--line2);flex-wrap:wrap}
+.search{flex:1 1 200px;border:1px solid var(--line);border-radius:10px;padding:9px 12px;background:var(--card)}
+.month-h{font-size:13px;font-weight:700;color:var(--muted);padding:14px 16px 6px}
+.row{display:grid;grid-template-columns:86px 4px 1fr;gap:12px;align-items:center;padding:9px 16px;border:0;background:transparent;width:100%;text-align:left;border-top:1px solid var(--line2)}
+.row:hover{background:var(--soft)}
+.row .d{font-size:13px;font-weight:600;font-variant-numeric:tabular-nums;line-height:1.3}
+.row .d small{display:block;font-weight:500;color:var(--muted);font-size:11.5px}
+.row .stripe{align-self:stretch;border-radius:3px}
+
+/* ---------- 시트(모달) ---------- */
+.scrim{position:fixed;inset:0;background:rgba(10,15,20,.45);z-index:50;display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:var(--card);width:min(560px,100%);max-height:92vh;overflow:auto;border-radius:18px 18px 0 0;padding:6px 18px calc(18px + env(safe-area-inset-bottom,0px));box-shadow:0 -10px 40px rgba(0,0,0,.2);animation:up .18s ease-out}
+@media (min-width:720px){.scrim{align-items:center}.sheet{border-radius:18px;padding-bottom:18px}}
+@keyframes up{from{transform:translateY(24px);opacity:.6}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){.sheet{animation:none}}
+.grab{width:40px;height:4px;border-radius:9px;background:var(--line);margin:6px auto 10px}
+.sheet h3{margin:0 0 14px;font-size:19px;font-weight:700;letter-spacing:-.4px;display:flex;align-items:center;gap:8px}
+.sheet h3 .x{margin-left:auto;border:0;background:var(--soft);border-radius:8px;width:32px;height:32px;font-size:16px}
+.f{margin-bottom:14px}
+.f > label,.f > .lbl{display:block;font-size:12.5px;font-weight:600;color:var(--ink2);margin-bottom:6px}
+.f input,.f select,.f textarea{width:100%;border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--card);font-size:15px}
+.f textarea{min-height:70px;resize:vertical}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.picks{display:flex;flex-wrap:wrap;gap:6px}
+.pick{border:1px solid var(--line);background:var(--card);border-radius:10px;padding:9px 14px;font-weight:600;font-size:14px;color:var(--ink2)}
+.pick[aria-pressed="true"]{color:var(--card);border-color:transparent}
+.pick[data-v="edu"][aria-pressed="true"]{background:var(--edu)} .pick[data-v="eval"][aria-pressed="true"]{background:var(--eval)}
+.pick[data-v="trip"][aria-pressed="true"]{background:var(--trip)} .pick[data-v="leave"][aria-pressed="true"]{background:var(--leave)}
+.pick[data-v="etc"][aria-pressed="true"]{background:var(--etc)}
+.pick.plain[aria-pressed="true"]{background:var(--ink)}
+.quick{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
+.quick button{border:1px dashed var(--line);background:transparent;border-radius:8px;padding:4px 9px;font-size:12.5px;color:var(--ink2)}
+.hint{font-size:12px;color:var(--muted);margin-top:5px}
+.actions{display:flex;gap:8px;margin-top:6px}
+.actions .grow{flex:1}
+.dl{display:grid;grid-template-columns:64px 1fr;gap:8px 12px;font-size:14px;margin:0 0 16px}
+.dl dt{color:var(--muted);font-size:13px}
+.dl dd{margin:0;overflow-wrap:anywhere;white-space:pre-wrap}
+.mem{display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;padding:9px 0;border-top:1px solid var(--line2);font-size:14px}
+.mem small{display:block;color:var(--muted);font-size:12px;overflow-wrap:anywhere}
+
+/* ---------- 로그인 화면 ---------- */
+.gate{min-height:80vh;display:grid;place-items:center;padding:24px 16px}
+.gate-card{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:28px 24px;width:min(420px,100%);text-align:center}
+.gate-card h1{font-size:24px;margin:0 0 4px;letter-spacing:-.6px}
+.gate-card h1 em{font-style:normal;color:var(--fire)}
+.gate-card p{color:var(--ink2);font-size:14px;margin:8px 0 18px}
+.gate-card .btn{width:100%;padding:12px}
+.gate-card code{display:block;background:var(--soft);border-radius:8px;padding:8px;font-size:14px;margin:8px 0 14px;overflow-wrap:anywhere}
+
+.fab{position:fixed;right:18px;bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:30;border:0;background:var(--fire);color:#fff;border-radius:999px;padding:14px 20px;font-weight:700;font-size:15px;box-shadow:0 8px 24px rgba(200,16,46,.35)}
+.toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--card);padding:10px 16px;border-radius:10px;font-size:14px;z-index:60;max-width:90vw;box-shadow:var(--shadow)}
+.foot{font-size:12px;color:var(--muted);margin-top:14px;line-height:1.7}
+
+/* ---------- 좁은 화면 ---------- */
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  .year{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:600px){
+  .mark span{display:none}
+  .wrap{padding:12px 10px 110px}
+  .filters{margin-left:0}
+  .week{grid-template-rows:24px repeat(3,18px) 16px;min-height:90px}
+  .ev{font-size:10px;line-height:18px;height:18px;padding:0 3px;margin:0 1px}
+  .ev.edu,.ev.eval,.ev.trip,.ev.leave,.ev.etc{box-shadow:none}
+  .dn{left:4px;font-size:12px}
+  .dn em{display:none}
+  .more{font-size:10px;padding-left:3px}
+  .year{grid-template-columns:1fr;padding:10px}
+  .board-date{min-width:88px;padding:12px}
+  .board-date strong{font-size:26px}
+  .board-body{padding:10px 12px}
+  .who .nm{display:none}
+  .who{padding:3px}
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="top-in">
+    <div class="mark"><b>ICTC <em>함께</em></b><span>긴급구조지휘역량강화센터 일정</span></div>
+    <div class="top-right" id="topRight"></div>
+  </div>
+</header>
+
+<div id="gate" class="gate hide"></div>
+
+<main id="app" class="wrap hide">
+  <div id="banner"></div>
+  <section class="board" id="board" aria-label="오늘 상황판"></section>
+
+  <div class="bar">
+    <div class="seg" role="group" aria-label="보기">
+      <button data-view="month" aria-pressed="true">월</button>
+      <button data-view="year" aria-pressed="false">연간</button>
+      <button data-view="list" aria-pressed="false">목록</button>
+    </div>
+    <div class="filters" id="filters"></div>
+  </div>
+
+  <section id="vMonth" class="layout">
+    <div class="panel">
+      <div class="phead">
+        <button class="nav" id="mPrev" aria-label="이전 달">‹</button>
+        <h2 id="mTitle"></h2>
+        <button class="nav" id="mNext" aria-label="다음 달">›</button>
+        <div class="right"><button class="btn btn-line btn-sm" id="mToday">오늘</button></div>
+      </div>
+      <div class="dow"><div>일</div><div>월</div><div>화</div><div>수</div><div>목</div><div>금</div><div>토</div></div>
+      <div id="weeks"></div>
+    </div>
+    <div class="panel" id="dayPanel"></div>
+  </section>
+
+  <section id="vYear" class="panel hide">
+    <div class="phead">
+      <button class="nav" id="yPrev" aria-label="이전 해">‹</button>
+      <h2 id="yTitle"></h2>
+      <button class="nav" id="yNext" aria-label="다음 해">›</button>
+      <div class="right" style="font-size:12px;color:var(--muted);align-items:center">칸 색은 교육·평가일, 점은 출장·연가</div>
+    </div>
+    <div class="year" id="yearGrid"></div>
+  </section>
+
+  <section id="vList" class="panel hide">
+    <div class="listtools">
+      <input class="search" id="q" type="search" placeholder="과정명, 이름, 장소로 찾기">
+      <div class="seg" role="group" aria-label="범위">
+        <button data-range="next" aria-pressed="true">오늘부터</button>
+        <button data-range="all" aria-pressed="false">전체</button>
+      </div>
+      <button class="btn btn-line btn-sm" id="copyWeek">이번 주 일정 글 복사</button>
+    </div>
+    <div id="listBody"></div>
+  </section>
+
+  <p class="foot">교육·평가 일정은 2026년 연간 교육계획과 2027~2028 지휘대장 편성표(3안)에서 옮겼습니다. 빗금 무늬는 확정 전 계획(안)입니다. 연가는 사유 없이 날짜만 등록해 주세요.</p>
+</main>
+
+<button class="fab hide" id="fab">＋ 일정 등록</button>
+<div id="sheetRoot"></div>
+<div id="toastRoot"></div>
+
+<script type="module">
+/* =========================================================
+   1) 설정 — 비워 두면 '체험 모드'로 열립니다.
+      README 순서대로 Firebase 값 네 개를 채우면 직원 공유 모드가 됩니다.
+      ※ 비밀번호는 이 파일에 적지 않습니다. Firebase가 확인합니다.
+   ========================================================= */
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyCswfYlGjuzBacttpx9zprfucwdr2fXP28",
+  authDomain: ""ictc-together.firebaseapp.com",
+  projectId: ""ictc-together",
+  appId: "1:741564454402:web:6c0fad5c9c73cce53b791b"
+};
+const ADMIN_MINUTES = 100;   // 관리자 모드 유지 시간(분). 보안 규칙상 최대 120분.
+const MIN_PW = 8;            // 비밀번호 최소 길이
+
+/* =========================================================
+   2) 기본 데이터
+   ========================================================= */
+// [id, 시작, 종료, 분류, 제목, 메모, 계획(안) 여부]
+const SEED = [["sb517da81","2026-01-22","2026-01-22","edu","신규(구급)","",0],["s12056053","2026-01-29","2026-01-29","edu","신규(화재)","",0],["s36be6060","2026-02-13","2026-02-13","trip","경남 출장교육","연간계획 달력 표기: 경남",0],["sbfc1a191","2026-02-23","2026-02-27","edu","8기 초급현장지휘관 양성과정","",0],["sb3ab2af1","2026-03-04","2026-03-06","edu","1기 지휘교육","",0],["s12683df6","2026-03-09","2026-03-20","edu","2기 고급현장지휘관 양성 과정","",0],["sab64d815","2026-03-30","2026-04-03","edu","9기 초급현장지휘관 양성과정","",0],["sadc3259d","2026-04-06","2026-04-10","edu","10기 초급현장지휘관 양성과정","",0],["sa0ac6ff3","2026-04-13","2026-04-17","edu","11기 초급현장지휘관 양성과정","",0],["sb8c19bf8","2026-04-27","2026-04-29","edu","5기 실무교육","",0],["s1d43f0af","2026-05-11","2026-05-15","edu","평가대비 사전연습","",0],["s164d980f","2026-05-18","2026-05-22","eval","1회 고급현장지휘관 자격인증 평가","",0],["s2c7de1f7","2026-06-08","2026-06-12","edu","팀단위(부산-50명/일 4개팀)","",0],["s43a050fa","2026-06-16","2026-06-19","edu","팀단위(부산-50명/일 4개팀)","",0],["scc7b8188","2026-06-22","2026-06-26","edu","12기 초급현장지휘관 양성과정","",0],["s8652e1f8","2026-06-29","2026-07-03","edu","평가대비 사전연습","",0],["sab4a1b02","2026-07-06","2026-07-10","eval","3회 초급현장지휘관 자격인증 평가","",0],["s1183c441","2026-07-27","2026-07-31","edu","평가대비 사전연습","",0],["sadd9aacc","2026-08-03","2026-08-07","eval","3회 중급현장지휘관 자격인증 평가","",0],["saa98e2d8","2026-08-31","2026-09-11","edu","5기 중급현장지휘관 양성과정","",0],["s3b5d3066","2026-09-16","2026-09-16","trip","경남 출장교육","연간계획 달력 표기: 경남",0],["s563b10d5","2026-09-21","2026-09-22","edu","팀단위(경남)","",0],["s7f3f215c","2026-09-28","2026-09-28","trip","경남 출장교육","연간계획 달력 표기: 경남",0],["s241cef7a","2026-09-29","2026-09-29","trip","울산 출장교육","연간계획 달력 표기: 울산",0],["s71715cf9","2026-09-30","2026-09-30","trip","창원 출장교육","연간계획 달력 표기: 창원",0],["s6177c93d","2026-10-12","2026-10-14","edu","6기 실무교육","",0],["s0472fa7c","2026-10-19","2026-10-21","edu","7기 실무교육","",0],["s267dbfd3","2026-10-26","2026-11-06","edu","6기 중급현장지휘관 자격인증 과정","",0],["sd6eebbad","2026-11-09","2026-11-13","edu","평가대비 사전연습","",0],["sa51d15d1","2026-11-16","2026-11-20","eval","4회 초급현장지휘관 자격인증 평가","",0],["s7fb40414","2026-11-23","2026-11-24","edu","신규","",0],["s8b5da911","2026-11-25","2026-11-25","trip","경남 출장교육","연간계획 달력 표기: 경남",0],["sbe3d86e9","2026-11-26","2026-11-27","edu","신규","",0],["s76ec05b2","2026-11-30","2026-12-04","edu","평가대비 사전연습","",0],["sd4ebf21e","2026-12-07","2026-12-11","eval","4회 중급현장지휘관 자격인증 평가","",0],["sc7f701f1","2027-02-01","2027-02-03","edu","소방령 지휘대장과정 1기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s809a496e","2027-02-04","2027-02-05","eval","소방령 지휘대장 평가 1~2회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s4b23ec51","2027-02-15","2027-02-17","edu","소방령 지휘대장과정 2기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s8bb80809","2027-02-18","2027-02-19","eval","소방령 지휘대장 평가 3~4회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s9466c502","2027-02-22","2027-02-24","edu","소방령 지휘대장과정 3기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["seb10435b","2027-02-25","2027-02-26","eval","소방령 지휘대장 평가 5~6회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s8abdb7c0","2027-03-08","2027-03-10","edu","소방령 지휘대장과정 4기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s78f1fac8","2027-03-11","2027-03-12","eval","소방령 지휘대장 평가 7~8회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s7a35ceb6","2027-03-15","2027-03-17","edu","소방령 지휘대장과정 5기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sd3b9f863","2027-03-18","2027-03-26","eval","소방령 지휘대장 평가 9~15회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sa106e58e","2027-03-29","2027-03-31","edu","소방령 지휘대장과정 6기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s7e6ad3d9","2027-04-01","2027-04-02","eval","소방령 지휘대장 평가 16~17회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s6b288dbb","2027-04-05","2027-04-07","edu","소방령 지휘대장과정 7기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s55bec0f0","2027-04-08","2027-04-09","eval","소방령 지휘대장 평가 18~19회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s2d9e5699","2027-04-12","2027-04-14","edu","소방령 지휘대장과정 8기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sd3581ccb","2027-04-15","2027-04-21","eval","소방령 지휘대장 평가 20~24회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s6ab2e8e3","2027-04-26","2027-04-28","edu","소방경 지휘대장과정 1기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s1872f8a7","2027-04-29","2027-04-30","eval","소방경 지휘대장 평가 1~2회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s4b7fbaa1","2027-05-03","2027-05-05","edu","소방경 지휘대장과정 2기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s6ac47f8c","2027-05-06","2027-05-07","eval","소방경 지휘대장 평가 3~4회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s9eff7c30","2027-05-17","2027-05-19","edu","소방경 지휘대장과정 3기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s48a9f614","2027-05-20","2027-05-21","eval","소방경 지휘대장 평가 5~6회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s29b1bd0f","2027-05-24","2027-05-26","edu","소방경 지휘대장과정 4기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sc4c3b3f9","2027-05-27","2027-05-28","eval","소방경 지휘대장 평가 7~8회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sc1482e92","2027-06-14","2027-06-16","edu","소방경 지휘대장과정 5기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sfbb44c0c","2027-06-17","2027-06-25","eval","소방경 지휘대장 평가 9~15회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sa0c73020","2027-06-28","2027-06-30","edu","소방경 지휘대장과정 6기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sb148b31d","2027-07-01","2027-07-02","eval","소방경 지휘대장 평가 16~17회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s6d7d549e","2027-07-05","2027-07-07","edu","소방경 지휘대장과정 7기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s240694a3","2027-07-08","2027-07-09","eval","소방경 지휘대장 평가 18~19회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sde76637a","2027-08-02","2027-08-04","edu","소방경 지휘대장과정 8기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s8b75f7c4","2027-08-05","2027-08-06","eval","소방경 지휘대장 평가 20~21회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s7e9ddc52","2027-08-09","2027-08-11","edu","소방경 지휘대장과정 9기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sd3e9529c","2027-08-12","2027-08-13","eval","소방경 지휘대장 평가 22~23회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sfcf86e99","2027-08-30","2027-09-01","edu","소방경 지휘대장과정 10기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s98d87fb2","2027-09-02","2027-09-10","eval","소방경 지휘대장 평가 24~30회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s6419aa05","2027-09-20","2027-09-22","edu","소방경 지휘대장과정 11기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s2613597c","2027-09-23","2027-09-27","eval","소방경 지휘대장 평가 31~33회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s45f5d86d","2028-02-07","2028-02-09","edu","소방경 지휘대장과정 12기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sb398724d","2028-02-10","2028-02-11","eval","소방경 지휘대장 평가 1~2회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s748e9e22","2028-02-14","2028-02-16","edu","소방경 지휘대장과정 13기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sd7d3ac23","2028-02-17","2028-02-18","eval","소방경 지휘대장 평가 3~4회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sa4bde040","2028-02-28","2028-03-01","edu","소방경 지휘대장과정 14기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s887e6714","2028-03-02","2028-03-03","eval","소방경 지휘대장 평가 5~6회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s83eed734","2028-03-06","2028-03-08","edu","소방경 지휘대장과정 15기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sd79d2fa5","2028-03-09","2028-03-10","eval","소방경 지휘대장 평가 7~8회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s1157b295","2028-03-20","2028-03-22","edu","소방경 지휘대장과정 16기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s812bef18","2028-03-23","2028-03-31","eval","소방경 지휘대장 평가 9~15회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s05ab73ef","2028-04-03","2028-04-05","edu","소방경 지휘대장과정 17기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s039d47c4","2028-04-06","2028-04-07","eval","소방경 지휘대장 평가 16~17회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s0155c1b0","2028-04-17","2028-04-19","edu","소방경 지휘대장과정 18기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sf30cf644","2028-04-20","2028-04-21","eval","소방경 지휘대장 평가 18~19회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s684a3e9b","2028-05-08","2028-05-10","edu","소방경 지휘대장과정 19기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s08207c10","2028-05-11","2028-05-12","eval","소방경 지휘대장 평가 20~21회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s389a772a","2028-05-15","2028-05-17","edu","소방경 지휘대장과정 20기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sf91be328","2028-05-18","2028-05-19","eval","소방경 지휘대장 평가 22~23회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sd80941f4","2028-05-29","2028-05-31","edu","소방경 지휘대장과정 21기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s681adb82","2028-06-01","2028-06-02","eval","소방경 지휘대장 평가 24~25회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sfb8fc01c","2028-06-12","2028-06-16","eval","소방경 지휘대장 평가 26~30회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s1eb64608","2028-06-19","2028-06-21","edu","소방경 지휘대장과정 22기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sd7759582","2028-06-22","2028-06-23","eval","소방경 지휘대장 평가 31~32회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["se98ca60a","2028-06-26","2028-06-28","edu","소방경 지휘대장과정 23기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sf0ffee01","2028-06-29","2028-06-30","eval","소방경 지휘대장 평가 33~34회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s31ed0996","2028-07-10","2028-07-12","edu","소방경 지휘대장과정 24기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sb87c9e56","2028-07-13","2028-07-14","eval","소방경 지휘대장 평가 35~36회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s6f759e5f","2028-07-31","2028-08-02","edu","소방경 지휘대장과정 25기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s43cb9a21","2028-08-03","2028-08-04","eval","소방경 지휘대장 평가 37~38회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s9e76f0db","2028-08-21","2028-08-23","edu","소방경 지휘대장과정 26기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s920af8f9","2028-08-24","2028-09-01","eval","소방경 지휘대장 평가 39~45회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["seafb856e","2028-09-04","2028-09-06","edu","소방경 지휘대장과정 27기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sf21b3874","2028-09-07","2028-09-08","eval","소방경 지휘대장 평가 46~47회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sb2bd4446","2028-09-11","2028-09-13","edu","소방경 지휘대장과정 28기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s42e58303","2028-09-14","2028-09-15","eval","소방경 지휘대장 평가 48~49회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s44d0e85a","2028-09-25","2028-09-27","edu","소방경 지휘대장과정 29기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s4996bec6","2028-09-28","2028-09-29","eval","소방경 지휘대장 평가 50~51회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sa0e05100","2028-10-16","2028-10-18","edu","소방경 지휘대장과정 30기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s35784947","2028-10-19","2028-10-26","eval","소방경 지휘대장 평가 52~57회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1]];
+const HOLIDAYS = {
+  "2026-01-01":"신정","2026-02-16":"설날","2026-02-17":"설날","2026-02-18":"설날","2026-03-01":"삼일절","2026-03-02":"대체휴일",
+  "2026-05-01":"노동절","2026-05-05":"어린이날","2026-05-24":"부처님오신날","2026-05-25":"대체휴일","2026-06-03":"지방선거","2026-06-06":"현충일",
+  "2026-07-17":"제헌절","2026-08-15":"광복절","2026-08-17":"대체휴일","2026-09-24":"추석","2026-09-25":"추석","2026-09-26":"추석",
+  "2026-10-03":"개천절","2026-10-05":"대체휴일","2026-10-09":"한글날","2026-12-25":"성탄절",
+  "2027-01-01":"신정","2027-02-06":"설날","2027-02-07":"설날","2027-02-08":"설날","2027-02-09":"대체휴일","2027-03-01":"삼일절",
+  "2027-05-01":"노동절","2027-05-05":"어린이날","2027-05-13":"부처님오신날","2027-06-06":"현충일","2027-06-07":"대체휴일","2027-07-17":"제헌절",
+  "2027-08-15":"광복절","2027-08-16":"대체휴일","2027-09-14":"추석","2027-09-15":"추석","2027-09-16":"추석","2027-10-03":"개천절",
+  "2027-10-04":"대체휴일","2027-10-09":"한글날","2027-10-11":"대체휴일","2027-12-25":"성탄절","2027-12-27":"대체휴일",
+  "2028-01-01":"신정","2028-01-26":"설날","2028-01-27":"설날","2028-01-28":"설날","2028-03-01":"삼일절","2028-04-12":"국회의원선거",
+  "2028-05-01":"노동절","2028-05-02":"부처님오신날","2028-05-05":"어린이날","2028-06-06":"현충일","2028-07-17":"제헌절","2028-08-15":"광복절",
+  "2028-10-02":"추석","2028-10-03":"추석·개천절","2028-10-04":"추석","2028-10-05":"대체휴일","2028-10-09":"한글날","2028-12-25":"성탄절"
+};
+const CATS = { edu:"교육", eval:"평가", trip:"출장", leave:"연가", etc:"기타" };
+const HALF = { full:"종일", am:"오전 반차", pm:"오후 반차" };
+const seedEvents = () => SEED.map(([id,start,end,cat,title,memo,plan]) => ({
+  id, start, end, cat, title, memo: memo || "2026년 연간 교육계획", plan: !!plan, person:"", place:"", half:"full", ownerName:"센터 연간계획"
+}));
+
+/* =========================================================
+   3) 날짜 도우미
+   ========================================================= */
+const WD = ["일","월","화","수","목","금","토"];
+const pad = n => String(n).padStart(2,"0");
+const ymd = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const pd = s => { const [y,m,d] = s.split("-").map(Number); return new Date(y, m-1, d, 12); };
+const addDays = (d,n) => { const x = new Date(d); x.setDate(x.getDate()+n); return x; };
+const diff = (a,b) => Math.round((pd(b) - pd(a)) / 864e5);
+const md = s => { const d = pd(s); return `${d.getMonth()+1}.${d.getDate()}`; };
+const mdw = s => { const d = pd(s); return `${d.getMonth()+1}월 ${d.getDate()}일 (${WD[d.getDay()]})`; };
+const rangeText = e => e.start === e.end ? mdw(e.start) : `${mdw(e.start)} ~ ${mdw(e.end)}`;
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const TODAY = ymd(new Date());
+
+/* =========================================================
+   4) 상태
+   ========================================================= */
+const S = {
+  mode: "demo", fb: null, me: null, adminUntil: 0, events: [],
+  view: "month", month: pd(TODAY.slice(0,8)+"01"), year: pd(TODAY).getFullYear(), sel: TODAY,
+  on: new Set(Object.keys(CATS)), mine: false, q: "", range: "next"
+};
+const PERSONAL = ["trip","leave","etc"];
+const isAdmin = () => S.adminUntil > Date.now();
+const canEdit = e => isAdmin() || PERSONAL.includes(e.cat);
+const label = e => {
+  if ((e.cat === "trip" || e.cat === "leave") && !e.person) return e.title || CATS[e.cat];
+  if (e.cat === "trip") return `${e.person} 출장${e.place ? " · " + e.place : (e.title ? " · " + e.title : "")}`;
+  if (e.cat === "leave") return `${e.person} ${e.half && e.half !== "full" ? HALF[e.half] : "연가"}`;
+  if (e.cat === "etc" && e.person) return `${e.person} · ${e.title}`;
+  return e.title + (e.plan ? " (안)" : "");
+};
+const visible = () => S.events.filter(e =>
+  S.on.has(e.cat) && (!S.mine || (S.me && (e.person === S.me.name || e.ownerName === S.me.name)))
+);
+const onDay = (list, ds) => list.filter(e => e.start <= ds && e.end >= ds);
+const ORDER = { eval:0, edu:1, trip:2, leave:3, etc:4 };
+const sortEv = a => a.sort((x,y) => x.start.localeCompare(y.start) || ORDER[x.cat]-ORDER[y.cat] || y.end.localeCompare(x.end) || label(x).localeCompare(label(y)));
+
+/* =========================================================
+   5) 비밀번호 확인용 지문(해시)
+      비밀번호 원문은 어디에도 저장하지 않고, 아래 계산 결과만 Firebase에 둡니다.
+   ========================================================= */
+async function pwKey(pw, kind){
+  const salt = `ictc-hamkke:${kind}:${FIREBASE_CONFIG.projectId || "demo"}`;
+  const enc = new TextEncoder();
+  const base = await crypto.subtle.importKey("raw", enc.encode(pw), "PBKDF2", false, ["deriveBits"]);
+  const bits = await crypto.subtle.deriveBits({ name:"PBKDF2", hash:"SHA-256", salt: enc.encode(salt), iterations: 150000 }, base, 256);
+  return [...new Uint8Array(bits)].map(b => b.toString(16).padStart(2,"0")).join("");
+}
+const NAME_KEY = "ictc-hamkke-name";
+const myName = () => { try { return localStorage.getItem(NAME_KEY) || ""; } catch(e){ return ""; } };
+const setMyName = n => { try { localStorage.setItem(NAME_KEY, n); } catch(e){} };
+class AuthError extends Error {}
+
+/* =========================================================
+   6) 저장소 (체험: 이 기기 / 공유: Firebase)
+   ========================================================= */
+const LS = "ictc-hamkke-demo-v2";
+const DEMO_PW = { staff: "ictc2026", admin: "admin2026" };
+const local = {
+  data: null,
+  async init(){
+    try { const v = JSON.parse(localStorage.getItem(LS)); if (v && Array.isArray(v.events) && v.k && v.a) { this.data = v; return; } } catch(e){}
+    this.data = { events: seedEvents(), k: await pwKey(DEMO_PW.staff, "staff"), a: await pwKey(DEMO_PW.admin, "admin"), session: null, adminUntil: 0 };
+    this.save();
+  },
+  save(){ try { localStorage.setItem(LS, JSON.stringify(this.data)); } catch(e){} }
+};
+
+const store = {
+  /* ----- 접속 ----- */
+  async login(pw, name){
+    const k = await pwKey(pw, "staff");
+    if (S.mode === "demo"){
+      if (k !== local.data.k) throw new AuthError("공용 비밀번호가 맞지 않습니다.");
+      local.data.session = k; local.save(); return;
+    }
+    const { fs, db, auth, authObj } = S.fb;
+    if (!authObj.currentUser) await auth.signInAnonymously(authObj);
+    try { await fs.setDoc(fs.doc(db, "sessions", authObj.currentUser.uid), { k, name, at: fs.serverTimestamp() }); }
+    catch(e){ if (e.code === "permission-denied") throw new AuthError("공용 비밀번호가 맞지 않습니다."); throw e; }
+  },
+  async logout(){
+    if (S.mode === "demo"){ local.data.session = null; local.data.adminUntil = 0; local.save(); return; }
+    const { fs, db, auth, authObj } = S.fb, uid = authObj.currentUser?.uid;
+    if (uid){
+      await fs.deleteDoc(fs.doc(db, "adminSessions", uid)).catch(() => {});
+      await fs.deleteDoc(fs.doc(db, "sessions", uid)).catch(() => {});
+    }
+    await auth.signOut(authObj);
+  },
+  async adminOn(pw){
+    const a = await pwKey(pw, "admin"), until = Date.now() + ADMIN_MINUTES * 60e3;
+    if (S.mode === "demo"){
+      if (a !== local.data.a) throw new AuthError("관리자 비밀번호가 맞지 않습니다.");
+      local.data.adminUntil = until; local.save(); return until;
+    }
+    const { fs, db, authObj } = S.fb;
+    try { await fs.setDoc(fs.doc(db, "adminSessions", authObj.currentUser.uid), { a, exp: fs.Timestamp.fromMillis(until) }); }
+    catch(e){ if (e.code === "permission-denied") throw new AuthError("관리자 비밀번호가 맞지 않습니다."); throw e; }
+    return until;
+  },
+  async adminOff(){
+    if (S.mode === "demo"){ local.data.adminUntil = 0; local.save(); return; }
+    const { fs, db, authObj } = S.fb;
+    await fs.deleteDoc(fs.doc(db, "adminSessions", authObj.currentUser.uid)).catch(() => {});
+  },
+  // 관리자 모드에서만: 공용 비밀번호 바꾸기 → 다른 기기는 모두 다시 로그인해야 함
+  async changeStaffPw(pw){
+    const k = await pwKey(pw, "staff");
+    if (S.mode === "demo"){ local.data.k = k; local.data.session = k; local.save(); return; }
+    const { fs, db, authObj } = S.fb, uid = authObj.currentUser.uid;
+    const old = await fs.getDocs(fs.collection(db, "keys"));
+    await fs.setDoc(fs.doc(db, "keys", k), { at: fs.serverTimestamp() });
+    await fs.setDoc(fs.doc(db, "sessions", uid), { k, name: S.me.name, at: fs.serverTimestamp() });
+    await Promise.all(old.docs.filter(d => d.id !== k).map(d => fs.deleteDoc(d.ref)));
+  },
+  async changeAdminPw(pw){
+    const a = await pwKey(pw, "admin");
+    if (S.mode === "demo"){ local.data.a = a; local.save(); return; }
+    const { fs, db, authObj } = S.fb, uid = authObj.currentUser.uid;
+    const old = await fs.getDocs(fs.collection(db, "adminKeys"));
+    await fs.setDoc(fs.doc(db, "adminKeys", a), { at: fs.serverTimestamp() });
+    await fs.setDoc(fs.doc(db, "adminSessions", uid), { a, exp: fs.Timestamp.fromMillis(S.adminUntil) });
+    await Promise.all(old.docs.filter(d => d.id !== a).map(d => fs.deleteDoc(d.ref)));
+  },
+  async samePw(pw, kind){ // 공용·관리자 비밀번호가 같아지지 않게
+    const other = kind === "staff" ? "admin" : "staff";
+    if (S.mode === "demo") return (await pwKey(pw, other)) === local.data[other === "staff" ? "k" : "a"];
+    return false; // 공유 모드에서는 서로 다른 지문만 저장되어 비교할 수 없음 → 화면에서 안내
+  },
+
+  /* ----- 일정 ----- */
+  async saveEvent(ev){
+    if (S.mode === "demo"){ const i = S.events.findIndex(x => x.id === ev.id); i >= 0 ? S.events[i] = ev : S.events.push(ev); local.data.events = S.events; local.save(); render(); return; }
+    const { fs, db } = S.fb; await fs.setDoc(fs.doc(db, "events", ev.id), ev);
+  },
+  async deleteEvent(id){
+    if (S.mode === "demo"){ S.events = S.events.filter(x => x.id !== id); local.data.events = S.events; local.save(); render(); return; }
+    const { fs, db } = S.fb; await fs.deleteDoc(fs.doc(db, "events", id));
+  },
+  async importSeed(){
+    const list = seedEvents();
+    if (S.mode === "demo"){ const have = new Set(S.events.map(e=>e.id)); list.forEach(e => have.has(e.id) || S.events.push(e)); local.data.events = S.events; local.save(); render(); return list.length; }
+    const { fs, db } = S.fb;
+    for (let i = 0; i < list.length; i += 20){
+      const b = fs.writeBatch(db);
+      list.slice(i, i+20).forEach(e => b.set(fs.doc(db, "events", e.id), { ...e, updatedAt: new Date().toISOString() }));
+      await b.commit();
+    }
+    return list.length;
+  }
+};
+
+/* =========================================================
+   7) 화면 그리기
+   ========================================================= */
+const $ = id => document.getElementById(id);
+function toast(msg){
+  const t = document.createElement("div"); t.className = "toast"; t.textContent = msg;
+  $("toastRoot").replaceChildren(t); setTimeout(() => t.remove(), 2600);
+}
+
+function renderTop(){
+  const r = $("topRight");
+  if (!S.me){ r.innerHTML = ""; return; }
+  const ini = (S.me.name || "직").slice(0,1);
+  r.innerHTML = `<button class="btn btn-sm ${isAdmin() ? "btn-ink" : "btn-line"}" id="admBtn">${isAdmin() ? "관리자 모드" : "관리자"}</button>
+    <button class="who" id="whoBtn" aria-label="내 접속"><span class="avatar">${esc(ini)}</span><span class="nm">${esc(S.me.name || "직원")}</span></button>`;
+  $("admBtn").addEventListener("click", openAdmin);
+  $("whoBtn").addEventListener("click", openAccount);
+}
+
+function renderBanner(){
+  let h = "";
+  if (S.mode === "demo") h += `<div class="banner"><b>체험 모드</b> · 등록한 일정은 이 기기에만 저장됩니다. 직원과 함께 보려면 Firebase를 연결해 주세요.</div>`;
+  if (S.mode === "shared" && isAdmin() && !S.events.some(e => e.id.startsWith("s")))
+    h += `<div class="banner"><b>교육계획이 아직 없습니다.</b> <button class="btn btn-sm btn-ink" id="importBtn">연간 교육계획 불러오기 (${SEED.length}건)</button></div>`;
+  $("banner").innerHTML = h;
+  $("importBtn")?.addEventListener("click", async () => {
+    try { const n = await store.importSeed(); toast(`교육계획 ${n}건을 불러왔습니다.`); } catch(e){ console.error(e); toast("불러오지 못했습니다. 관리자 모드를 다시 켜 주세요."); }
+  });
+}
+
+function renderBoard(){
+  const d = pd(TODAY);
+  const today = onDay(S.events, TODAY);
+  const training = sortEv(today.filter(e => e.cat === "edu" || e.cat === "eval"));
+  const away = sortEv(today.filter(e => e.cat === "trip" || e.cat === "leave"));
+  const etc = today.filter(e => e.cat === "etc");
+  const hol = HOLIDAYS[TODAY];
+  const dayN = e => { const total = diff(e.start, e.end) + 1; return total > 1 ? ` <i>${diff(e.start, TODAY)+1}/${total}일차</i>` : ""; };
+  const tag = e => `<button class="tag t-${e.cat}" data-id="${esc(e.id)}">${esc(e.cat==="trip"||e.cat==="leave" ? (e.person || e.title) : e.title)}${e.cat==="trip" && e.person && (e.place||e.title) ? ` <i>${esc(e.place||e.title)}</i>` : ""}${e.cat==="leave" && e.half!=="full" ? ` <i>${HALF[e.half]}</i>` : ""}${e.cat==="edu"||e.cat==="eval" ? dayN(e) : ""}</button>`;
+  $("board").innerHTML = `
+    <div class="board-date"><small>오늘</small><strong>${d.getMonth()+1}.${pad(d.getDate())}</strong><span>${WD[d.getDay()]}요일${hol ? " · " + esc(hol) : ""}</span></div>
+    <div class="board-body">
+      <div class="board-row"><b>교육</b><div class="val">${training.length ? training.map(tag).join("") : `<span class="none">진행 중인 교육·평가 없음</span>`}</div></div>
+      <div class="board-row"><b>부재</b><div class="val">${away.length ? away.map(tag).join("") : `<span class="none">오늘 등록된 출장·연가 없음</span>`}</div></div>
+      ${etc.length ? `<div class="board-row"><b>기타</b><div class="val">${etc.map(tag).join("")}</div></div>` : ""}
+    </div>`;
+  $("board").querySelectorAll("[data-id]").forEach(b => b.addEventListener("click", () => openDetail(b.dataset.id)));
+}
+
+function renderFilters(){
+  const chips = Object.entries(CATS).map(([k,v]) => `<button class="chip" data-c="${k}" aria-pressed="${S.on.has(k)}">${v}</button>`).join("");
+  $("filters").innerHTML = chips + `<button class="chip" data-c="mine" aria-pressed="${S.mine}">내 일정</button>`;
+  $("filters").querySelectorAll(".chip").forEach(b => b.addEventListener("click", () => {
+    const c = b.dataset.c;
+    if (c === "mine") S.mine = !S.mine; else S.on.has(c) ? S.on.delete(c) : S.on.add(c);
+    render();
+  }));
+}
+
+function renderMonth(){
+  const m = S.month, y = m.getFullYear(), mo = m.getMonth();
+  $("mTitle").textContent = `${y}년 ${mo+1}월`;
+  const first = new Date(y, mo, 1, 12), start = addDays(first, -first.getDay());
+  const last = new Date(y, mo+1, 0, 12);
+  const weeksN = Math.ceil((first.getDay() + last.getDate()) / 7);
+  const vis = visible();
+  const LANES = 3;
+  let html = "";
+  for (let w = 0; w < weeksN; w++){
+    const ws = addDays(start, w*7), wsS = ymd(ws), weS = ymd(addDays(ws, 6));
+    let cells = "";
+    for (let i = 0; i < 7; i++){
+      const d = addDays(ws, i), ds = ymd(d), hol = HOLIDAYS[ds];
+      const cls = ["cell", d.getMonth() !== mo && "out", i === 0 && "sun", i === 6 && "sat", hol && "hol", ds === TODAY && "today", ds === S.sel && "sel"].filter(Boolean).join(" ");
+      cells += `<button class="${cls}" style="grid-column:${i+1}" data-day="${ds}" aria-label="${mdw(ds)}"><span class="dn"><b>${d.getDate()}</b>${hol ? `<em>${esc(hol)}</em>` : ""}</span></button>`;
+    }
+    // 주 단위로 막대 배치
+    const evs = sortEv(vis.filter(e => e.start <= weS && e.end >= wsS));
+    const laneEnd = [], hidden = Array(7).fill(0); let bars = "";
+    evs.forEach(e => {
+      const c1 = Math.max(0, diff(wsS, e.start)), c2 = Math.min(6, diff(wsS, e.end));
+      let lane = laneEnd.findIndex(end => end < c1);
+      if (lane < 0){ lane = laneEnd.length; laneEnd.push(-1); }
+      laneEnd[lane] = c2;
+      if (lane >= LANES){ for (let c = c1; c <= c2; c++) hidden[c]++; return; }
+      const cl = ["ev", e.cat, e.plan && "plan", e.start < wsS && "cont-l", e.end > weS && "cont-r"].filter(Boolean).join(" ");
+      bars += `<button class="${cl}" style="grid-column:${c1+1}/${c2+2};grid-row:${lane+2}" data-id="${esc(e.id)}" title="${esc(label(e))}">${esc(label(e))}</button>`;
+    });
+    hidden.forEach((n, c) => { if (n) bars += `<span class="more" style="grid-column:${c+1};grid-row:${LANES+2}">+${n}</span>`; });
+    html += `<div class="week">${cells}${bars}</div>`;
+  }
+  $("weeks").innerHTML = html;
+  $("weeks").querySelectorAll("[data-day]").forEach(b => b.addEventListener("click", () => { S.sel = b.dataset.day; renderMonth(); }));
+  $("weeks").querySelectorAll(".ev").forEach(b => b.addEventListener("click", ev => { ev.stopPropagation(); openDetail(b.dataset.id); }));
+  renderDay();
+}
+
+function itemHTML(e){
+  const span = e.start === e.end ? "" : `${md(e.start)}~${md(e.end)} · `;
+  const sub = e.cat === "edu" || e.cat === "eval"
+    ? `${span}${e.plan ? "계획(안)" : CATS[e.cat]}`
+    : `${span}${e.cat === "leave" ? HALF[e.half||"full"] : CATS[e.cat]}${e.ownerName ? " · 등록 " + esc(e.ownerName) : ""}`;
+  return `<button class="item" data-id="${esc(e.id)}"><span class="stripe s-${e.cat}"></span><span><span class="t">${esc(label(e))}</span><span class="m">${sub}</span></span><span class="badge t-${e.cat}">${CATS[e.cat]}</span></button>`;
+}
+
+function renderDay(){
+  const list = sortEv(onDay(visible(), S.sel)), hol = HOLIDAYS[S.sel];
+  $("dayPanel").innerHTML = `
+    <div class="day-head"><h3>${mdw(S.sel)}</h3><p>${hol ? esc(hol) + " · " : ""}${list.length ? `일정 ${list.length}건` : "등록된 일정 없음"}</p></div>
+    <div class="items">${list.length ? list.map(itemHTML).join("") :
+      `<div class="empty">이날 출장이나 연가가 있다면 등록해 두세요.<br><button class="btn btn-ink btn-sm" id="addHere">＋ 이날 일정 등록</button></div>`}</div>`;
+  $("dayPanel").querySelectorAll("[data-id]").forEach(b => b.addEventListener("click", () => openDetail(b.dataset.id)));
+  $("addHere")?.addEventListener("click", () => openForm(null, S.sel));
+}
+
+function renderYear(){
+  const y = S.year; $("yTitle").textContent = `${y}년`;
+  const vis = visible();
+  let html = "";
+  for (let mo = 0; mo < 12; mo++){
+    const first = new Date(y, mo, 1, 12), days = new Date(y, mo+1, 0).getDate();
+    const mS = ymd(first), mE = ymd(new Date(y, mo, days, 12));
+    const inMonth = vis.filter(e => e.start <= mE && e.end >= mS);
+    let g = WD.map(w => `<span class="h">${w}</span>`).join("") + "<span></span>".repeat(first.getDay());
+    for (let d = 1; d <= days; d++){
+      const ds = `${y}-${pad(mo+1)}-${pad(d)}`, on = onDay(inMonth, ds), dow = (first.getDay()+d-1) % 7;
+      const work = dow !== 0 && dow !== 6 && !HOLIDAYS[ds];
+      const top = !work ? "" : on.some(e => e.cat === "eval") ? "eval" : on.some(e => e.cat === "edu") ? "edu" : "";
+      const dots = ["trip","leave","etc"].filter(c => on.some(e => e.cat === c));
+      const cls = ["md", top, (HOLIDAYS[ds] || dow === 0) && "sun", ds === TODAY && "today"].filter(Boolean).join(" ");
+      g += `<button class="${cls}" data-day="${ds}" title="${esc(HOLIDAYS[ds] || "")}">${d}${dots.length ? `<span class="dots">${dots.map(c=>`<i class="${c}"></i>`).join("")}</span>` : ""}</button>`;
+    }
+    const courses = sortEv(inMonth.filter(e => (e.cat === "edu" || e.cat === "eval") && e.start >= mS));
+    const away = inMonth.filter(e => e.cat === "trip" || e.cat === "leave").length;
+    html += `<div class="mini"><h4>${mo+1}월 <small>${courses.length ? `교육·평가 ${courses.length}` : ""}${away ? ` · 출장·연가 ${away}` : ""}</small></h4>
+      <div class="mgrid">${g}</div>
+      ${courses.length ? `<ul class="mlist">${courses.slice(0,6).map(e => `<li class="${e.plan?"plan":""}"><span>${md(e.start)}${e.end!==e.start?"~":""}</span><b>${esc(e.title)}</b></li>`).join("")}${courses.length>6?`<li><span></span><b>외 ${courses.length-6}건</b></li>`:""}</ul>` : ""}
+    </div>`;
+  }
+  $("yearGrid").innerHTML = html;
+  $("yearGrid").querySelectorAll("[data-day]").forEach(b => b.addEventListener("click", () => {
+    S.sel = b.dataset.day; S.month = pd(S.sel.slice(0,8)+"01"); setView("month");
+  }));
+}
+
+function renderList(){
+  const q = S.q.trim().toLowerCase();
+  let list = visible().filter(e => (S.range === "all" || e.end >= TODAY) &&
+    (!q || [e.title, e.person, e.place, e.memo, e.ownerName, CATS[e.cat]].join(" ").toLowerCase().includes(q)));
+  list = sortEv(list);
+  if (!list.length){ $("listBody").innerHTML = `<div class="empty">찾는 일정이 없습니다. 검색어나 위의 분류 필터를 바꿔 보세요.</div>`; return; }
+  let html = "", lastM = "";
+  list.slice(0, 400).forEach(e => {
+    const m = e.start.slice(0,7);
+    if (m !== lastM){ html += `<div class="month-h">${m.slice(0,4)}년 ${+m.slice(5)}월</div>`; lastM = m; }
+    const d = pd(e.start);
+    html += `<button class="row" data-id="${esc(e.id)}"><span class="d">${md(e.start)} ${WD[d.getDay()]}${e.end!==e.start ? `<small>~ ${md(e.end)} ${WD[pd(e.end).getDay()]}</small>` : ""}</span><span class="stripe s-${e.cat}"></span><span><span class="t" style="font-weight:600">${esc(label(e))}</span><span class="m" style="display:block;font-size:12px;color:var(--muted)">${CATS[e.cat]}${e.plan?" · 계획(안)":""}${e.memo && e.cat!=="edu" && e.cat!=="eval" ? " · " + esc(e.memo) : ""}</span></span></button>`;
+  });
+  $("listBody").innerHTML = html;
+  $("listBody").querySelectorAll("[data-id]").forEach(b => b.addEventListener("click", () => openDetail(b.dataset.id)));
+}
+
+function weekText(){
+  const t = pd(TODAY), mon = addDays(t, -((t.getDay()+6)%7));
+  const lines = [`[ICTC 함께] ${md(ymd(mon))}~${md(ymd(addDays(mon,4)))} 주간 일정`];
+  for (let i = 0; i < 5; i++){
+    const ds = ymd(addDays(mon, i)), list = sortEv(onDay(S.events, ds));
+    lines.push("", `${mdw(ds)}${HOLIDAYS[ds] ? " " + HOLIDAYS[ds] : ""}`);
+    if (!list.length) lines.push("- 일정 없음");
+    list.forEach(e => lines.push(`- ${label(e)}`));
+  }
+  return lines.join("\n");
+}
+
+function setView(v){
+  S.view = v;
+  document.querySelectorAll("[data-view]").forEach(b => b.setAttribute("aria-pressed", b.dataset.view === v));
+  $("vMonth").classList.toggle("hide", v !== "month");
+  $("vYear").classList.toggle("hide", v !== "year");
+  $("vList").classList.toggle("hide", v !== "list");
+  render();
+}
+
+function render(){
+  if (!S.me) return;
+  renderTop(); renderBanner(); renderBoard(); renderFilters();
+  if (S.view === "month") renderMonth();
+  if (S.view === "year") renderYear();
+  if (S.view === "list") renderList();
+}
+
+/* =========================================================
+   8) 시트: 상세, 등록·수정, 관리자, 내 접속
+   ========================================================= */
+function sheet(html, onMount){
+  const root = $("sheetRoot");
+  root.innerHTML = `<div class="scrim"><div class="sheet" role="dialog" aria-modal="true"><div class="grab"></div>${html}</div></div>`;
+  const close = () => { root.innerHTML = ""; document.removeEventListener("keydown", esc_); };
+  const esc_ = e => { if (e.key === "Escape") close(); };
+  document.addEventListener("keydown", esc_);
+  root.querySelector(".scrim").addEventListener("click", e => { if (e.target.classList.contains("scrim")) close(); });
+  root.querySelectorAll("[data-close]").forEach(b => b.addEventListener("click", close));
+  onMount?.(root, close);
+  root.querySelector("input,button:not(.x)")?.focus({ preventScroll:true });
+  return close;
+}
+
+function openDetail(id){
+  const e = S.events.find(x => x.id === id); if (!e) return;
+  const days = diff(e.start, e.end) + 1;
+  const rows = [
+    ["분류", CATS[e.cat] + (e.cat === "leave" ? ` · ${HALF[e.half||"full"]}` : "") + (e.plan ? " · 계획(안)" : "")],
+    ["기간", rangeText(e) + (days > 1 ? ` · ${days}일` : "")],
+    e.person && ["담당", e.person],
+    e.place && ["장소", e.place],
+    (e.title && (e.cat === "trip" || e.cat === "leave")) && ["내용", e.title],
+    e.memo && ["메모", e.memo],
+    e.ownerName && ["등록", e.ownerName]
+  ].filter(Boolean);
+  sheet(`<h3><span class="badge t-${e.cat}" style="font-size:12px;border-radius:6px;padding:3px 8px">${CATS[e.cat]}</span>${esc(label(e))}<button class="x" data-close aria-label="닫기">✕</button></h3>
+    <dl class="dl">${rows.map(([k,v]) => `<dt>${k}</dt><dd>${esc(v)}</dd>`).join("")}</dl>
+    ${canEdit(e) ? `<div class="actions"><button class="btn btn-danger" id="del">삭제</button><button class="btn btn-ink grow" id="edit">수정</button></div>`
+      : `<p class="hint">교육·평가 일정은 관리자 모드에서 고칠 수 있습니다.</p>`}`,
+  (root, close) => {
+    root.querySelector("#edit")?.addEventListener("click", () => { close(); openForm(e); });
+    root.querySelector("#del")?.addEventListener("click", async () => {
+      if (!confirm(`'${label(e)}' 일정을 삭제할까요?`)) return;
+      try { await store.deleteEvent(e.id); close(); toast("삭제했습니다."); } catch(err){ console.error(err); toast("삭제하지 못했습니다. 권한을 확인하세요."); }
+    });
+  });
+}
+
+function openForm(e, day){
+  const isNew = !e;
+  const v = e ? { ...e } : { cat:"trip", start: day || S.sel, end: day || S.sel, half:"full", person: S.me.name, place:"", title:"", memo:"" };
+  const cats = isAdmin() ? ["trip","leave","edu","eval","etc"] : ["trip","leave","etc"];
+  const names = [...new Set([S.me.name, ...S.events.map(x => x.person)].filter(Boolean))].sort();
+  sheet(`<h3>${isNew ? "일정 등록" : "일정 수정"}<button class="x" data-close aria-label="닫기">✕</button></h3>
+    <div class="f"><span class="lbl">분류</span><div class="picks" id="fCat">${cats.map(c => `<button type="button" class="pick" data-v="${c}" aria-pressed="${v.cat===c}">${CATS[c]}</button>`).join("")}</div></div>
+    <div class="f" id="wPerson"><label for="fPerson">누가</label><input id="fPerson" list="names" value="${esc(v.person)}" maxlength="20" placeholder="이름"><datalist id="names">${names.map(n=>`<option value="${esc(n)}">`).join("")}</datalist></div>
+    <div class="two">
+      <div class="f"><label for="fStart">시작일</label><input id="fStart" type="date" value="${v.start}"></div>
+      <div class="f"><label for="fEnd">종료일</label><input id="fEnd" type="date" value="${v.end}"></div>
+    </div>
+    <div class="quick" id="fQuick" style="margin:-6px 0 14px"><button type="button" data-n="0">하루</button><button type="button" data-n="1">2일</button><button type="button" data-n="2">3일</button><button type="button" data-n="4">5일(월~금)</button></div>
+    <div class="f" id="wHalf"><span class="lbl">시간</span><div class="picks" id="fHalf">${Object.entries(HALF).map(([k,t]) => `<button type="button" class="pick plain" data-v="${k}" aria-pressed="${(v.half||"full")===k}">${t}</button>`).join("")}</div></div>
+    <div class="f" id="wPlace"><label for="fPlace">어디로</label><input id="fPlace" value="${esc(v.place)}" maxlength="40" placeholder="예: 경남소방본부, 중앙소방학교">
+      <div class="quick">${["경남","울산","창원","중앙소방학교","소방청"].map(p=>`<button type="button" data-place="${p}">${p}</button>`).join("")}</div></div>
+    <div class="f" id="wTitle"><label for="fTitle" id="lTitle">내용</label><input id="fTitle" value="${esc(v.title)}" maxlength="60"></div>
+    <div class="f"><label for="fMemo">메모 (선택)</label><textarea id="fMemo" maxlength="300" placeholder="함께 알아야 할 내용만 적어 주세요.">${esc(v.memo)}</textarea></div>
+    <div class="actions"><button class="btn btn-line" data-close>취소</button><button class="btn btn-fire grow" id="fSave">${isNew ? "등록" : "저장"}</button></div>`,
+  (root, close) => {
+    const q = s => root.querySelector(s);
+    const sync = () => {
+      const c = v.cat, personal = c === "trip" || c === "leave";
+      q("#wPerson").classList.toggle("hide", !(personal || c === "etc"));
+      q("#wHalf").classList.toggle("hide", c !== "leave");
+      q("#wPlace").classList.toggle("hide", !(c === "trip" || c === "edu" || c === "eval" || c === "etc"));
+      q("#lTitle").textContent = personal ? "내용 (선택)" : (c === "etc" ? "무엇을" : "과정명");
+      q("#fTitle").placeholder = c === "trip" ? "예: 팀단위 전술훈련 지원" : c === "leave" ? "사유는 적지 않아도 됩니다" : c === "etc" ? "예: 센터 회의, 장비 점검" : "예: 7기 초급현장지휘관 양성과정";
+      q("#fEnd").disabled = c === "leave" && v.half !== "full";
+    };
+    q("#fCat").addEventListener("click", ev => { const b = ev.target.closest(".pick"); if (!b) return; v.cat = b.dataset.v; q("#fCat").querySelectorAll(".pick").forEach(x => x.setAttribute("aria-pressed", x === b)); sync(); });
+    q("#fHalf").addEventListener("click", ev => { const b = ev.target.closest(".pick"); if (!b) return; v.half = b.dataset.v; q("#fHalf").querySelectorAll(".pick").forEach(x => x.setAttribute("aria-pressed", x === b)); if (v.half !== "full") q("#fEnd").value = q("#fStart").value; sync(); });
+    q("#fQuick").addEventListener("click", ev => { const n = ev.target.dataset.n; if (n == null) return; q("#fEnd").value = ymd(addDays(pd(q("#fStart").value), +n)); });
+    root.querySelectorAll("[data-place]").forEach(b => b.addEventListener("click", () => { q("#fPlace").value = b.dataset.place; }));
+    q("#fStart").addEventListener("change", () => { if (q("#fEnd").value < q("#fStart").value || (v.cat==="leave" && v.half!=="full")) q("#fEnd").value = q("#fStart").value; });
+    sync();
+    q("#fSave").addEventListener("click", async () => {
+      const ev = {
+        ...(e || {}), id: e?.id || ("e" + Date.now().toString(36) + Math.random().toString(36).slice(2,6)),
+        cat: v.cat, start: q("#fStart").value, end: q("#fEnd").value || q("#fStart").value,
+        half: v.cat === "leave" ? v.half : "full",
+        person: q("#fPerson").value.trim(), place: q("#fPlace").value.trim(), title: q("#fTitle").value.trim(), memo: q("#fMemo").value.trim(),
+        plan: e?.plan || false, ownerName: e?.ownerName || S.me.name, editedBy: S.me.name, updatedAt: new Date().toISOString()
+      };
+      if (ev.cat === "leave" && ev.half !== "full") ev.end = ev.start;
+      if (!ev.start) return toast("시작일을 골라 주세요.");
+      if (ev.end < ev.start) return toast("종료일이 시작일보다 빠릅니다.");
+      if ((ev.cat === "trip" || ev.cat === "leave") && !ev.person) return toast("누구의 일정인지 이름을 적어 주세요.");
+      if ((ev.cat === "edu" || ev.cat === "eval" || ev.cat === "etc") && !ev.title) return toast(v.cat === "etc" ? "무엇을 하는지 적어 주세요." : "과정명을 적어 주세요.");
+      try {
+        q("#fSave").disabled = true;
+        await store.saveEvent(ev); close();
+        S.sel = ev.start; S.month = pd(ev.start.slice(0,8)+"01"); render();
+        toast(isNew ? (S.mode === "demo" ? "등록했습니다." : "등록했습니다. 직원 모두에게 보입니다.") : "저장했습니다.");
+      } catch(err){ console.error(err); q("#fSave").disabled = false; toast(isAdmin() || PERSONAL.includes(ev.cat) ? "저장하지 못했습니다. 다시 로그인해 주세요." : "교육·평가는 관리자 모드에서 저장할 수 있습니다."); }
+    });
+  });
+}
+
+function pwFields(id, label){
+  return `<div class="f"><label for="${id}">${label}</label><input id="${id}" type="password" autocomplete="new-password" minlength="${MIN_PW}" maxlength="64"></div>
+    <div class="f"><label for="${id}2">한 번 더</label><input id="${id}2" type="password" autocomplete="new-password" maxlength="64"></div>`;
+}
+function readPw(root, id){
+  const a = root.querySelector("#"+id).value, b = root.querySelector("#"+id+"2").value;
+  if (a.length < MIN_PW) { toast(`${MIN_PW}자 이상으로 정해 주세요.`); return null; }
+  if (a !== b) { toast("두 칸의 비밀번호가 다릅니다."); return null; }
+  return a;
+}
+
+function openAdmin(){
+  if (!isAdmin()){
+    sheet(`<h3>관리자 모드<button class="x" data-close aria-label="닫기">✕</button></h3>
+      <p class="hint" style="margin:-6px 0 14px">교육계획 수정과 비밀번호 변경은 관리자 비밀번호를 넣어야 할 수 있습니다. ${ADMIN_MINUTES}분 뒤 자동으로 꺼집니다.</p>
+      <form id="aForm"><div class="f"><label for="aPw">관리자 비밀번호</label><input id="aPw" type="password" autocomplete="current-password"></div>
+      <button class="btn btn-ink" style="width:100%">관리자 모드 켜기</button></form>`,
+    (root, close) => {
+      root.querySelector("#aForm").addEventListener("submit", async ev => {
+        ev.preventDefault(); const btn = root.querySelector("#aForm button"); btn.disabled = true;
+        try { S.adminUntil = await store.adminOn(root.querySelector("#aPw").value); close(); render(); toast("관리자 모드를 켰습니다."); }
+        catch(e){ btn.disabled = false; toast(e instanceof AuthError ? e.message : "확인하지 못했습니다. 연결을 확인해 주세요."); if (!(e instanceof AuthError)) console.error(e); }
+      });
+    });
+    return;
+  }
+  const left = Math.max(1, Math.round((S.adminUntil - Date.now()) / 60e3));
+  sheet(`<h3>관리자 모드<button class="x" data-close aria-label="닫기">✕</button></h3>
+    <p class="hint" style="margin:-6px 0 14px">${left}분 남음. 지금은 교육·평가 일정도 등록하고 고칠 수 있습니다.</p>
+    <div class="f"><span class="lbl">직원 공용 비밀번호 바꾸기</span>
+      <p class="hint" style="margin:0 0 8px">바꾸면 다른 직원 기기는 모두 접속이 끊기고, 새 비밀번호로 다시 들어와야 합니다. 전보·퇴직이 있을 때 바꿔 주세요.</p></div>
+    ${pwFields("nStaff", "새 공용 비밀번호")}
+    <button class="btn btn-fire" id="doStaff" style="width:100%;margin-bottom:22px">공용 비밀번호 변경</button>
+    <div class="f"><span class="lbl">관리자 비밀번호 바꾸기</span></div>
+    ${pwFields("nAdmin", "새 관리자 비밀번호")}
+    <button class="btn btn-ink" id="doAdmin" style="width:100%;margin-bottom:22px">관리자 비밀번호 변경</button>
+    <div class="actions">${S.mode === "shared" ? `<button class="btn btn-line grow" id="imp">교육계획 다시 불러오기</button>` : ""}<button class="btn btn-line grow" id="aOff">관리자 모드 끄기</button></div>`,
+  (root, close) => {
+    const guard = async (pw, kind) => {
+      if (await store.samePw(pw, kind)){ toast("공용 비밀번호와 관리자 비밀번호는 서로 달라야 합니다."); return false; }
+      return true;
+    };
+    root.querySelector("#doStaff").addEventListener("click", async () => {
+      const pw = readPw(root, "nStaff"); if (!pw || !(await guard(pw, "staff"))) return;
+      if (!confirm("공용 비밀번호를 바꿀까요? 다른 기기는 모두 다시 로그인해야 합니다.")) return;
+      try { await store.changeStaffPw(pw); close(); toast("공용 비밀번호를 바꿨습니다. 직원들에게 새 비밀번호를 알려 주세요."); }
+      catch(e){ console.error(e); toast("바꾸지 못했습니다. 관리자 모드를 다시 켜 주세요."); }
+    });
+    root.querySelector("#doAdmin").addEventListener("click", async () => {
+      const pw = readPw(root, "nAdmin"); if (!pw || !(await guard(pw, "admin"))) return;
+      if (!confirm("관리자 비밀번호를 바꿀까요?")) return;
+      try { await store.changeAdminPw(pw); close(); toast("관리자 비밀번호를 바꿨습니다."); }
+      catch(e){ console.error(e); toast("바꾸지 못했습니다. 관리자 모드를 다시 켜 주세요."); }
+    });
+    root.querySelector("#imp")?.addEventListener("click", async () => {
+      if (!confirm("연간 교육계획을 다시 불러올까요? 같은 일정은 원래 내용으로 덮어씁니다.")) return;
+      try { const n = await store.importSeed(); close(); toast(`교육계획 ${n}건을 불러왔습니다.`); } catch(e){ console.error(e); toast("불러오지 못했습니다."); }
+    });
+    root.querySelector("#aOff").addEventListener("click", async () => { await store.adminOff(); S.adminUntil = 0; close(); render(); toast("관리자 모드를 껐습니다."); });
+  });
+}
+
+function openAccount(){
+  sheet(`<h3>내 접속<button class="x" data-close aria-label="닫기">✕</button></h3>
+    <div class="f"><label for="myName">내 이름</label><input id="myName" value="${esc(S.me.name)}" maxlength="20">
+      <p class="hint">일정을 등록할 때 '누가'와 '등록'에 들어갑니다. 이 기기에만 기억합니다.</p></div>
+    <dl class="dl"><dt>접속</dt><dd>${S.mode === "demo" ? "체험 모드 (이 기기에만 저장)" : "직원 공용 비밀번호"}</dd><dt>권한</dt><dd>${isAdmin() ? "관리자 모드" : "직원"}</dd></dl>
+    <div class="actions"><button class="btn btn-line" id="out">로그아웃</button><button class="btn btn-ink grow" id="saveName">이름 저장</button></div>
+    ${S.mode === "demo" ? `<button class="btn btn-danger" id="reset" style="width:100%;margin-top:10px">체험 데이터 처음으로</button>` : ""}`,
+  (root, close) => {
+    root.querySelector("#saveName").addEventListener("click", () => {
+      const n = root.querySelector("#myName").value.trim(); if (!n) return toast("이름을 적어 주세요.");
+      setMyName(n); S.me.name = n; close(); render(); toast("저장했습니다.");
+    });
+    root.querySelector("#out").addEventListener("click", async () => { close(); unsubs.forEach(u => u()); unsubs = []; await store.logout(); showLogin(); });
+    root.querySelector("#reset")?.addEventListener("click", async () => {
+      if (!confirm("체험 중 바꾼 일정과 비밀번호를 모두 처음으로 돌릴까요?")) return;
+      localStorage.removeItem(LS); await local.init(); close(); showLogin();
+    });
+  });
+}
+
+/* =========================================================
+   9) 시작: 로그인 화면 → 체험 모드 또는 Firebase 공유 모드
+   ========================================================= */
+function showApp(){
+  $("gate").classList.add("hide"); $("app").classList.remove("hide"); $("fab").classList.remove("hide"); render();
+}
+function showGate(html){
+  $("app").classList.add("hide"); $("fab").classList.add("hide"); $("topRight").innerHTML = ""; $("sheetRoot").innerHTML = "";
+  $("gate").classList.remove("hide"); $("gate").innerHTML = `<div class="gate-card">${html}</div>`;
+}
+function showLogin(msg){
+  S.me = null; S.adminUntil = 0;
+  showGate(`<h1>ICTC <em>함께</em></h1>
+    <p>긴급구조지휘역량강화센터 직원 일정입니다.<br>센터에서 받은 공용 비밀번호를 넣어 주세요.</p>
+    ${msg ? `<p class="hint" style="color:var(--fire);margin-top:-8px">${esc(msg)}</p>` : ""}
+    <form id="lForm" style="text-align:left">
+      <div class="f"><label for="lName">내 이름</label><input id="lName" value="${esc(myName())}" maxlength="20" placeholder="일정 등록할 때 쓰입니다" autocomplete="name"></div>
+      <div class="f"><label for="lPw">공용 비밀번호</label><input id="lPw" type="password" autocomplete="current-password"></div>
+      <button class="btn btn-fire">들어가기</button>
+    </form>
+    ${S.mode === "demo" ? `<p class="hint" style="margin-top:14px">체험 모드 비밀번호 · 공용 <b>${DEMO_PW.staff}</b> · 관리자 <b>${DEMO_PW.admin}</b></p>` : ""}`);
+  $(myName() ? "lPw" : "lName").focus();
+  $("lForm").addEventListener("submit", async ev => {
+    ev.preventDefault();
+    const name = $("lName").value.trim(), pw = $("lPw").value, btn = $("lForm").querySelector("button");
+    if (!name) return toast("이름을 적어 주세요.");
+    if (!pw) return toast("공용 비밀번호를 넣어 주세요.");
+    btn.disabled = true; btn.textContent = "확인 중…";
+    try {
+      await store.login(pw, name); setMyName(name);
+      if (S.mode === "demo") enterDemo(); else await enterShared();
+    } catch(e){
+      btn.disabled = false; btn.textContent = "들어가기";
+      toast(e instanceof AuthError ? e.message : "연결하지 못했습니다. 인터넷 연결을 확인해 주세요."); if (!(e instanceof AuthError)) console.error(e);
+    }
+  });
+}
+
+/* --- 체험 모드 --- */
+function enterDemo(){
+  S.events = local.data.events; S.me = { name: myName() };
+  S.adminUntil = local.data.adminUntil || 0;
+  showApp();
+}
+async function startDemo(){
+  S.mode = "demo"; await local.init();
+  if (local.data.session && local.data.session === local.data.k && myName()) enterDemo(); else showLogin();
+}
+
+/* --- 공유 모드 --- */
+let unsubs = [];
+async function enterShared(){
+  const { fs, db, authObj } = S.fb, uid = authObj.currentUser.uid;
+  unsubs.forEach(u => u()); unsubs = [];
+  S.me = { name: myName() };
+  try { const a = await fs.getDoc(fs.doc(db, "adminSessions", uid)); S.adminUntil = a.exists() ? a.data().exp.toMillis() : 0; } catch(e){ S.adminUntil = 0; }
+  await new Promise((resolve, reject) => {
+    let first = true;
+    unsubs.push(fs.onSnapshot(fs.collection(db, "events"), snap => {
+      S.events = snap.docs.map(d => ({ half:"full", ...d.data(), id: d.id }));
+      if (first){ first = false; showApp(); resolve(); } else render();
+    }, err => {
+      unsubs.forEach(u => u()); unsubs = [];
+      if (first){ first = false; reject(err); }
+      else showLogin("공용 비밀번호가 바뀌었거나 접속이 끝났습니다. 새 비밀번호로 들어와 주세요.");
+    }));
+  });
+}
+async function startShared(){
+  showGate(`<h1>ICTC <em>함께</em></h1><p>연결하는 중…</p>`);
+  const v = "10.12.2";
+  const [appM, auth, fs] = await Promise.all([
+    import(`https://www.gstatic.com/firebasejs/${v}/firebase-app.js`),
+    import(`https://www.gstatic.com/firebasejs/${v}/firebase-auth.js`),
+    import(`https://www.gstatic.com/firebasejs/${v}/firebase-firestore.js`)
+  ]);
+  const app = appM.initializeApp(FIREBASE_CONFIG);
+  const authObj = auth.getAuth(app), db = fs.getFirestore(app);
+  S.mode = "shared"; S.fb = { fs, db, auth, authObj };
+  await authObj.authStateReady();
+  if (authObj.currentUser && myName()){
+    try { await enterShared(); return; } catch(e){ /* 세션 없음 또는 비밀번호 변경됨 */ }
+  }
+  showLogin();
+}
+
+/* --- 관리자 모드 시간 끝나면 화면 갱신 --- */
+setInterval(() => { if (S.me && S.adminUntil && !isAdmin()){ S.adminUntil = 0; render(); toast("관리자 모드가 꺼졌습니다."); } }, 30e3);
+
+/* --- 처음 한 번: 비밀번호 지문 만들기 (주소 끝에 ?setup) --- */
+function showSetup(){
+  showGate(`<h1>처음 설정</h1>
+    <p>직원 공용 비밀번호와 관리자 비밀번호를 정하면, Firebase에 넣을 지문(해시)을 만들어 드립니다. 비밀번호 원문은 어디에도 저장되지 않습니다.</p>
+    <form id="sForm" style="text-align:left">
+      <div class="f"><label for="sStaff">직원 공용 비밀번호 (${MIN_PW}자 이상)</label><input id="sStaff" type="password" autocomplete="new-password"></div>
+      <div class="f"><label for="sAdmin">관리자 비밀번호 (공용과 다르게)</label><input id="sAdmin" type="password" autocomplete="new-password"></div>
+      <button class="btn btn-ink">지문 만들기</button>
+    </form><div id="sOut" style="text-align:left;margin-top:16px"></div>`);
+  if (!FIREBASE_CONFIG.projectId) $("sOut").innerHTML = `<p class="hint" style="color:var(--fire)">먼저 index.html의 FIREBASE_CONFIG를 채워 주세요. 프로젝트마다 지문이 달라집니다.</p>`;
+  $("sForm").addEventListener("submit", async ev => {
+    ev.preventDefault();
+    const s = $("sStaff").value, a = $("sAdmin").value;
+    if (s.length < MIN_PW || a.length < MIN_PW) return toast(`두 비밀번호 모두 ${MIN_PW}자 이상으로 정해 주세요.`);
+    if (s === a) return toast("공용 비밀번호와 관리자 비밀번호는 서로 달라야 합니다.");
+    const [k, ak] = await Promise.all([pwKey(s, "staff"), pwKey(a, "admin")]);
+    const row = (col, id) => `<div class="f"><span class="lbl">컬렉션 <b>${col}</b> → 문서 ID</span><code style="text-align:left">${id}</code>
+      <button type="button" class="btn btn-line btn-sm" data-cp="${id}">복사</button></div>`;
+    $("sOut").innerHTML = `<p class="hint">Firebase 콘솔 → Firestore Database → 데이터 → <b>컬렉션 시작</b>으로 아래 두 문서를 만드세요. 필드는 아무거나 하나(예: memo / 문자열 / 처음)면 됩니다.</p>
+      ${row("keys", k)}${row("adminKeys", ak)}
+      <p class="hint">만든 뒤에는 주소 끝의 ?setup 을 지우고 들어가면 됩니다. 이후 비밀번호 변경은 앱의 관리자 모드에서 합니다.</p>`;
+    $("sOut").querySelectorAll("[data-cp]").forEach(b => b.addEventListener("click", () => { navigator.clipboard?.writeText(b.dataset.cp); toast("복사했습니다."); }));
+  });
+}
+
+/* 고정 이벤트 연결 */
+document.querySelectorAll("[data-view]").forEach(b => b.addEventListener("click", () => setView(b.dataset.view)));
+$("mPrev").addEventListener("click", () => { S.month = new Date(S.month.getFullYear(), S.month.getMonth()-1, 1, 12); renderMonth(); });
+$("mNext").addEventListener("click", () => { S.month = new Date(S.month.getFullYear(), S.month.getMonth()+1, 1, 12); renderMonth(); });
+$("mToday").addEventListener("click", () => { S.sel = TODAY; S.month = pd(TODAY.slice(0,8)+"01"); renderMonth(); });
+$("yPrev").addEventListener("click", () => { S.year--; renderYear(); });
+$("yNext").addEventListener("click", () => { S.year++; renderYear(); });
+$("q").addEventListener("input", e => { S.q = e.target.value; renderList(); });
+document.querySelectorAll("[data-range]").forEach(b => b.addEventListener("click", () => {
+  S.range = b.dataset.range; document.querySelectorAll("[data-range]").forEach(x => x.setAttribute("aria-pressed", x === b)); renderList();
+}));
+$("copyWeek").addEventListener("click", async () => {
+  const t = weekText();
+  try { await navigator.clipboard.writeText(t); toast("이번 주 일정을 복사했습니다. 단톡방에 붙여 넣으세요."); }
+  catch(e){ sheet(`<h3>이번 주 일정<button class="x" data-close>✕</button></h3><textarea style="width:100%;min-height:260px;border:1px solid var(--line);border-radius:10px;padding:10px">${esc(t)}</textarea>`); }
+});
+$("fab").addEventListener("click", () => openForm(null, S.sel));
+
+const configured = FIREBASE_CONFIG.apiKey && FIREBASE_CONFIG.projectId;
+if (new URLSearchParams(location.search).has("setup")) showSetup();
+else if (configured) startShared().catch(e => { console.error(e); showGate(`<h1>연결하지 못했습니다</h1><p>인터넷 연결을 확인하고 새로고침해 주세요.</p>`); });
+else startDemo();
+</script>
+</body>
+</html>
