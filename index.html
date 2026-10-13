@@ -106,8 +106,7 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent}
 .chip{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:5px 11px;font-size:13px;font-weight:600;color:var(--muted);display:inline-flex;align-items:center;gap:6px}
 .chip::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor;opacity:.35}
 .chip[aria-pressed="true"]::before{opacity:1}
-.chip[data-c="edu"][aria-pressed="true"]{color:var(--edu);border-color:currentColor}
-.chip[data-c="eval"][aria-pressed="true"]{color:var(--eval);border-color:currentColor}
+.chip[data-c="edu"][aria-pressed="true"],.chip[data-c="eval"][aria-pressed="true"]{color:var(--ink);border-color:currentColor}
 .chip[data-c="trip"][aria-pressed="true"]{color:var(--trip);border-color:currentColor}
 .chip[data-c="leave"][aria-pressed="true"]{color:var(--leave);border-color:currentColor}
 .chip[data-c="etc"][aria-pressed="true"]{color:var(--etc);border-color:currentColor}
@@ -236,6 +235,31 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent}
 .toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--card);padding:10px 16px;border-radius:10px;font-size:14px;z-index:60;max-width:90vw;box-shadow:var(--shadow)}
 .foot{font-size:12px;color:var(--muted);margin-top:14px;line-height:1.7}
 
+/* ---------- 과정별 색 ---------- */
+.cc{--cfg:var(--c)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .cc{--cfg:color-mix(in srgb,var(--c) 50%,#fff)}}
+:root[data-theme="dark"] .cc{--cfg:color-mix(in srgb,var(--c) 50%,#fff)}
+.tag.cc,.badge.cc{background:color-mix(in srgb,var(--c) 14%,var(--card));color:var(--cfg)}
+.tag.cc.solid,.badge.cc.solid{background:var(--c);color:#fff}
+.tag.cc.out,.badge.cc.out{background:var(--card);box-shadow:inset 0 0 0 1px var(--c)}
+.ev.cc{background:color-mix(in srgb,var(--c) 16%,var(--card));color:var(--cfg);box-shadow:inset 3px 0 0 var(--c)}
+.ev.cc.solid{background:var(--c);color:#fff;box-shadow:none}
+.ev.cc.out{background:var(--card);box-shadow:inset 0 0 0 1px var(--c)}
+.ev.cc.cont-l:not(.out){box-shadow:none}
+.ev.cc.plan{background-image:repeating-linear-gradient(135deg,transparent 0 6px,rgba(127,127,127,.16) 6px 9px)}
+.stripe.cc{background:var(--c)}
+.md.cc{background:color-mix(in srgb,var(--c) 20%,var(--card));color:var(--cfg);font-weight:700}
+.md.cc.solid{background:var(--c);color:#fff}
+.mlist li{grid-template-columns:8px 40px 1fr;align-items:center}
+.mlist li i{width:8px;height:8px;border-radius:2px;background:var(--c)}
+.mlist li.solid b{font-weight:700}
+.legend{display:flex;flex-wrap:wrap;gap:6px 12px;font-size:12px;color:var(--ink2);margin:-4px 0 12px;align-items:center}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.legend i{width:12px;height:12px;border-radius:3px;background:color-mix(in srgb,var(--c) 22%,var(--card));box-shadow:inset 2px 0 0 var(--c)}
+.legend i.solid{background:var(--c);box-shadow:none}
+.legend i.out{background:var(--card);box-shadow:inset 0 0 0 1px var(--c)}
+.legend .sep{width:1px;height:12px;background:var(--line)}
+
 /* ---------- 좁은 화면 ---------- */
 @media (max-width:900px){
   .layout{grid-template-columns:1fr}
@@ -247,7 +271,7 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent}
   .filters{margin-left:0}
   .week{grid-template-rows:24px repeat(3,18px) 16px;min-height:90px}
   .ev{font-size:10px;line-height:18px;height:18px;padding:0 3px;margin:0 1px}
-  .ev.edu,.ev.eval,.ev.trip,.ev.leave,.ev.etc{box-shadow:none}
+  .ev.cc:not(.out){box-shadow:none}
   .dn{left:4px;font-size:12px}
   .dn em{display:none}
   .more{font-size:10px;padding-left:3px}
@@ -282,6 +306,7 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent}
     </div>
     <div class="filters" id="filters"></div>
   </div>
+  <div class="legend" id="legend"></div>
 
   <section id="vMonth" class="layout">
     <div class="panel">
@@ -302,7 +327,7 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent}
       <button class="nav" id="yPrev" aria-label="이전 해">‹</button>
       <h2 id="yTitle"></h2>
       <button class="nav" id="yNext" aria-label="다음 해">›</button>
-      <div class="right" style="font-size:12px;color:var(--muted);align-items:center">칸 색은 교육·평가일, 점은 출장·연가</div>
+      <div class="right" style="font-size:12px;color:var(--muted);align-items:center">칸 색은 과정, 점은 출장·연가</div>
     </div>
     <div class="year" id="yearGrid"></div>
   </section>
@@ -345,7 +370,7 @@ const MIN_PW = 8;            // 비밀번호 최소 길이
    2) 기본 데이터
    ========================================================= */
 // [id, 시작, 종료, 분류, 제목, 메모, 계획(안) 여부]
-const SEED = [["sb517da81","2026-01-22","2026-01-22","edu","신규(구급)","",0],["s12056053","2026-01-29","2026-01-29","edu","신규(화재)","",0],["s36be6060","2026-02-13","2026-02-13","trip","경남 출장교육","연간계획 달력 표기: 경남",0],["sbfc1a191","2026-02-23","2026-02-27","edu","8기 초급현장지휘관 양성과정","",0],["sb3ab2af1","2026-03-04","2026-03-06","edu","1기 지휘교육","",0],["s12683df6","2026-03-09","2026-03-20","edu","2기 고급현장지휘관 양성 과정","",0],["sab64d815","2026-03-30","2026-04-03","edu","9기 초급현장지휘관 양성과정","",0],["sadc3259d","2026-04-06","2026-04-10","edu","10기 초급현장지휘관 양성과정","",0],["sa0ac6ff3","2026-04-13","2026-04-17","edu","11기 초급현장지휘관 양성과정","",0],["sb8c19bf8","2026-04-27","2026-04-29","edu","5기 실무교육","",0],["s1d43f0af","2026-05-11","2026-05-15","edu","평가대비 사전연습","",0],["s164d980f","2026-05-18","2026-05-22","eval","1회 고급현장지휘관 자격인증 평가","",0],["s2c7de1f7","2026-06-08","2026-06-12","edu","팀단위(부산-50명/일 4개팀)","",0],["s43a050fa","2026-06-16","2026-06-19","edu","팀단위(부산-50명/일 4개팀)","",0],["scc7b8188","2026-06-22","2026-06-26","edu","12기 초급현장지휘관 양성과정","",0],["s8652e1f8","2026-06-29","2026-07-03","edu","평가대비 사전연습","",0],["sab4a1b02","2026-07-06","2026-07-10","eval","3회 초급현장지휘관 자격인증 평가","",0],["s1183c441","2026-07-27","2026-07-31","edu","평가대비 사전연습","",0],["sadd9aacc","2026-08-03","2026-08-07","eval","3회 중급현장지휘관 자격인증 평가","",0],["saa98e2d8","2026-08-31","2026-09-11","edu","5기 중급현장지휘관 양성과정","",0],["s3b5d3066","2026-09-16","2026-09-16","trip","경남 출장교육","연간계획 달력 표기: 경남",0],["s563b10d5","2026-09-21","2026-09-22","edu","팀단위(경남)","",0],["s7f3f215c","2026-09-28","2026-09-28","trip","경남 출장교육","연간계획 달력 표기: 경남",0],["s241cef7a","2026-09-29","2026-09-29","trip","울산 출장교육","연간계획 달력 표기: 울산",0],["s71715cf9","2026-09-30","2026-09-30","trip","창원 출장교육","연간계획 달력 표기: 창원",0],["s6177c93d","2026-10-12","2026-10-14","edu","6기 실무교육","",0],["s0472fa7c","2026-10-19","2026-10-21","edu","7기 실무교육","",0],["s267dbfd3","2026-10-26","2026-11-06","edu","6기 중급현장지휘관 자격인증 과정","",0],["sd6eebbad","2026-11-09","2026-11-13","edu","평가대비 사전연습","",0],["sa51d15d1","2026-11-16","2026-11-20","eval","4회 초급현장지휘관 자격인증 평가","",0],["s7fb40414","2026-11-23","2026-11-24","edu","신규","",0],["s8b5da911","2026-11-25","2026-11-25","trip","경남 출장교육","연간계획 달력 표기: 경남",0],["sbe3d86e9","2026-11-26","2026-11-27","edu","신규","",0],["s76ec05b2","2026-11-30","2026-12-04","edu","평가대비 사전연습","",0],["sd4ebf21e","2026-12-07","2026-12-11","eval","4회 중급현장지휘관 자격인증 평가","",0],["sc7f701f1","2027-02-01","2027-02-03","edu","소방령 지휘대장과정 1기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s809a496e","2027-02-04","2027-02-05","eval","소방령 지휘대장 평가 1~2회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s4b23ec51","2027-02-15","2027-02-17","edu","소방령 지휘대장과정 2기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s8bb80809","2027-02-18","2027-02-19","eval","소방령 지휘대장 평가 3~4회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s9466c502","2027-02-22","2027-02-24","edu","소방령 지휘대장과정 3기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["seb10435b","2027-02-25","2027-02-26","eval","소방령 지휘대장 평가 5~6회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s8abdb7c0","2027-03-08","2027-03-10","edu","소방령 지휘대장과정 4기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s78f1fac8","2027-03-11","2027-03-12","eval","소방령 지휘대장 평가 7~8회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s7a35ceb6","2027-03-15","2027-03-17","edu","소방령 지휘대장과정 5기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sd3b9f863","2027-03-18","2027-03-26","eval","소방령 지휘대장 평가 9~15회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sa106e58e","2027-03-29","2027-03-31","edu","소방령 지휘대장과정 6기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s7e6ad3d9","2027-04-01","2027-04-02","eval","소방령 지휘대장 평가 16~17회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s6b288dbb","2027-04-05","2027-04-07","edu","소방령 지휘대장과정 7기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s55bec0f0","2027-04-08","2027-04-09","eval","소방령 지휘대장 평가 18~19회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s2d9e5699","2027-04-12","2027-04-14","edu","소방령 지휘대장과정 8기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sd3581ccb","2027-04-15","2027-04-21","eval","소방령 지휘대장 평가 20~24회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s6ab2e8e3","2027-04-26","2027-04-28","edu","소방경 지휘대장과정 1기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s1872f8a7","2027-04-29","2027-04-30","eval","소방경 지휘대장 평가 1~2회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s4b7fbaa1","2027-05-03","2027-05-05","edu","소방경 지휘대장과정 2기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s6ac47f8c","2027-05-06","2027-05-07","eval","소방경 지휘대장 평가 3~4회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s9eff7c30","2027-05-17","2027-05-19","edu","소방경 지휘대장과정 3기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s48a9f614","2027-05-20","2027-05-21","eval","소방경 지휘대장 평가 5~6회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s29b1bd0f","2027-05-24","2027-05-26","edu","소방경 지휘대장과정 4기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sc4c3b3f9","2027-05-27","2027-05-28","eval","소방경 지휘대장 평가 7~8회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sc1482e92","2027-06-14","2027-06-16","edu","소방경 지휘대장과정 5기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sfbb44c0c","2027-06-17","2027-06-25","eval","소방경 지휘대장 평가 9~15회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sa0c73020","2027-06-28","2027-06-30","edu","소방경 지휘대장과정 6기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sb148b31d","2027-07-01","2027-07-02","eval","소방경 지휘대장 평가 16~17회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s6d7d549e","2027-07-05","2027-07-07","edu","소방경 지휘대장과정 7기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s240694a3","2027-07-08","2027-07-09","eval","소방경 지휘대장 평가 18~19회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sde76637a","2027-08-02","2027-08-04","edu","소방경 지휘대장과정 8기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s8b75f7c4","2027-08-05","2027-08-06","eval","소방경 지휘대장 평가 20~21회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s7e9ddc52","2027-08-09","2027-08-11","edu","소방경 지휘대장과정 9기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sd3e9529c","2027-08-12","2027-08-13","eval","소방경 지휘대장 평가 22~23회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sfcf86e99","2027-08-30","2027-09-01","edu","소방경 지휘대장과정 10기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s98d87fb2","2027-09-02","2027-09-10","eval","소방경 지휘대장 평가 24~30회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s6419aa05","2027-09-20","2027-09-22","edu","소방경 지휘대장과정 11기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s2613597c","2027-09-23","2027-09-27","eval","소방경 지휘대장 평가 31~33회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s45f5d86d","2028-02-07","2028-02-09","edu","소방경 지휘대장과정 12기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sb398724d","2028-02-10","2028-02-11","eval","소방경 지휘대장 평가 1~2회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s748e9e22","2028-02-14","2028-02-16","edu","소방경 지휘대장과정 13기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sd7d3ac23","2028-02-17","2028-02-18","eval","소방경 지휘대장 평가 3~4회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sa4bde040","2028-02-28","2028-03-01","edu","소방경 지휘대장과정 14기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s887e6714","2028-03-02","2028-03-03","eval","소방경 지휘대장 평가 5~6회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s83eed734","2028-03-06","2028-03-08","edu","소방경 지휘대장과정 15기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sd79d2fa5","2028-03-09","2028-03-10","eval","소방경 지휘대장 평가 7~8회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s1157b295","2028-03-20","2028-03-22","edu","소방경 지휘대장과정 16기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s812bef18","2028-03-23","2028-03-31","eval","소방경 지휘대장 평가 9~15회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s05ab73ef","2028-04-03","2028-04-05","edu","소방경 지휘대장과정 17기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s039d47c4","2028-04-06","2028-04-07","eval","소방경 지휘대장 평가 16~17회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s0155c1b0","2028-04-17","2028-04-19","edu","소방경 지휘대장과정 18기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sf30cf644","2028-04-20","2028-04-21","eval","소방경 지휘대장 평가 18~19회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s684a3e9b","2028-05-08","2028-05-10","edu","소방경 지휘대장과정 19기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s08207c10","2028-05-11","2028-05-12","eval","소방경 지휘대장 평가 20~21회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s389a772a","2028-05-15","2028-05-17","edu","소방경 지휘대장과정 20기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sf91be328","2028-05-18","2028-05-19","eval","소방경 지휘대장 평가 22~23회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sd80941f4","2028-05-29","2028-05-31","edu","소방경 지휘대장과정 21기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s681adb82","2028-06-01","2028-06-02","eval","소방경 지휘대장 평가 24~25회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sfb8fc01c","2028-06-12","2028-06-16","eval","소방경 지휘대장 평가 26~30회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s1eb64608","2028-06-19","2028-06-21","edu","소방경 지휘대장과정 22기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sd7759582","2028-06-22","2028-06-23","eval","소방경 지휘대장 평가 31~32회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["se98ca60a","2028-06-26","2028-06-28","edu","소방경 지휘대장과정 23기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sf0ffee01","2028-06-29","2028-06-30","eval","소방경 지휘대장 평가 33~34회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s31ed0996","2028-07-10","2028-07-12","edu","소방경 지휘대장과정 24기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sb87c9e56","2028-07-13","2028-07-14","eval","소방경 지휘대장 평가 35~36회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s6f759e5f","2028-07-31","2028-08-02","edu","소방경 지휘대장과정 25기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s43cb9a21","2028-08-03","2028-08-04","eval","소방경 지휘대장 평가 37~38회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s9e76f0db","2028-08-21","2028-08-23","edu","소방경 지휘대장과정 26기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s920af8f9","2028-08-24","2028-09-01","eval","소방경 지휘대장 평가 39~45회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["seafb856e","2028-09-04","2028-09-06","edu","소방경 지휘대장과정 27기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sf21b3874","2028-09-07","2028-09-08","eval","소방경 지휘대장 평가 46~47회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sb2bd4446","2028-09-11","2028-09-13","edu","소방경 지휘대장과정 28기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s42e58303","2028-09-14","2028-09-15","eval","소방경 지휘대장 평가 48~49회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s44d0e85a","2028-09-25","2028-09-27","edu","소방경 지휘대장과정 29기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s4996bec6","2028-09-28","2028-09-29","eval","소방경 지휘대장 평가 50~51회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sa0e05100","2028-10-16","2028-10-18","edu","소방경 지휘대장과정 30기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s35784947","2028-10-19","2028-10-26","eval","소방경 지휘대장 평가 52~57회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1]];
+const SEED = [["sb517da81","2026-01-22","2026-01-22","edu","신규(구급)","",0],["s12056053","2026-01-29","2026-01-29","edu","신규(화재)","",0],["s36be6060","2026-02-13","2026-02-13","edu","팀단위(경남)","연간계획 달력 표기: 경남",0],["sbfc1a191","2026-02-23","2026-02-27","edu","8기 초급현장지휘관 양성과정","",0],["sb3ab2af1","2026-03-04","2026-03-06","edu","1기 지휘교육","",0],["s12683df6","2026-03-09","2026-03-20","edu","2기 고급현장지휘관 양성 과정","",0],["sab64d815","2026-03-30","2026-04-03","edu","9기 초급현장지휘관 양성과정","",0],["sadc3259d","2026-04-06","2026-04-10","edu","10기 초급현장지휘관 양성과정","",0],["sa0ac6ff3","2026-04-13","2026-04-17","edu","11기 초급현장지휘관 양성과정","",0],["sb8c19bf8","2026-04-27","2026-04-29","edu","5기 실무교육","",0],["s1d43f0af","2026-05-11","2026-05-15","edu","평가대비 사전연습","",0],["s164d980f","2026-05-18","2026-05-22","eval","1회 고급현장지휘관 자격인증 평가","",0],["s2c7de1f7","2026-06-08","2026-06-12","edu","팀단위(부산-50명/일 4개팀)","",0],["s43a050fa","2026-06-16","2026-06-19","edu","팀단위(부산-50명/일 4개팀)","",0],["scc7b8188","2026-06-22","2026-06-26","edu","12기 초급현장지휘관 양성과정","",0],["s8652e1f8","2026-06-29","2026-07-03","edu","평가대비 사전연습","",0],["sab4a1b02","2026-07-06","2026-07-10","eval","3회 초급현장지휘관 자격인증 평가","",0],["s1183c441","2026-07-27","2026-07-31","edu","평가대비 사전연습","",0],["sadd9aacc","2026-08-03","2026-08-07","eval","3회 중급현장지휘관 자격인증 평가","",0],["saa98e2d8","2026-08-31","2026-09-11","edu","5기 중급현장지휘관 양성과정","",0],["s3b5d3066","2026-09-16","2026-09-16","edu","팀단위(경남)","연간계획 달력 표기: 경남",0],["s563b10d5","2026-09-21","2026-09-22","edu","팀단위(경남)","",0],["s7f3f215c","2026-09-28","2026-09-28","edu","팀단위(경남)","연간계획 달력 표기: 경남",0],["s241cef7a","2026-09-29","2026-09-29","edu","팀단위(울산)","연간계획 달력 표기: 울산",0],["s71715cf9","2026-09-30","2026-09-30","edu","팀단위(창원)","연간계획 달력 표기: 창원",0],["s6177c93d","2026-10-12","2026-10-14","edu","6기 실무교육","",0],["s0472fa7c","2026-10-19","2026-10-21","edu","7기 실무교육","",0],["s267dbfd3","2026-10-26","2026-11-06","edu","6기 중급현장지휘관 자격인증 과정","",0],["sd6eebbad","2026-11-09","2026-11-13","edu","평가대비 사전연습","",0],["sa51d15d1","2026-11-16","2026-11-20","eval","4회 초급현장지휘관 자격인증 평가","",0],["s7fb40414","2026-11-23","2026-11-24","edu","신규","",0],["s8b5da911","2026-11-25","2026-11-25","edu","팀단위(경남)","연간계획 달력 표기: 경남",0],["sbe3d86e9","2026-11-26","2026-11-27","edu","신규","",0],["s76ec05b2","2026-11-30","2026-12-04","edu","평가대비 사전연습","",0],["sd4ebf21e","2026-12-07","2026-12-11","eval","4회 중급현장지휘관 자격인증 평가","",0],["sc7f701f1","2027-02-01","2027-02-03","edu","소방령 지휘대장과정 1기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s809a496e","2027-02-04","2027-02-05","eval","소방령 지휘대장 평가 1~2회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s4b23ec51","2027-02-15","2027-02-17","edu","소방령 지휘대장과정 2기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s8bb80809","2027-02-18","2027-02-19","eval","소방령 지휘대장 평가 3~4회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s9466c502","2027-02-22","2027-02-24","edu","소방령 지휘대장과정 3기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["seb10435b","2027-02-25","2027-02-26","eval","소방령 지휘대장 평가 5~6회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s8abdb7c0","2027-03-08","2027-03-10","edu","소방령 지휘대장과정 4기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s78f1fac8","2027-03-11","2027-03-12","eval","소방령 지휘대장 평가 7~8회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s7a35ceb6","2027-03-15","2027-03-17","edu","소방령 지휘대장과정 5기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sd3b9f863","2027-03-18","2027-03-26","eval","소방령 지휘대장 평가 9~15회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sa106e58e","2027-03-29","2027-03-31","edu","소방령 지휘대장과정 6기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s7e6ad3d9","2027-04-01","2027-04-02","eval","소방령 지휘대장 평가 16~17회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s6b288dbb","2027-04-05","2027-04-07","edu","소방령 지휘대장과정 7기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s55bec0f0","2027-04-08","2027-04-09","eval","소방령 지휘대장 평가 18~19회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s2d9e5699","2027-04-12","2027-04-14","edu","소방령 지휘대장과정 8기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sd3581ccb","2027-04-15","2027-04-21","eval","소방령 지휘대장 평가 20~24회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s6ab2e8e3","2027-04-26","2027-04-28","edu","소방경 지휘대장과정 1기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s1872f8a7","2027-04-29","2027-04-30","eval","소방경 지휘대장 평가 1~2회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s4b7fbaa1","2027-05-03","2027-05-05","edu","소방경 지휘대장과정 2기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s6ac47f8c","2027-05-06","2027-05-07","eval","소방경 지휘대장 평가 3~4회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s9eff7c30","2027-05-17","2027-05-19","edu","소방경 지휘대장과정 3기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s48a9f614","2027-05-20","2027-05-21","eval","소방경 지휘대장 평가 5~6회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s29b1bd0f","2027-05-24","2027-05-26","edu","소방경 지휘대장과정 4기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sc4c3b3f9","2027-05-27","2027-05-28","eval","소방경 지휘대장 평가 7~8회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sc1482e92","2027-06-14","2027-06-16","edu","소방경 지휘대장과정 5기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sfbb44c0c","2027-06-17","2027-06-25","eval","소방경 지휘대장 평가 9~15회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sa0c73020","2027-06-28","2027-06-30","edu","소방경 지휘대장과정 6기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sb148b31d","2027-07-01","2027-07-02","eval","소방경 지휘대장 평가 16~17회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s6d7d549e","2027-07-05","2027-07-07","edu","소방경 지휘대장과정 7기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s240694a3","2027-07-08","2027-07-09","eval","소방경 지휘대장 평가 18~19회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sde76637a","2027-08-02","2027-08-04","edu","소방경 지휘대장과정 8기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s8b75f7c4","2027-08-05","2027-08-06","eval","소방경 지휘대장 평가 20~21회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s7e9ddc52","2027-08-09","2027-08-11","edu","소방경 지휘대장과정 9기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sd3e9529c","2027-08-12","2027-08-13","eval","소방경 지휘대장 평가 22~23회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sfcf86e99","2027-08-30","2027-09-01","edu","소방경 지휘대장과정 10기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s98d87fb2","2027-09-02","2027-09-10","eval","소방경 지휘대장 평가 24~30회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s6419aa05","2027-09-20","2027-09-22","edu","소방경 지휘대장과정 11기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s2613597c","2027-09-23","2027-09-27","eval","소방경 지휘대장 평가 31~33회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s45f5d86d","2028-02-07","2028-02-09","edu","소방경 지휘대장과정 12기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sb398724d","2028-02-10","2028-02-11","eval","소방경 지휘대장 평가 1~2회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s748e9e22","2028-02-14","2028-02-16","edu","소방경 지휘대장과정 13기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sd7d3ac23","2028-02-17","2028-02-18","eval","소방경 지휘대장 평가 3~4회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sa4bde040","2028-02-28","2028-03-01","edu","소방경 지휘대장과정 14기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s887e6714","2028-03-02","2028-03-03","eval","소방경 지휘대장 평가 5~6회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s83eed734","2028-03-06","2028-03-08","edu","소방경 지휘대장과정 15기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sd79d2fa5","2028-03-09","2028-03-10","eval","소방경 지휘대장 평가 7~8회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s1157b295","2028-03-20","2028-03-22","edu","소방경 지휘대장과정 16기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s812bef18","2028-03-23","2028-03-31","eval","소방경 지휘대장 평가 9~15회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s05ab73ef","2028-04-03","2028-04-05","edu","소방경 지휘대장과정 17기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s039d47c4","2028-04-06","2028-04-07","eval","소방경 지휘대장 평가 16~17회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s0155c1b0","2028-04-17","2028-04-19","edu","소방경 지휘대장과정 18기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sf30cf644","2028-04-20","2028-04-21","eval","소방경 지휘대장 평가 18~19회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s684a3e9b","2028-05-08","2028-05-10","edu","소방경 지휘대장과정 19기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s08207c10","2028-05-11","2028-05-12","eval","소방경 지휘대장 평가 20~21회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s389a772a","2028-05-15","2028-05-17","edu","소방경 지휘대장과정 20기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sf91be328","2028-05-18","2028-05-19","eval","소방경 지휘대장 평가 22~23회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sd80941f4","2028-05-29","2028-05-31","edu","소방경 지휘대장과정 21기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s681adb82","2028-06-01","2028-06-02","eval","소방경 지휘대장 평가 24~25회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sfb8fc01c","2028-06-12","2028-06-16","eval","소방경 지휘대장 평가 26~30회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s1eb64608","2028-06-19","2028-06-21","edu","소방경 지휘대장과정 22기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sd7759582","2028-06-22","2028-06-23","eval","소방경 지휘대장 평가 31~32회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["se98ca60a","2028-06-26","2028-06-28","edu","소방경 지휘대장과정 23기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sf0ffee01","2028-06-29","2028-06-30","eval","소방경 지휘대장 평가 33~34회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s31ed0996","2028-07-10","2028-07-12","edu","소방경 지휘대장과정 24기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sb87c9e56","2028-07-13","2028-07-14","eval","소방경 지휘대장 평가 35~36회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s6f759e5f","2028-07-31","2028-08-02","edu","소방경 지휘대장과정 25기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s43cb9a21","2028-08-03","2028-08-04","eval","소방경 지휘대장 평가 37~38회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s9e76f0db","2028-08-21","2028-08-23","edu","소방경 지휘대장과정 26기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s920af8f9","2028-08-24","2028-09-01","eval","소방경 지휘대장 평가 39~45회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["seafb856e","2028-09-04","2028-09-06","edu","소방경 지휘대장과정 27기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sf21b3874","2028-09-07","2028-09-08","eval","소방경 지휘대장 평가 46~47회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sb2bd4446","2028-09-11","2028-09-13","edu","소방경 지휘대장과정 28기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s42e58303","2028-09-14","2028-09-15","eval","소방경 지휘대장 평가 48~49회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s44d0e85a","2028-09-25","2028-09-27","edu","소방경 지휘대장과정 29기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s4996bec6","2028-09-28","2028-09-29","eval","소방경 지휘대장 평가 50~51회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sa0e05100","2028-10-16","2028-10-18","edu","소방경 지휘대장과정 30기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s35784947","2028-10-19","2028-10-26","eval","소방경 지휘대장 평가 52~57회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1]];
 const HOLIDAYS = {
   "2026-01-01":"신정","2026-02-16":"설날","2026-02-17":"설날","2026-02-18":"설날","2026-03-01":"삼일절","2026-03-02":"대체휴일",
   "2026-05-01":"노동절","2026-05-05":"어린이날","2026-05-24":"부처님오신날","2026-05-25":"대체휴일","2026-06-03":"지방선거","2026-06-06":"현충일",
@@ -384,7 +409,7 @@ const TODAY = ymd(new Date());
    4) 상태
    ========================================================= */
 const S = {
-  mode: "demo", fb: null, me: null, adminUntil: 0, events: [],
+  mode: "demo", fb: null, me: null, adminUntil: 0, events: [], access: { open:false, numeric:false },
   view: "month", month: pd(TODAY.slice(0,8)+"01"), year: pd(TODAY).getFullYear(), sel: TODAY,
   on: new Set(Object.keys(CATS)), mine: false, q: "", range: "next"
 };
@@ -403,6 +428,26 @@ const visible = () => S.events.filter(e =>
 );
 const onDay = (list, ds) => list.filter(e => e.start <= ds && e.end >= ds);
 const ORDER = { eval:0, edu:1, trip:2, leave:3, etc:4 };
+const COURSE = [
+  [/평가대비|사전연습/, "평가 사전연습", "#66707a"],
+  [/소방령/, "소방령 지휘대장", "#1e3a8a"],
+  [/소방경/, "소방경 지휘대장", "#a21caf"],
+  [/초급/, "초급 현장지휘관", "#1f63b8"],
+  [/중급/, "중급 현장지휘관", "#0d8088"],
+  [/고급/, "고급 현장지휘관", "#5b3cb0"],
+  [/실무/, "실무교육", "#c0265f"],
+  [/팀단위/, "팀단위 전술훈련", "#c2410c"],
+  [/신규/, "신규임용자", "#8a5a2b"],
+  [/지휘교육/, "지휘교육", "#3b5b7a"]
+];
+const PCOL = { trip:"#a86400", leave:"#1f7a4a", etc:"#4d5b69" };
+function tone(e){
+  if (PCOL[e.cat]) return { c: PCOL[e.cat], name: CATS[e.cat], solid:false, out:true };
+  const g = COURSE.find(([re]) => re.test(e.title || ""));
+  return { c: g ? g[2] : "#5b6672", name: g ? g[1] : "기타 교육", solid: e.cat === "eval", out:false };
+}
+const tcls = e => { const x = tone(e); return `cc${x.solid ? " solid" : ""}${x.out ? " out" : ""}`; };
+const tst = e => `--c:${tone(e).c}`;
 const sortEv = a => a.sort((x,y) => x.start.localeCompare(y.start) || ORDER[x.cat]-ORDER[y.cat] || y.end.localeCompare(x.end) || label(x).localeCompare(label(y)));
 
 /* =========================================================
@@ -429,8 +474,8 @@ const DEMO_PW = { staff: "ictc2026", admin: "admin2026" };
 const local = {
   data: null,
   async init(){
-    try { const v = JSON.parse(localStorage.getItem(LS)); if (v && Array.isArray(v.events) && v.k && v.a) { this.data = v; return; } } catch(e){}
-    this.data = { events: seedEvents(), k: await pwKey(DEMO_PW.staff, "staff"), a: await pwKey(DEMO_PW.admin, "admin"), session: null, adminUntil: 0 };
+    try { const v = JSON.parse(localStorage.getItem(LS)); if (v && Array.isArray(v.events) && v.k && v.a) { this.data = { access: { open:false, numeric:false }, demoStaff: DEMO_PW.staff, ...v }; return; } } catch(e){}
+    this.data = { events: seedEvents(), k: await pwKey(DEMO_PW.staff, "staff"), a: await pwKey(DEMO_PW.admin, "admin"), session: null, adminUntil: 0, access: { open:false, numeric:false }, demoStaff: DEMO_PW.staff };
     this.save();
   },
   save(){ try { localStorage.setItem(LS, JSON.stringify(this.data)); } catch(e){} }
@@ -438,7 +483,21 @@ const local = {
 
 const store = {
   /* ----- 접속 ----- */
+  async getAccess(){
+    if (S.mode === "demo") return local.data.access;
+    const { fs, db } = S.fb;
+    try { const d = await fs.getDoc(fs.doc(db, "settings", "access")); if (d.exists()) return { open: !!d.data().open, numeric: !!d.data().numeric }; } catch(e){ console.warn(e); }
+    return { open:false, numeric:false };
+  },
+  async setAccess(a){
+    if (S.mode === "demo"){ local.data.access = a; local.save(); return; }
+    const { fs, db } = S.fb; await fs.setDoc(fs.doc(db, "settings", "access"), { open: !!a.open, numeric: !!a.numeric });
+  },
   async login(pw, name){
+    if (S.access.open){
+      if (S.mode === "demo"){ local.data.session = "open"; local.save(); return; }
+      const { auth, authObj } = S.fb; if (!authObj.currentUser) await auth.signInAnonymously(authObj); return;
+    }
     const k = await pwKey(pw, "staff");
     if (S.mode === "demo"){
       if (k !== local.data.k) throw new AuthError("공용 비밀번호가 맞지 않습니다.");
@@ -477,7 +536,7 @@ const store = {
   // 관리자 모드에서만: 공용 비밀번호 바꾸기 → 다른 기기는 모두 다시 로그인해야 함
   async changeStaffPw(pw){
     const k = await pwKey(pw, "staff");
-    if (S.mode === "demo"){ local.data.k = k; local.data.session = k; local.save(); return; }
+    if (S.mode === "demo"){ local.data.k = k; local.data.session = k; local.data.demoStaff = pw; local.save(); return; }
     const { fs, db, authObj } = S.fb, uid = authObj.currentUser.uid;
     const old = await fs.getDocs(fs.collection(db, "keys"));
     await fs.setDoc(fs.doc(db, "keys", k), { at: fs.serverTimestamp() });
@@ -559,7 +618,7 @@ function renderBoard(){
   const etc = today.filter(e => e.cat === "etc");
   const hol = HOLIDAYS[TODAY];
   const dayN = e => { const total = diff(e.start, e.end) + 1; return total > 1 ? ` <i>${diff(e.start, TODAY)+1}/${total}일차</i>` : ""; };
-  const tag = e => `<button class="tag t-${e.cat}" data-id="${esc(e.id)}">${esc(e.cat==="trip"||e.cat==="leave" ? (e.person || e.title) : e.title)}${e.cat==="trip" && e.person && (e.place||e.title) ? ` <i>${esc(e.place||e.title)}</i>` : ""}${e.cat==="leave" && e.half!=="full" ? ` <i>${HALF[e.half]}</i>` : ""}${e.cat==="edu"||e.cat==="eval" ? dayN(e) : ""}</button>`;
+  const tag = e => `<button class="tag ${tcls(e)}" style="${tst(e)}" data-id="${esc(e.id)}">${esc(e.cat==="trip"||e.cat==="leave" ? (e.person || e.title) : e.title)}${e.cat==="trip" && e.person && (e.place||e.title) ? ` <i>${esc(e.place||e.title)}</i>` : ""}${e.cat==="leave" && e.half!=="full" ? ` <i>${HALF[e.half]}</i>` : ""}${e.cat==="edu"||e.cat==="eval" ? dayN(e) : ""}</button>`;
   $("board").innerHTML = `
     <div class="board-date"><small>오늘</small><strong>${d.getMonth()+1}.${pad(d.getDate())}</strong><span>${WD[d.getDay()]}요일${hol ? " · " + esc(hol) : ""}</span></div>
     <div class="board-body">
@@ -606,8 +665,8 @@ function renderMonth(){
       if (lane < 0){ lane = laneEnd.length; laneEnd.push(-1); }
       laneEnd[lane] = c2;
       if (lane >= LANES){ for (let c = c1; c <= c2; c++) hidden[c]++; return; }
-      const cl = ["ev", e.cat, e.plan && "plan", e.start < wsS && "cont-l", e.end > weS && "cont-r"].filter(Boolean).join(" ");
-      bars += `<button class="${cl}" style="grid-column:${c1+1}/${c2+2};grid-row:${lane+2}" data-id="${esc(e.id)}" title="${esc(label(e))}">${esc(label(e))}</button>`;
+      const cl = ["ev", e.cat, tcls(e), e.plan && "plan", e.start < wsS && "cont-l", e.end > weS && "cont-r"].filter(Boolean).join(" ");
+      bars += `<button class="${cl}" style="${tst(e)};grid-column:${c1+1}/${c2+2};grid-row:${lane+2}" data-id="${esc(e.id)}" title="${esc(label(e))}">${esc(label(e))}</button>`;
     });
     hidden.forEach((n, c) => { if (n) bars += `<span class="more" style="grid-column:${c+1};grid-row:${LANES+2}">+${n}</span>`; });
     html += `<div class="week">${cells}${bars}</div>`;
@@ -623,7 +682,7 @@ function itemHTML(e){
   const sub = e.cat === "edu" || e.cat === "eval"
     ? `${span}${e.plan ? "계획(안)" : CATS[e.cat]}`
     : `${span}${e.cat === "leave" ? HALF[e.half||"full"] : CATS[e.cat]}${e.ownerName ? " · 등록 " + esc(e.ownerName) : ""}`;
-  return `<button class="item" data-id="${esc(e.id)}"><span class="stripe s-${e.cat}"></span><span><span class="t">${esc(label(e))}</span><span class="m">${sub}</span></span><span class="badge t-${e.cat}">${CATS[e.cat]}</span></button>`;
+  return `<button class="item" data-id="${esc(e.id)}"><span class="stripe cc" style="${tst(e)}"></span><span><span class="t">${esc(label(e))}</span><span class="m">${sub}</span></span><span class="badge ${tcls(e)}" style="${tst(e)}">${e.cat === "edu" || e.cat === "eval" ? esc(tone(e).name.split(" ")[0]) + (e.cat === "eval" ? " 평가" : "") : CATS[e.cat]}</span></button>`;
 }
 
 function renderDay(){
@@ -648,16 +707,16 @@ function renderYear(){
     for (let d = 1; d <= days; d++){
       const ds = `${y}-${pad(mo+1)}-${pad(d)}`, on = onDay(inMonth, ds), dow = (first.getDay()+d-1) % 7;
       const work = dow !== 0 && dow !== 6 && !HOLIDAYS[ds];
-      const top = !work ? "" : on.some(e => e.cat === "eval") ? "eval" : on.some(e => e.cat === "edu") ? "edu" : "";
+      const course = !work ? null : (on.find(e => e.cat === "eval") || on.find(e => e.cat === "edu"));
       const dots = ["trip","leave","etc"].filter(c => on.some(e => e.cat === c));
-      const cls = ["md", top, (HOLIDAYS[ds] || dow === 0) && "sun", ds === TODAY && "today"].filter(Boolean).join(" ");
-      g += `<button class="${cls}" data-day="${ds}" title="${esc(HOLIDAYS[ds] || "")}">${d}${dots.length ? `<span class="dots">${dots.map(c=>`<i class="${c}"></i>`).join("")}</span>` : ""}</button>`;
+      const cls = ["md", course && tcls(course), (HOLIDAYS[ds] || dow === 0) && "sun", ds === TODAY && "today"].filter(Boolean).join(" ");
+      g += `<button class="${cls}" ${course ? `style="${tst(course)}"` : ""} data-day="${ds}" title="${esc(course ? course.title : (HOLIDAYS[ds] || ""))}">${d}${dots.length ? `<span class="dots">${dots.map(c=>`<i class="${c}"></i>`).join("")}</span>` : ""}</button>`;
     }
     const courses = sortEv(inMonth.filter(e => (e.cat === "edu" || e.cat === "eval") && e.start >= mS));
     const away = inMonth.filter(e => e.cat === "trip" || e.cat === "leave").length;
     html += `<div class="mini"><h4>${mo+1}월 <small>${courses.length ? `교육·평가 ${courses.length}` : ""}${away ? ` · 출장·연가 ${away}` : ""}</small></h4>
       <div class="mgrid">${g}</div>
-      ${courses.length ? `<ul class="mlist">${courses.slice(0,6).map(e => `<li class="${e.plan?"plan":""}"><span>${md(e.start)}${e.end!==e.start?"~":""}</span><b>${esc(e.title)}</b></li>`).join("")}${courses.length>6?`<li><span></span><b>외 ${courses.length-6}건</b></li>`:""}</ul>` : ""}
+      ${courses.length ? `<ul class="mlist">${courses.slice(0,6).map(e => `<li class="${e.plan?"plan":""} ${e.cat==="eval"?"solid":""}" style="${tst(e)}"><i></i><span>${md(e.start)}${e.end!==e.start?"~":""}</span><b>${esc(e.title)}</b></li>`).join("")}${courses.length>6?`<li><i style="background:none"></i><span></span><b>외 ${courses.length-6}건</b></li>`:""}</ul>` : ""}
     </div>`;
   }
   $("yearGrid").innerHTML = html;
@@ -677,7 +736,7 @@ function renderList(){
     const m = e.start.slice(0,7);
     if (m !== lastM){ html += `<div class="month-h">${m.slice(0,4)}년 ${+m.slice(5)}월</div>`; lastM = m; }
     const d = pd(e.start);
-    html += `<button class="row" data-id="${esc(e.id)}"><span class="d">${md(e.start)} ${WD[d.getDay()]}${e.end!==e.start ? `<small>~ ${md(e.end)} ${WD[pd(e.end).getDay()]}</small>` : ""}</span><span class="stripe s-${e.cat}"></span><span><span class="t" style="font-weight:600">${esc(label(e))}</span><span class="m" style="display:block;font-size:12px;color:var(--muted)">${CATS[e.cat]}${e.plan?" · 계획(안)":""}${e.memo && e.cat!=="edu" && e.cat!=="eval" ? " · " + esc(e.memo) : ""}</span></span></button>`;
+    html += `<button class="row" data-id="${esc(e.id)}"><span class="d">${md(e.start)} ${WD[d.getDay()]}${e.end!==e.start ? `<small>~ ${md(e.end)} ${WD[pd(e.end).getDay()]}</small>` : ""}</span><span class="stripe cc" style="${tst(e)}"></span><span><span class="t" style="font-weight:600">${esc(label(e))}</span><span class="m" style="display:block;font-size:12px;color:var(--muted)">${e.cat === "edu" || e.cat === "eval" ? esc(tone(e).name) + (e.cat === "eval" ? " · 평가" : "") : CATS[e.cat]}${e.plan?" · 계획(안)":""}${e.memo && e.cat!=="edu" && e.cat!=="eval" ? " · " + esc(e.memo) : ""}</span></span></button>`;
   });
   $("listBody").innerHTML = html;
   $("listBody").querySelectorAll("[data-id]").forEach(b => b.addEventListener("click", () => openDetail(b.dataset.id)));
@@ -704,9 +763,21 @@ function setView(v){
   render();
 }
 
+function renderLegend(){
+  let from, to;
+  if (S.view === "month"){ const y = S.month.getFullYear(), m = S.month.getMonth(); from = ymd(new Date(y, m, 1, 12)); to = ymd(new Date(y, m+1, 0, 12)); }
+  else if (S.view === "year"){ from = `${S.year}-01-01`; to = `${S.year}-12-31`; }
+  else { $("legend").innerHTML = ""; return; }
+  const seen = new Map();
+  visible().filter(e => (e.cat === "edu" || e.cat === "eval") && e.start <= to && e.end >= from).forEach(e => { const x = tone(e); if (!seen.has(x.name)) seen.set(x.name, x.c); });
+  const items = [...seen].map(([n,c]) => `<span><i style="--c:${c}"></i>${esc(n)}</span>`).join("");
+  $("legend").innerHTML = items + (items ? `<span class="sep"></span>` : "") +
+    `<span><i class="solid" style="--c:#5b6672"></i>진한 색 = 평가</span><span><i class="out" style="--c:#a86400"></i>테두리 = 출장·연가</span>`;
+}
+
 function render(){
   if (!S.me) return;
-  renderTop(); renderBanner(); renderBoard(); renderFilters();
+  renderTop(); renderBanner(); renderBoard(); renderFilters(); renderLegend();
   if (S.view === "month") renderMonth();
   if (S.view === "year") renderYear();
   if (S.view === "list") renderList();
@@ -732,7 +803,7 @@ function openDetail(id){
   const e = S.events.find(x => x.id === id); if (!e) return;
   const days = diff(e.start, e.end) + 1;
   const rows = [
-    ["분류", CATS[e.cat] + (e.cat === "leave" ? ` · ${HALF[e.half||"full"]}` : "") + (e.plan ? " · 계획(안)" : "")],
+    ["분류", (e.cat === "edu" || e.cat === "eval" ? tone(e).name + " · " : "") + CATS[e.cat] + (e.cat === "leave" ? ` · ${HALF[e.half||"full"]}` : "") + (e.plan ? " · 계획(안)" : "")],
     ["기간", rangeText(e) + (days > 1 ? ` · ${days}일` : "")],
     e.person && ["담당", e.person],
     e.place && ["장소", e.place],
@@ -740,7 +811,7 @@ function openDetail(id){
     e.memo && ["메모", e.memo],
     e.ownerName && ["등록", e.ownerName]
   ].filter(Boolean);
-  sheet(`<h3><span class="badge t-${e.cat}" style="font-size:12px;border-radius:6px;padding:3px 8px">${CATS[e.cat]}</span>${esc(label(e))}<button class="x" data-close aria-label="닫기">✕</button></h3>
+  sheet(`<h3><span class="badge ${tcls(e)}" style="${tst(e)};font-size:12px;border-radius:6px;padding:3px 8px;white-space:nowrap">${CATS[e.cat]}</span>${esc(label(e))}<button class="x" data-close aria-label="닫기">✕</button></h3>
     <dl class="dl">${rows.map(([k,v]) => `<dt>${k}</dt><dd>${esc(v)}</dd>`).join("")}</dl>
     ${canEdit(e) ? `<div class="actions"><button class="btn btn-danger" id="del">삭제</button><button class="btn btn-ink grow" id="edit">수정</button></div>`
       : `<p class="hint">교육·평가 일정은 관리자 모드에서 고칠 수 있습니다.</p>`}`,
@@ -812,21 +883,27 @@ function openForm(e, day){
   });
 }
 
-function pwFields(id, label){
-  return `<div class="f"><label for="${id}">${label}</label><input id="${id}" type="password" autocomplete="new-password" minlength="${MIN_PW}" maxlength="64"></div>
-    <div class="f"><label for="${id}2">한 번 더</label><input id="${id}2" type="password" autocomplete="new-password" maxlength="64"></div>`;
+function pwFields(id, label, numeric){
+  const im = numeric ? ` inputmode="numeric" pattern="[0-9]*" placeholder="숫자 4자리 이상"` : ` placeholder="${MIN_PW}자 이상"`;
+  return `<div class="two"><div class="f"><label for="${id}">${label}</label><input id="${id}" type="password" autocomplete="new-password" maxlength="64"${im}></div>
+    <div class="f"><label for="${id}2">한 번 더</label><input id="${id}2" type="password" autocomplete="new-password" maxlength="64"${im}></div></div>`;
 }
-function readPw(root, id){
+// fmt: "pin"(숫자 4자리 이상) | "text"(8자 이상)
+function readPw(root, id, fmt, optional){
   const a = root.querySelector("#"+id).value, b = root.querySelector("#"+id+"2").value;
-  if (a.length < MIN_PW) { toast(`${MIN_PW}자 이상으로 정해 주세요.`); return null; }
+  if (optional && !a && !b) return "";
+  if (fmt === "pin" && !/^\d{4,12}$/.test(a)) { toast("숫자 4자리 이상으로 정해 주세요."); return null; }
+  if (fmt === "text" && a.length < MIN_PW) { toast(`${MIN_PW}자 이상으로 정해 주세요.`); return null; }
   if (a !== b) { toast("두 칸의 비밀번호가 다릅니다."); return null; }
   return a;
 }
+const accessMode = () => S.access.open ? "open" : (S.access.numeric ? "pin" : "text");
+const MODE_TEXT = { open:"비밀번호 없이", pin:"숫자 4자리", text:`${MIN_PW}자 이상` };
 
 function openAdmin(){
   if (!isAdmin()){
     sheet(`<h3>관리자 모드<button class="x" data-close aria-label="닫기">✕</button></h3>
-      <p class="hint" style="margin:-6px 0 14px">교육계획 수정과 비밀번호 변경은 관리자 비밀번호를 넣어야 할 수 있습니다. ${ADMIN_MINUTES}분 뒤 자동으로 꺼집니다.</p>
+      <p class="hint" style="margin:-6px 0 14px">교육계획 수정과 접속 설정은 관리자 비밀번호를 넣어야 할 수 있습니다. ${ADMIN_MINUTES}분 뒤 자동으로 꺼집니다.</p>
       <form id="aForm"><div class="f"><label for="aPw">관리자 비밀번호</label><input id="aPw" type="password" autocomplete="current-password"></div>
       <button class="btn btn-ink" style="width:100%">관리자 모드 켜기</button></form>`,
     (root, close) => {
@@ -839,38 +916,69 @@ function openAdmin(){
     return;
   }
   const left = Math.max(1, Math.round((S.adminUntil - Date.now()) / 60e3));
+  const cur = accessMode();
+  let pick = cur;
   sheet(`<h3>관리자 모드<button class="x" data-close aria-label="닫기">✕</button></h3>
-    <p class="hint" style="margin:-6px 0 14px">${left}분 남음. 지금은 교육·평가 일정도 등록하고 고칠 수 있습니다.</p>
-    <div class="f"><span class="lbl">직원 공용 비밀번호 바꾸기</span>
-      <p class="hint" style="margin:0 0 8px">바꾸면 다른 직원 기기는 모두 접속이 끊기고, 새 비밀번호로 다시 들어와야 합니다. 전보·퇴직이 있을 때 바꿔 주세요.</p></div>
-    ${pwFields("nStaff", "새 공용 비밀번호")}
-    <button class="btn btn-fire" id="doStaff" style="width:100%;margin-bottom:22px">공용 비밀번호 변경</button>
+    <p class="hint" style="margin:-6px 0 16px">${left}분 남음. 지금은 교육·평가 일정도 등록하고 고칠 수 있습니다.</p>
+
+    <div class="f"><span class="lbl">직원 접속 방식 <span style="font-weight:500;color:var(--muted)">· 지금: ${MODE_TEXT[cur]}</span></span>
+      <div class="picks" id="mPick">${["text","pin","open"].map(m => `<button type="button" class="pick plain" data-v="${m}" aria-pressed="${m===cur}">${MODE_TEXT[m]}</button>`).join("")}</div>
+      <p class="hint" id="mHint"></p></div>
+    <div id="mPw"></div>
+    <button class="btn btn-fire" id="mSave" style="width:100%;margin-bottom:24px">접속 방식 저장</button>
+
     <div class="f"><span class="lbl">관리자 비밀번호 바꾸기</span></div>
-    ${pwFields("nAdmin", "새 관리자 비밀번호")}
+    ${pwFields("nAdmin", "새 관리자 비밀번호", false)}
     <button class="btn btn-ink" id="doAdmin" style="width:100%;margin-bottom:22px">관리자 비밀번호 변경</button>
     <div class="actions">${S.mode === "shared" ? `<button class="btn btn-line grow" id="imp">교육계획 다시 불러오기</button>` : ""}<button class="btn btn-line grow" id="aOff">관리자 모드 끄기</button></div>`,
   (root, close) => {
-    const guard = async (pw, kind) => {
-      if (await store.samePw(pw, kind)){ toast("공용 비밀번호와 관리자 비밀번호는 서로 달라야 합니다."); return false; }
-      return true;
+    const q = s => root.querySelector(s);
+    const HINT = {
+      text: "가장 안전합니다. 영문·숫자를 섞어 정해 주세요.",
+      pin: "폰에서 숫자 키패드로 빠르게 들어옵니다. 주소를 아는 사람이 프로그램으로 0000~9999를 모두 넣어 보면 뚫릴 수 있으니, 연가처럼 민감한 내용은 적지 않는 걸 권합니다.",
+      open: "주소만 알면 누구나 보고 출장·연가를 등록할 수 있습니다. 주소가 단톡방 밖으로 퍼지지 않게 주의해 주세요. 교육계획 수정은 여전히 관리자만 할 수 있습니다."
     };
-    root.querySelector("#doStaff").addEventListener("click", async () => {
-      const pw = readPw(root, "nStaff"); if (!pw || !(await guard(pw, "staff"))) return;
-      if (!confirm("공용 비밀번호를 바꿀까요? 다른 기기는 모두 다시 로그인해야 합니다.")) return;
-      try { await store.changeStaffPw(pw); close(); toast("공용 비밀번호를 바꿨습니다. 직원들에게 새 비밀번호를 알려 주세요."); }
-      catch(e){ console.error(e); toast("바꾸지 못했습니다. 관리자 모드를 다시 켜 주세요."); }
+    const draw = () => {
+      q("#mPick").querySelectorAll(".pick").forEach(b => b.setAttribute("aria-pressed", b.dataset.v === pick));
+      const need = pick !== "open" && pick !== cur;              // 형식이 바뀌면 새 비밀번호 필수
+      q("#mHint").textContent = HINT[pick];
+      q("#mPw").innerHTML = pick === "open" ? "" :
+        `${pwFields("nStaff", need ? "새 공용 비밀번호" : "새 공용 비밀번호 (바꿀 때만)", pick === "pin")}
+         <p class="hint" style="margin:-8px 0 12px">${need ? "형식이 바뀌어 새 비밀번호를 꼭 정해야 합니다." : "비워 두면 지금 비밀번호를 그대로 씁니다."} 비밀번호를 바꾸면 다른 기기는 모두 다시 들어와야 합니다.</p>`;
+    };
+    q("#mPick").addEventListener("click", ev => { const b = ev.target.closest(".pick"); if (!b) return; pick = b.dataset.v; draw(); });
+    draw();
+    q("#mSave").addEventListener("click", async () => {
+      let pw = "";
+      if (pick !== "open"){
+        pw = readPw(root, "nStaff", pick, pick === cur); if (pw === null) return;
+        if (pw && await store.samePw(pw, "staff")) return toast("공용 비밀번호와 관리자 비밀번호는 서로 달라야 합니다.");
+      }
+      if (pick === cur && !pw) return toast("바뀐 내용이 없습니다.");
+      const msg = pick === "open" ? "비밀번호 없이 주소만으로 들어오게 할까요?"
+        : pw ? "공용 비밀번호를 바꿀까요? 다른 기기는 모두 다시 들어와야 합니다." : `접속 방식을 '${MODE_TEXT[pick]}'로 바꿀까요?`;
+      if (!confirm(msg)) return;
+      try {
+        q("#mSave").disabled = true;
+        if (pw) await store.changeStaffPw(pw);
+        const next = pick === "open" ? { open:true, numeric:S.access.numeric } : { open:false, numeric: pick === "pin" };
+        await store.setAccess(next); S.access = next;
+        close(); render();
+        toast(pick === "open" ? "이제 비밀번호 없이 들어옵니다." : pw ? "저장했습니다. 직원들에게 새 비밀번호를 알려 주세요." : "저장했습니다.");
+      } catch(e){ console.error(e); q("#mSave").disabled = false; toast("저장하지 못했습니다. 관리자 모드를 다시 켜 주세요. (보안 규칙을 새로 붙여 넣었는지도 확인해 주세요)"); }
     });
-    root.querySelector("#doAdmin").addEventListener("click", async () => {
-      const pw = readPw(root, "nAdmin"); if (!pw || !(await guard(pw, "admin"))) return;
+    q("#doAdmin").addEventListener("click", async () => {
+      const pw = readPw(root, "nAdmin", "text"); if (!pw) return;
+      if (await store.samePw(pw, "admin")) return toast("공용 비밀번호와 관리자 비밀번호는 서로 달라야 합니다.");
       if (!confirm("관리자 비밀번호를 바꿀까요?")) return;
       try { await store.changeAdminPw(pw); close(); toast("관리자 비밀번호를 바꿨습니다."); }
       catch(e){ console.error(e); toast("바꾸지 못했습니다. 관리자 모드를 다시 켜 주세요."); }
     });
-    root.querySelector("#imp")?.addEventListener("click", async () => {
+    q("#imp")?.addEventListener("click", async () => {
       if (!confirm("연간 교육계획을 다시 불러올까요? 같은 일정은 원래 내용으로 덮어씁니다.")) return;
       try { const n = await store.importSeed(); close(); toast(`교육계획 ${n}건을 불러왔습니다.`); } catch(e){ console.error(e); toast("불러오지 못했습니다."); }
     });
-    root.querySelector("#aOff").addEventListener("click", async () => { await store.adminOff(); S.adminUntil = 0; close(); render(); toast("관리자 모드를 껐습니다."); });
+    q("#aOff").addEventListener("click", async () => { await store.adminOff(); S.adminUntil = 0; close(); render(); toast("관리자 모드를 껐습니다."); });
   });
 }
 
@@ -878,7 +986,7 @@ function openAccount(){
   sheet(`<h3>내 접속<button class="x" data-close aria-label="닫기">✕</button></h3>
     <div class="f"><label for="myName">내 이름</label><input id="myName" value="${esc(S.me.name)}" maxlength="20">
       <p class="hint">일정을 등록할 때 '누가'와 '등록'에 들어갑니다. 이 기기에만 기억합니다.</p></div>
-    <dl class="dl"><dt>접속</dt><dd>${S.mode === "demo" ? "체험 모드 (이 기기에만 저장)" : "직원 공용 비밀번호"}</dd><dt>권한</dt><dd>${isAdmin() ? "관리자 모드" : "직원"}</dd></dl>
+    <dl class="dl"><dt>접속</dt><dd>${S.mode === "demo" ? "체험 모드 (이 기기에만 저장)" : "직원 공용 접속"} · ${MODE_TEXT[accessMode()]}</dd><dt>권한</dt><dd>${isAdmin() ? "관리자 모드" : "직원"}</dd></dl>
     <div class="actions"><button class="btn btn-line" id="out">로그아웃</button><button class="btn btn-ink grow" id="saveName">이름 저장</button></div>
     ${S.mode === "demo" ? `<button class="btn btn-danger" id="reset" style="width:100%;margin-top:10px">체험 데이터 처음으로</button>` : ""}`,
   (root, close) => {
@@ -906,21 +1014,22 @@ function showGate(html){
 }
 function showLogin(msg){
   S.me = null; S.adminUntil = 0;
+  const open = S.access.open, pin = S.access.numeric;
   showGate(`<h1>ICTC <em>함께</em></h1>
-    <p>긴급구조지휘역량강화센터 직원 일정입니다.<br>센터에서 받은 공용 비밀번호를 넣어 주세요.</p>
+    <p>긴급구조지휘역량강화센터 직원 일정입니다.<br>${open ? "이름을 적고 들어와 주세요." : "센터에서 받은 공용 비밀번호를 넣어 주세요."}</p>
     ${msg ? `<p class="hint" style="color:var(--fire);margin-top:-8px">${esc(msg)}</p>` : ""}
     <form id="lForm" style="text-align:left">
       <div class="f"><label for="lName">내 이름</label><input id="lName" value="${esc(myName())}" maxlength="20" placeholder="일정 등록할 때 쓰입니다" autocomplete="name"></div>
-      <div class="f"><label for="lPw">공용 비밀번호</label><input id="lPw" type="password" autocomplete="current-password"></div>
+      ${open ? "" : `<div class="f"><label for="lPw">공용 비밀번호</label><input id="lPw" type="password" autocomplete="current-password"${pin ? ` inputmode="numeric" pattern="[0-9]*" placeholder="숫자"` : ""}></div>`}
       <button class="btn btn-fire">들어가기</button>
     </form>
-    ${S.mode === "demo" ? `<p class="hint" style="margin-top:14px">체험 모드 비밀번호 · 공용 <b>${DEMO_PW.staff}</b> · 관리자 <b>${DEMO_PW.admin}</b></p>` : ""}`);
-  $(myName() ? "lPw" : "lName").focus();
+    ${S.mode === "demo" && !open ? `<p class="hint" style="margin-top:14px">체험 모드 비밀번호 · 공용 <b>${esc(local.data.demoStaff)}</b> · 관리자 <b>${DEMO_PW.admin}</b></p>` : ""}`);
+  $(myName() && !open ? "lPw" : "lName").focus();
   $("lForm").addEventListener("submit", async ev => {
     ev.preventDefault();
-    const name = $("lName").value.trim(), pw = $("lPw").value, btn = $("lForm").querySelector("button");
+    const name = $("lName").value.trim(), pw = open ? "" : $("lPw").value, btn = $("lForm").querySelector("button");
     if (!name) return toast("이름을 적어 주세요.");
-    if (!pw) return toast("공용 비밀번호를 넣어 주세요.");
+    if (!open && !pw) return toast("공용 비밀번호를 넣어 주세요.");
     btn.disabled = true; btn.textContent = "확인 중…";
     try {
       await store.login(pw, name); setMyName(name);
@@ -940,7 +1049,9 @@ function enterDemo(){
 }
 async function startDemo(){
   S.mode = "demo"; await local.init();
-  if (local.data.session && local.data.session === local.data.k && myName()) enterDemo(); else showLogin();
+  S.access = local.data.access;
+  const ok = local.data.session && (S.access.open || local.data.session === local.data.k);
+  if (ok && myName()) enterDemo(); else showLogin();
 }
 
 /* --- 공유 모드 --- */
@@ -958,7 +1069,7 @@ async function enterShared(){
     }, err => {
       unsubs.forEach(u => u()); unsubs = [];
       if (first){ first = false; reject(err); }
-      else showLogin("공용 비밀번호가 바뀌었거나 접속이 끝났습니다. 새 비밀번호로 들어와 주세요.");
+      else store.getAccess().then(a => { S.access = a; showLogin("접속 방식이나 공용 비밀번호가 바뀌었습니다. 다시 들어와 주세요."); });
     }));
   });
 }
@@ -974,6 +1085,7 @@ async function startShared(){
   const authObj = auth.getAuth(app), db = fs.getFirestore(app);
   S.mode = "shared"; S.fb = { fs, db, auth, authObj };
   await authObj.authStateReady();
+  S.access = await store.getAccess();
   if (authObj.currentUser && myName()){
     try { await enterShared(); return; } catch(e){ /* 세션 없음 또는 비밀번호 변경됨 */ }
   }
@@ -988,15 +1100,16 @@ function showSetup(){
   showGate(`<h1>처음 설정</h1>
     <p>직원 공용 비밀번호와 관리자 비밀번호를 정하면, Firebase에 넣을 지문(해시)을 만들어 드립니다. 비밀번호 원문은 어디에도 저장되지 않습니다.</p>
     <form id="sForm" style="text-align:left">
-      <div class="f"><label for="sStaff">직원 공용 비밀번호 (${MIN_PW}자 이상)</label><input id="sStaff" type="password" autocomplete="new-password"></div>
-      <div class="f"><label for="sAdmin">관리자 비밀번호 (공용과 다르게)</label><input id="sAdmin" type="password" autocomplete="new-password"></div>
+      <div class="f"><label for="sStaff">직원 공용 비밀번호 (숫자 4자리 이상 또는 ${MIN_PW}자 이상)</label><input id="sStaff" type="password" autocomplete="new-password"></div>
+      <div class="f"><label for="sAdmin">관리자 비밀번호 (${MIN_PW}자 이상, 공용과 다르게)</label><input id="sAdmin" type="password" autocomplete="new-password"></div>
       <button class="btn btn-ink">지문 만들기</button>
     </form><div id="sOut" style="text-align:left;margin-top:16px"></div>`);
   if (!FIREBASE_CONFIG.projectId) $("sOut").innerHTML = `<p class="hint" style="color:var(--fire)">먼저 index.html의 FIREBASE_CONFIG를 채워 주세요. 프로젝트마다 지문이 달라집니다.</p>`;
   $("sForm").addEventListener("submit", async ev => {
     ev.preventDefault();
     const s = $("sStaff").value, a = $("sAdmin").value;
-    if (s.length < MIN_PW || a.length < MIN_PW) return toast(`두 비밀번호 모두 ${MIN_PW}자 이상으로 정해 주세요.`);
+    if (!(/^\d{4,12}$/.test(s) || s.length >= MIN_PW)) return toast(`공용 비밀번호는 숫자 4자리 이상 또는 ${MIN_PW}자 이상으로 정해 주세요.`);
+    if (a.length < MIN_PW) return toast(`관리자 비밀번호는 ${MIN_PW}자 이상으로 정해 주세요.`);
     if (s === a) return toast("공용 비밀번호와 관리자 비밀번호는 서로 달라야 합니다.");
     const [k, ak] = await Promise.all([pwKey(s, "staff"), pwKey(a, "admin")]);
     const row = (col, id) => `<div class="f"><span class="lbl">컬렉션 <b>${col}</b> → 문서 ID</span><code style="text-align:left">${id}</code>
@@ -1010,11 +1123,11 @@ function showSetup(){
 
 /* 고정 이벤트 연결 */
 document.querySelectorAll("[data-view]").forEach(b => b.addEventListener("click", () => setView(b.dataset.view)));
-$("mPrev").addEventListener("click", () => { S.month = new Date(S.month.getFullYear(), S.month.getMonth()-1, 1, 12); renderMonth(); });
-$("mNext").addEventListener("click", () => { S.month = new Date(S.month.getFullYear(), S.month.getMonth()+1, 1, 12); renderMonth(); });
-$("mToday").addEventListener("click", () => { S.sel = TODAY; S.month = pd(TODAY.slice(0,8)+"01"); renderMonth(); });
-$("yPrev").addEventListener("click", () => { S.year--; renderYear(); });
-$("yNext").addEventListener("click", () => { S.year++; renderYear(); });
+$("mPrev").addEventListener("click", () => { S.month = new Date(S.month.getFullYear(), S.month.getMonth()-1, 1, 12); renderMonth(); renderLegend(); });
+$("mNext").addEventListener("click", () => { S.month = new Date(S.month.getFullYear(), S.month.getMonth()+1, 1, 12); renderMonth(); renderLegend(); });
+$("mToday").addEventListener("click", () => { S.sel = TODAY; S.month = pd(TODAY.slice(0,8)+"01"); renderMonth(); renderLegend(); });
+$("yPrev").addEventListener("click", () => { S.year--; renderYear(); renderLegend(); });
+$("yNext").addEventListener("click", () => { S.year++; renderYear(); renderLegend(); });
 $("q").addEventListener("input", e => { S.q = e.target.value; renderList(); });
 document.querySelectorAll("[data-range]").forEach(b => b.addEventListener("click", () => {
   S.range = b.dataset.range; document.querySelectorAll("[data-range]").forEach(x => x.setAttribute("aria-pressed", x === b)); renderList();
