@@ -528,11 +528,11 @@ body.locked{overflow:hidden}
   <div class="bar">
     <div class="seg" id="viewTabs" role="group" aria-label="보기">
       <button data-view="home" aria-pressed="true"><span class="ico"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg></span>홈</button>
-      <button data-view="month" aria-pressed="false"><span class="ico"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></span>월</button>
       <button data-view="week" aria-pressed="false"><span class="ico"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 14h8M8 17h5"/></svg></span>주간</button>
+      <button data-view="month" aria-pressed="false"><span class="ico"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></span>월간</button>
       <button data-view="year" aria-pressed="false"><span class="ico"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span>연간</button>
       <button data-view="list" aria-pressed="false"><span class="ico"><svg viewBox="0 0 24 24"><path d="M9 6h12M9 12h12M9 18h12M4 6h.01M4 12h.01M4 18h.01"/></svg></span>목록</button>
-    </div>
+</div>
     <div class="filters" id="filters"></div>
   </div>
   <div class="legend" id="legend"></div>
@@ -574,7 +574,7 @@ body.locked{overflow:hidden}
       <button class="nav" id="yPrev" aria-label="이전 해">‹</button>
       <h2 id="yTitle"></h2>
       <button class="nav" id="yNext" aria-label="다음 해">›</button>
-      <div class="right" style="font-size:12px;color:var(--muted);align-items:center">칸 색은 과정, 점은 출장·연가</div>
+      <div class="right" style="font-size:12px;color:var(--muted);align-items:center">칸 색은 과정, 점은 출장·휴가</div>
     </div>
     <div class="year" id="yearGrid"></div>
   </section>
@@ -593,7 +593,7 @@ body.locked{overflow:hidden}
   </section>
 
   <p class="foot keys">단축키 · ← → 이동 · T 오늘 · N 새 일정 · 1~5 보기 전환 (1 = 홈) · 달력에서 날짜를 끌면 기간 등록, 두 번 누르면 그날 등록</p>
-  <p class="foot">교육·평가 일정은 2026년 연간 교육계획과 2027~2028 지휘대장 편성표(3안)에서 옮겼습니다. 빗금 무늬는 확정 전 계획(안)입니다. 연가는 사유 없이 날짜만 등록해 주세요.</p>
+  <p class="foot">교육·평가 일정은 2026년 연간 교육계획과 2027~2028 지휘대장 편성표(3안)에서 옮겼습니다. 빗금 무늬는 확정 전 계획(안)입니다. 휴가는 사유 없이 날짜만 등록해 주세요.</p>
 </main>
 
 <button class="fab hide" id="fab">＋ 일정 등록</button>
@@ -635,8 +635,8 @@ const HOLIDAYS = {
   "2028-05-01":"노동절","2028-05-02":"부처님오신날","2028-05-05":"어린이날","2028-06-06":"현충일","2028-07-17":"제헌절","2028-08-15":"광복절",
   "2028-10-02":"추석","2028-10-03":"추석·개천절","2028-10-04":"추석","2028-10-05":"대체휴일","2028-10-09":"한글날","2028-12-25":"성탄절"
 };
-const CATS = { edu:"교육", eval:"평가", trip:"출장", leave:"연가", etc:"기타" };
-const HALF = { full:"종일", am:"오전 반차", pm:"오후 반차" };
+const CATS = { edu:"교육", eval:"평가", trip:"출장", leave:"휴가", etc:"기타" };
+const HALF = { full:"종일", am:"오전 반차", pm:"오후 반차", time:"시간 휴가" };
 const seedEvents = () => SEED.map(([id,start,end,cat,title,memo,plan]) => ({
   id, start, end, cat, title, memo: memo || "2026년 연간 교육계획", plan: !!plan, person:"", place:"", half:"full", ownerName:"센터 연간계획"
 }));
@@ -680,14 +680,14 @@ function applyTheme(v){
 try { applyTheme(localStorage.getItem(THEME_KEY) || "auto"); } catch(e){}
 const isAdmin = () => S.adminUntil > Date.now();
 const canEdit = e => isAdmin() || PERSONAL.includes(e.cat);
-const timeText = e => e.time && e.cat !== "leave" ? (e.timeEnd ? `${e.time}~${e.timeEnd}` : e.time) : "";
+const timeText = e => e.time && (e.cat !== "leave" || e.half === "time") ? (e.timeEnd ? `${e.time}~${e.timeEnd}` : e.time) : "";
 const label = e => (timeText(e) ? timeText(e) + " " : "") + label0(e);
 const toMin = s => { const [h, m] = String(s || "0:0").split(":").map(Number); return h * 60 + (m || 0); };
 const fromMin = n => { n = Math.max(0, Math.min(23 * 60 + 59, n)); return `${pad(Math.floor(n / 60))}:${pad(n % 60)}`; };
 const label0 = e => {
   if ((e.cat === "trip" || e.cat === "leave") && !e.person) return e.title || CATS[e.cat];
   if (e.cat === "trip") return `${e.person} 출장${e.place ? " · " + e.place : (e.title ? " · " + e.title : "")}`;
-  if (e.cat === "leave") return `${e.person} ${e.half && e.half !== "full" ? HALF[e.half] : "연가"}`;
+  if (e.cat === "leave") return `${e.person} ${e.half && e.half !== "full" && e.half !== "time" ? HALF[e.half] : "휴가"}`;
   if (e.cat === "etc" && e.person) return `${e.person} · ${e.title}`;
   return e.title + (e.plan ? " (안)" : "");
 };
@@ -712,7 +712,7 @@ const COURSE = [
   [/지휘교육/,          "jihwi",  "지휘교육",        "#3b5b7a"]
 ];
 const OTHER = ["other", "기타 교육", "#5b6672"];
-const PCOL = { trip:["출장","#a86400"], leave:["연가","#1f7a4a"], etc:["기타 일정","#4d5b69"] };
+const PCOL = { trip:["출장","#a86400"], leave:["휴가","#1f7a4a"], etc:["기타 일정","#4d5b69"] };
 const DEFAULT_COLORS = Object.fromEntries([...COURSE.map(c => [c[1], c[3]]), [OTHER[0], OTHER[2]], ...Object.entries(PCOL).map(([k,v]) => [k, v[1]])]);
 const COLOR_NAMES = Object.fromEntries([...COURSE.map(c => [c[1], c[2]]), [OTHER[0], OTHER[1]], ...Object.entries(PCOL).map(([k,v]) => [k, v[0]])]);
 const HEX = /^#[0-9a-f]{6}$/i;
@@ -924,13 +924,13 @@ function renderBoard(){
   const etc = today.filter(e => e.cat === "etc");
   const hol = HOLIDAYS[TODAY];
   const dayN = e => { const total = diff(e.start, e.end) + 1; return total > 1 ? ` <i>${diff(e.start, TODAY)+1}/${total}일차</i>` : ""; };
-  const tag = e => `<button class="tag ${tcls(e)}" style="${tst(e)}" data-id="${esc(e.id)}">${esc(e.cat==="trip"||e.cat==="leave" ? (e.person || e.title) : e.title)}${e.cat==="trip" && e.person && (e.place||e.title) ? ` <i>${esc(e.place||e.title)}</i>` : ""}${e.cat==="leave" && e.half!=="full" ? ` <i>${HALF[e.half]}</i>` : ""}${e.cat==="edu"||e.cat==="eval" ? dayN(e) : ""}</button>`;
+  const tag = e => `<button class="tag ${tcls(e)}" style="${tst(e)}" data-id="${esc(e.id)}">${esc(e.cat==="trip"||e.cat==="leave" ? (e.person || e.title) : e.title)}${e.cat==="trip" && e.person && (e.place||e.title) ? ` <i>${esc(e.place||e.title)}</i>` : ""}${e.cat==="leave" && e.half!=="full" ? ` <i>${e.half === "time" ? timeText(e) : HALF[e.half]}</i>` : ""}${e.cat==="edu"||e.cat==="eval" ? dayN(e) : ""}</button>`;
   $("board").innerHTML = `
     <div class="board-date"><small>오늘</small><strong>${d.getMonth()+1}.${pad(d.getDate())}</strong><span>${WD[d.getDay()]}요일${hol ? " · " + esc(hol) : ""}</span></div>
     <div class="board-body">
       ${teamPref().show ? `<span class="btm ${teamPref().mine === teamOf(TODAY) ? "mine" : ""}" title="근무 팀은 내 이름 → 근무 팀 표시에서 바꿀 수 있습니다">오늘 <b>${teamOf(TODAY)}팀</b> 근무</span>` : ""}
       <div class="board-row"><b>교육</b><div class="val">${training.length ? training.map(tag).join("") : `<span class="none">진행 중인 교육·평가 없음</span>`}</div></div>
-      <div class="board-row"><b>부재</b><div class="val">${away.length ? away.map(tag).join("") : `<span class="none">오늘 등록된 출장·연가 없음</span>`}</div></div>
+      <div class="board-row"><b>부재</b><div class="val">${away.length ? away.map(tag).join("") : `<span class="none">오늘 등록된 출장·휴가 없음</span>`}</div></div>
       ${etc.length ? `<div class="board-row"><b>기타</b><div class="val">${etc.map(tag).join("")}</div></div>` : ""}
     </div>`;
   $("board").querySelectorAll("[data-id]").forEach(b => b.addEventListener("click", () => openDetail(b.dataset.id)));
@@ -950,12 +950,12 @@ function renderHome(){
   const d = pd(TODAY), mon = monday(d), all = S.events;
   const wk = Array.from({ length: 5 }, (_, i) => ymd(addDays(mon, i)));
   const awayWeek = all.filter(e => (e.cat === "trip" || e.cat === "leave") && e.start <= wk[4] && e.end >= wk[0]);
-  $("hello").innerHTML = `<h1>${esc(S.me.name)} 님, 안녕하세요</h1><p>${d.getMonth()+1}월 ${d.getDate()}일 ${WD[d.getDay()]}요일 · 이번 주 출장·연가 ${new Set(awayWeek.map(e => e.person)).size}명</p>`;
+  $("hello").innerHTML = `<h1>${esc(S.me.name)} 님, 안녕하세요</h1><p>${d.getMonth()+1}월 ${d.getDate()}일 ${WD[d.getDay()]}요일 · 이번 주 출장·휴가 ${new Set(awayWeek.map(e => e.person)).size}명</p>`;
   setTimeout(() => {
     if (newCount) $("hello").insertAdjacentHTML("beforeend", `<span class="newb">지난 접속 이후 새 일정 ${newCount}건</span>`);
   });
   renderBoard();
-  const Q = [["trip","출장 등록","어디로 언제",{ cat:"trip" }],["leave","연가 등록","하루 이상",{ cat:"leave" }],["leave","반차 등록","오전·오후",{ cat:"leave", half:"am" }],["etc","회의·기타","센터 일정",{ cat:"etc" }]];
+  const Q = [["trip","출장 등록","어디로 언제",{ cat:"trip" }],["leave","휴가 등록","하루 이상",{ cat:"leave" }],["leave","반차·시간 휴가","오전·오후·몇 시간",{ cat:"leave", half:"am" }],["etc","회의·기타","센터 일정",{ cat:"etc" }]];
   $("quickRow").innerHTML = Q.map(([c, t, s], i) => `<button class="qbtn" style="--c:${colorOf(c)}" data-q="${i}"><i></i><span>${t}<small>${s}</small></span></button>`).join("");
   $("quickRow").querySelectorAll("[data-q]").forEach(b => b.addEventListener("click", () => openForm(null, TODAY, { ...Q[+b.dataset.q][3] })));
 
@@ -995,11 +995,11 @@ function renderHome(){
       <div class="nrow"><div><div class="ntext">${esc(n.text)}</div><div class="m">${esc(n.by || "")} · ${ago(n.at)}${n.until ? ` · ${md(n.until)}까지` : ""}</div></div>${isAdmin() ? `<button class="x" data-dn="${esc(n.id)}" aria-label="공지 삭제">✕</button>` : ""}</div>`).join("") : `<div class="empty" style="padding:10px 6px">올라온 공지가 없습니다.</div>`}</div></div>` : ""}
     <div class="card wide"><h3>이번 주<button class="lnk" data-go="week">주간 보기 ›</button></h3><div class="body"><div class="strip">${strip}</div></div></div>
     <div class="card"><h3>내 다음 일정<button class="lnk" data-go="mine">전체 ›</button></h3><div class="body">${mine.length ? mine.map(e => row(e, staffOf(e).includes(S.me.name) ? "담당" : "")).join("") :
-      `<div class="empty" style="padding:14px 6px">다가오는 내 출장·연가·담당 교육이 없습니다.</div>`}</div></div>
+      `<div class="empty" style="padding:14px 6px">다가오는 내 출장·휴가·담당 교육이 없습니다.</div>`}</div></div>
     <div class="card"><h3>다가오는 교육·평가<button class="lnk" data-go="list">목록 ›</button></h3><div class="body">${crs.length ? crs.map(e => row(e, e.cat === "eval" ? "평가" : "")).join("") :
       `<div class="empty" style="padding:14px 6px">예정된 교육이 없습니다.</div>`}</div></div>
     <div class="card wide"><h3>최근 올라온 일정</h3><div class="body">${recent.length ? recent.map(e => row(e, `${isNew(e) ? `<span class="newt">NEW</span> ` : ""}${esc(e.editedBy || e.ownerName || "")} · ${ago(e.updatedAt)}`)).join("") :
-      `<div class="empty" style="padding:14px 6px">아직 등록된 출장·연가가 없습니다. 위 버튼으로 첫 일정을 올려 보세요.</div>`}</div></div>`;
+      `<div class="empty" style="padding:14px 6px">아직 등록된 출장·휴가가 없습니다. 위 버튼으로 첫 일정을 올려 보세요.</div>`}</div></div>`;
   const g = $("homeGrid");
   g.querySelectorAll("[data-id]").forEach(b => b.addEventListener("click", () => openDetail(b.dataset.id)));
   g.querySelectorAll("[data-wk]").forEach(b => b.addEventListener("click", () => { S.sel = b.dataset.wk; setView("week"); }));
@@ -1110,7 +1110,7 @@ function renderDay(){
   $("dayPanel").innerHTML = `
     <div class="day-head"><h3>${mdw(S.sel)}</h3><p>${hol ? esc(hol) + " · " : ""}${list.length ? `일정 ${list.length}건` : "등록된 일정 없음"}</p></div>
     <div class="items">${list.length ? list.map(itemHTML).join("") :
-      `<div class="empty">이날 출장이나 연가가 있다면 등록해 두세요.<br><button class="btn btn-ink btn-sm" id="addHere">＋ 이날 일정 등록</button></div>`}</div>`;
+      `<div class="empty">이날 출장이나 휴가가 있다면 등록해 두세요.<br><button class="btn btn-ink btn-sm" id="addHere">＋ 이날 일정 등록</button></div>`}</div>`;
   $("dayPanel").querySelectorAll("[data-id]").forEach(b => b.addEventListener("click", () => openDetail(b.dataset.id)));
   $("addHere")?.addEventListener("click", () => openForm(null, S.sel));
 }
@@ -1134,7 +1134,7 @@ function renderYear(){
     }
     const courses = sortEv(inMonth.filter(e => (e.cat === "edu" || e.cat === "eval") && e.start >= mS));
     const away = inMonth.filter(e => e.cat === "trip" || e.cat === "leave").length;
-    html += `<div class="mini"><h4>${mo+1}월 <small>${courses.length ? `교육·평가 ${courses.length}` : ""}${away ? ` · 출장·연가 ${away}` : ""}</small></h4>
+    html += `<div class="mini"><h4>${mo+1}월 <small>${courses.length ? `교육·평가 ${courses.length}` : ""}${away ? ` · 출장·휴가 ${away}` : ""}</small></h4>
       <div class="mgrid">${g}</div>
       ${courses.length ? `<ul class="mlist">${courses.slice(0,6).map(e => `<li class="${e.plan?"plan":""} ${e.cat==="eval"?"solid":""}" style="${tst(e)}"><i></i><span>${md(e.start)}${e.end!==e.start?"~":""}</span><b>${esc(e.title)}</b></li>`).join("")}${courses.length>6?`<li><i style="background:none"></i><span></span><b>외 ${courses.length-6}건</b></li>`:""}</ul>` : ""}
     </div>`;
@@ -1252,7 +1252,7 @@ function renderWeek(){
   days.forEach((ds, i) => {
     const away = vis.filter(e => (e.cat === "trip" || e.cat === "leave") && e.start <= ds && e.end >= ds);
     const t = away.filter(e => e.cat === "trip").length, l = away.filter(e => e.cat === "leave").length;
-    html += `<div class="cnt ${t + l >= 3 ? "hi" : ""}" style="grid-column:${i+2};grid-row:${row}">${t + l ? `<span title="출장 ${t}명, 연가 ${l}명">${narrow ? `${t + l}명` : [t && `출장 ${t}`, l && `연가 ${l}`].filter(Boolean).join(" · ")}</span>` : "–"}</div>`;
+    html += `<div class="cnt ${t + l >= 3 ? "hi" : ""}" style="grid-column:${i+2};grid-row:${row}">${t + l ? `<span title="출장 ${t}명, 휴가 ${l}명">${narrow ? `${t + l}명` : [t && `출장 ${t}`, l && `휴가 ${l}`].filter(Boolean).join(" · ")}</span>` : "–"}</div>`;
   });
   row++;
   // 직원별
@@ -1265,7 +1265,7 @@ function renderWeek(){
     const mine = [...personal.filter(e => e.person === n), ...assigned.filter(e => staffOf(e).includes(n)).map(e => ({ ...e, _asg: true }))], k = pack(mine);
     html += `<div class="nm ${n === S.me.name ? "me" : ""}" style="grid-row:${row}/${row+k}" title="${esc(n)}">${esc(n)}</div>`;
     days.forEach((ds, i) => { const dow = pd(ds).getDay(); html += `<button class="slot ${dow === 0 || dow === 6 || HOLIDAYS[ds] ? "wkend" : ""}" style="grid-column:${i+2};grid-row:${row}/${row+k}" data-slot="${ds}" data-person="${esc(n)}" aria-label="${esc(n)} ${mdw(ds)} 일정 등록"></button>`; });
-    mine.forEach(e => html += bar(e, row, e._asg ? `담당 · ${e.title}` : e.cat === "leave" ? (e.half && e.half !== "full" ? HALF[e.half] : "연가") : e.cat === "trip" ? `${timeText(e) ? timeText(e) + " " : ""}출장${e.place ? " · " + e.place : ""}` : label(e)));
+    mine.forEach(e => html += bar(e, row, e._asg ? `담당 · ${e.title}` : e.cat === "leave" ? (e.half === "time" ? timeText(e) + " 휴가" : e.half && e.half !== "full" ? HALF[e.half] : "휴가") : e.cat === "trip" ? `${timeText(e) ? timeText(e) + " " : ""}출장${e.place ? " · " + e.place : ""}` : label(e)));
     row += k;
   });
   const etc = personal.filter(e => !e.person);
@@ -1321,7 +1321,7 @@ function renderLegend(){
   visible().filter(e => (e.cat === "edu" || e.cat === "eval") && e.start <= to && e.end >= from).forEach(e => { const x = tone(e); if (!seen.has(x.name)) seen.set(x.name, x.c); });
   const items = [...seen].map(([n,c]) => `<span><i style="--c:${c}"></i>${esc(n)}</span>`).join("");
   $("legend").innerHTML = items + (items ? `<span class="sep"></span>` : "") +
-    `<span><i class="solid" style="--c:${colorOf("other")}"></i>진한 색 = 평가</span><span><i class="out" style="--c:${colorOf("trip")}"></i>테두리 = 출장·연가</span>` +
+    `<span><i class="solid" style="--c:${colorOf("other")}"></i>진한 색 = 평가</span><span><i class="out" style="--c:${colorOf("trip")}"></i>테두리 = 출장·휴가</span>` +
     (isAdmin() ? `<button class="btn btn-line btn-sm" id="lgEdit" style="padding:2px 8px;font-size:12px">색 바꾸기</button>` : "");
   $("lgEdit")?.addEventListener("click", openColors);
 }
@@ -1445,7 +1445,7 @@ function openForm(e, day, preset){
     </div>
     <div class="quick" id="fQuick" style="margin:-6px 0 14px"><button type="button" data-n="0">하루</button><button type="button" data-n="1">2일</button><button type="button" data-n="2">3일</button><button type="button" data-n="4">5일(월~금)</button></div>
     <div class="finfo" id="fInfo" aria-live="polite"></div>
-    <div class="f" id="wHalf"><span class="lbl">시간</span><div class="picks" id="fHalf">${Object.entries(HALF).map(([k,t]) => `<button type="button" class="pick plain" data-v="${k}" aria-pressed="${(v.half||"full")===k}">${t}</button>`).join("")}</div></div>
+    <div class="f" id="wHalf"><span class="lbl">휴가 종류</span><div class="picks" id="fHalf">${Object.entries(HALF).map(([k,t]) => `<button type="button" class="pick plain" data-v="${k}" aria-pressed="${(v.half||"full")===k}">${t}</button>`).join("")}</div></div>
     <div class="f" id="wPlace"><label for="fPlace">어디로</label><input id="fPlace" value="${esc(v.place)}" maxlength="40" placeholder="예: 경남소방본부, 중앙소방학교">
       <div class="quick">${["경남","울산","창원","중앙소방학교","소방청"].map(p=>`<button type="button" data-place="${p}">${p}</button>`).join("")}</div></div>
     <div class="f" id="wTitle"><label for="fTitle" id="lTitle">내용</label><input id="fTitle" value="${esc(v.title)}" maxlength="60"></div>
@@ -1478,7 +1478,15 @@ function openForm(e, day, preset){
       q("#fEnd").disabled = c === "leave" && v.half !== "full";
       const course = c === "edu" || c === "eval";
       q("#wStaff").classList.toggle("hide", !course); q("#wPlan").classList.toggle("hide", !course);
-      q("#wTime").classList.toggle("hide", c === "leave");
+      const tLeave = c === "leave" && v.half === "time";
+      q("#wTime").classList.toggle("hide", c === "leave" && !tLeave);
+      q("#fTmode").classList.toggle("hide", tLeave);
+      if (tLeave && typeof tmode !== "undefined"){
+        tmode = "time"; q("#fTbox").classList.remove("hide");
+        q("#fTmode").querySelectorAll(".pick").forEach(x => x.setAttribute("aria-pressed", x.dataset.v === "time"));
+        if (!q("#fTime").value){ q("#fTime").value = "09:00"; q("#fTimeEnd").value = "11:00"; }
+        tPaint();
+      }
     };
     // 시간: 시 → 분 → 얼마나 세 번이면 끝
     let tmode = v.time ? "time" : "all";
@@ -1526,7 +1534,7 @@ function openForm(e, day, preset){
       const away = sortEv(over.filter(x => (x.cat === "trip" || x.cat === "leave") && x.person));
       const same = (v.cat === "trip" || v.cat === "leave") && who ? away.filter(x => x.person === who) : [];
       const others = away.filter(x => x.person !== who);
-      const fmt = x => `${esc(x.person)} ${x.cat === "trip" ? "출장" : (x.half && x.half !== "full" ? HALF[x.half] : "연가")} ${md(x.start)}${x.end !== x.start ? "~" + md(x.end) : ""}`;
+      const fmt = x => `${esc(x.person)} ${x.cat === "trip" ? "출장" : (x.half === "time" ? "휴가 " + timeText(x) : x.half && x.half !== "full" ? HALF[x.half] : "휴가")} ${md(x.start)}${x.end !== x.start ? "~" + md(x.end) : ""}`;
       q("#fInfo").innerHTML = [
         same.length && `<div class="warn">⚠ ${esc(who)} 님은 이 기간에 이미 ${same.map(x => fmt(x).replace(x.person + " ", "")).join(", ")} 일정이 있습니다.</div>`,
         crs.length && `<div><b>진행 교육</b> ${crs.slice(0,4).map(esc).join(", ")}${crs.length > 4 ? ` 외 ${crs.length-4}` : ""}</div>`,
@@ -1550,8 +1558,8 @@ function openForm(e, day, preset){
         half: v.cat === "leave" ? v.half : "full",
         person: q("#fPerson").value.trim(), place: q("#fPlace").value.trim(), title: q("#fTitle").value.trim(), memo: q("#fMemo").value.trim(),
         plan: (v.cat === "edu" || v.cat === "eval") ? q("#fPlan").checked : false,
-        time: v.cat === "leave" || tmode !== "time" ? "" : q("#fTime").value,
-        timeEnd: v.cat === "leave" || tmode !== "time" ? "" : q("#fTimeEnd").value,
+        time: (v.cat === "leave" && v.half !== "time") || tmode !== "time" ? "" : q("#fTime").value,
+        timeEnd: (v.cat === "leave" && v.half !== "time") || tmode !== "time" ? "" : q("#fTimeEnd").value,
         staff: (v.cat === "edu" || v.cat === "eval") ? [...new Set(q("#fStaff").value.split(/[,·\s]+/).map(s => s.trim()).filter(Boolean))].slice(0, 12) : [],
         ownerName: e?.ownerName || S.me.name, editedBy: S.me.name, updatedAt: new Date().toISOString()
       };
@@ -1559,7 +1567,8 @@ function openForm(e, day, preset){
       if (!ev.start) return toast("시작일을 골라 주세요.");
       if (ev.end < ev.start) return toast("종료일이 시작일보다 빠릅니다.");
       if (ev.time && ev.timeEnd && ev.start === ev.end && toMin(ev.timeEnd) <= toMin(ev.time)) return toast("끝 시간이 시작 시간보다 늦어야 합니다.");
-      if (tmode === "time" && !ev.time && v.cat !== "leave") return toast("시작 시간을 골라 주세요.");
+      if (tmode === "time" && !ev.time && (v.cat !== "leave" || v.half === "time")) return toast("시작 시간을 골라 주세요.");
+      if (ev.cat === "leave" && ev.half === "time" && (!ev.time || !ev.timeEnd)) return toast("휴가 시작·끝 시간을 골라 주세요.");
       if ((ev.cat === "trip" || ev.cat === "leave") && !ev.person) return toast("누구의 일정인지 이름을 적어 주세요.");
       if ((ev.cat === "edu" || ev.cat === "eval" || ev.cat === "etc") && !ev.title) return toast(v.cat === "etc" ? "무엇을 하는지 적어 주세요." : "과정명을 적어 주세요.");
       let list = [ev];
@@ -1640,8 +1649,8 @@ function openAdmin(){
     const q = s => root.querySelector(s);
     const HINT = {
       text: "가장 안전합니다. 영문·숫자를 섞어 정해 주세요.",
-      pin: "폰에서 숫자 키패드로 빠르게 들어옵니다. 주소를 아는 사람이 프로그램으로 0000~9999를 모두 넣어 보면 뚫릴 수 있으니, 연가처럼 민감한 내용은 적지 않는 걸 권합니다.",
-      open: "주소만 알면 누구나 보고 출장·연가를 등록할 수 있습니다. 주소가 단톡방 밖으로 퍼지지 않게 주의해 주세요. 교육계획 수정은 여전히 관리자만 할 수 있습니다."
+      pin: "폰에서 숫자 키패드로 빠르게 들어옵니다. 주소를 아는 사람이 프로그램으로 0000~9999를 모두 넣어 보면 뚫릴 수 있으니, 휴가처럼 민감한 내용은 적지 않는 걸 권합니다.",
+      open: "주소만 알면 누구나 보고 출장·휴가를 등록할 수 있습니다. 주소가 단톡방 밖으로 퍼지지 않게 주의해 주세요. 교육계획 수정은 여전히 관리자만 할 수 있습니다."
     };
     const draw = () => {
       q("#mPick").querySelectorAll(".pick").forEach(b => b.setAttribute("aria-pressed", b.dataset.v === pick));
@@ -1700,7 +1709,7 @@ function openColors(){
   sheet(`<h3>과정 색깔<button class="x" data-close aria-label="닫기">✕</button></h3>
     <p class="hint" style="margin:-6px 0 12px">색 칸을 눌러 고르세요. 저장하면 직원 모두의 화면에 바로 바뀝니다. 같은 과정의 평가는 이 색을 진하게 채워서 보여 줍니다.</p>
     <div class="cgrid">${[...COURSE.map(c => c[1]), "other"].map(id => row(id, "")).join("")}</div>
-    <div class="f" style="margin-top:14px"><span class="lbl">출장·연가·기타 (테두리 색)</span></div>
+    <div class="f" style="margin-top:14px"><span class="lbl">출장·휴가·기타 (테두리 색)</span></div>
     <div class="cgrid">${Object.keys(PCOL).map(id => row(id, "out")).join("")}</div>
     <div class="f" style="margin-top:14px"><span class="lbl">추천 색 <span style="font-weight:500;color:var(--muted)">· 위에서 바꿀 줄을 먼저 누른 뒤 고르세요</span></span>
       <div class="sw">${SWATCH.map(c => `<button type="button" style="--c:${c}" data-sw="${c}" aria-label="${c}"></button>`).join("")}</div></div>
@@ -1911,7 +1920,7 @@ document.addEventListener("keydown", e => {
   if (k === "ArrowLeft") shift(-1); else if (k === "ArrowRight") shift(1);
   else if (k === "t" || k === "T" || k === "ㅅ") goToday();
   else if (k === "n" || k === "N" || k === "ㅜ") { e.preventDefault(); openForm(null, S.sel); }
-  else if ("12345".includes(k) && k.length === 1) setView(["home","month","week","year","list"][+k - 1]);
+  else if ("12345".includes(k) && k.length === 1) setView(["home","week","month","year","list"][+k - 1]);
   else if (k === "/") { e.preventDefault(); setView("list"); $("q").focus(); }
   else return;
 });
