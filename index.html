@@ -3,7 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#ffffff">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1b2026" media="(prefers-color-scheme: dark)">
+<meta name="format-detection" content="telephone=no">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" href="icon-192.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -62,7 +64,8 @@
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
 button,input,select,textarea{font:inherit;color:inherit}
-button{cursor:pointer;-webkit-tap-highlight-color:transparent}
+button{cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+body.locked{overflow:hidden}
 :focus-visible{outline:2px solid var(--edu);outline-offset:2px}
 .hide{display:none!important}
 
@@ -197,7 +200,7 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent}
 
 /* ---------- 시트(모달) ---------- */
 .scrim{position:fixed;inset:0;background:rgba(10,15,20,.45);z-index:50;display:flex;align-items:flex-end;justify-content:center}
-.sheet{background:var(--card);width:min(560px,100%);max-height:92vh;overflow:auto;border-radius:18px 18px 0 0;padding:6px 18px calc(18px + env(safe-area-inset-bottom,0px));box-shadow:0 -10px 40px rgba(0,0,0,.2);animation:up .18s ease-out}
+.sheet{background:var(--card);width:min(560px,100%);max-height:92vh;max-height:92dvh;overscroll-behavior:contain;overflow:auto;border-radius:18px 18px 0 0;padding:6px 18px calc(18px + env(safe-area-inset-bottom,0px));box-shadow:0 -10px 40px rgba(0,0,0,.2);animation:up .18s ease-out}
 @media (min-width:720px){.scrim{align-items:center}.sheet{border-radius:18px;padding-bottom:18px}}
 @keyframes up{from{transform:translateY(24px);opacity:.6}to{transform:none;opacity:1}}
 @media (prefers-reduced-motion:reduce){.sheet{animation:none}}
@@ -416,6 +419,38 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent}
 }
 @media (max-width:600px){
   .mark span{display:none}
+  /* 폰: 확대 방지(16px), 누르기 쉬운 크기, 한 줄 스크롤 */
+  input,select,textarea,.f input,.f select,.f textarea,.search{font-size:16px!important}
+  .psel{font-size:14px!important;padding:6px 10px}
+  .nav{width:40px;height:40px;font-size:20px}
+  .btn-sm{padding:8px 11px}
+  .filters{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin:0 -10px;padding:2px 10px;width:calc(100% + 20px);-webkit-overflow-scrolling:touch}
+  .filters::-webkit-scrollbar,.legend::-webkit-scrollbar{display:none}
+  .chip,.psel{flex:0 0 auto}
+  .legend{flex-wrap:nowrap;overflow-x:auto;white-space:nowrap;scrollbar-width:none;margin:0 -10px 10px;padding:0 10px}
+  .legend span{flex:0 0 auto}
+  .fab{width:58px;height:58px;padding:0;border-radius:50%;font-size:0;right:16px}
+  .fab::before{content:"＋";font-size:28px;font-weight:500;line-height:58px}
+  .phead{padding:10px 10px}
+  .phead h2{font-size:17px}
+  .year{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;padding:8px}
+  .mini{padding:8px 6px}
+  .mini h4{font-size:13px}
+  .mini h4 small{display:none}
+  .md{height:22px;font-size:10px;border-radius:4px}
+  .mgrid .h{font-size:9px}
+  .mlist{font-size:10.5px;gap:2px}
+  .mlist li{grid-template-columns:6px 30px 1fr;gap:4px}
+  .mlist li:nth-child(n+4){display:none}
+  .row{grid-template-columns:62px 4px 1fr;gap:10px;padding:10px 12px}
+  .listtools{padding:10px}
+  .listtools .btn{flex:1 1 auto}
+  .sheet{padding-left:16px;padding-right:16px}
+  .sheet h3{font-size:18px}
+  .pick{padding:10px 13px}
+  .quick button{padding:6px 10px;font-size:13px}
+  .item{padding:11px 10px 11px 0}
+  .hrow{padding:10px 4px}
   .wrap{padding:12px 10px 110px}
   .filters{margin-left:0}
   .week{grid-template-rows:24px repeat(3,18px) 16px;min-height:90px}
@@ -424,12 +459,14 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent}
   .dn{left:4px;font-size:12px}
   .dn em{display:none}
   .tm{top:4px;right:2px;font-size:9.5px;padding:0 2px;line-height:14px}
+  .cell.today .dn b{padding:0 4px}
+  .cell .dn{left:3px}
   .btm{position:static;align-self:flex-end;font-size:12px;padding:2px 8px;margin:-2px -2px 0 0}
   .btm b{font-size:14px}
   .board-body:has(.btm) .board-row:first-of-type{padding-right:0}
   .dn{max-width:calc(100% - 26px)}
   .more{font-size:10px;padding-left:3px}
-  .year{grid-template-columns:1fr;padding:10px}
+
   .board-date{min-width:88px;padding:12px}
   .board-date strong{font-size:26px}
   .board-body{padding:10px 12px}
@@ -446,7 +483,7 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent}
   #viewTabs button{display:flex;flex-direction:column;align-items:center;gap:1px;font-size:11px;padding:5px 0;border-radius:10px}
   #viewTabs button[aria-pressed="true"]{background:transparent;color:var(--fire)}
   #viewTabs .ico{display:block;line-height:0}
-  .fab{bottom:calc(72px + env(safe-area-inset-bottom,0px));padding:13px 18px}
+  .fab{bottom:calc(72px + env(safe-area-inset-bottom,0px))}
   .toast{bottom:calc(132px + env(safe-area-inset-bottom,0px))}
   .wrap{padding-bottom:150px}
   .bar{margin-bottom:8px}
@@ -1023,12 +1060,26 @@ function renderMonth(){
   }
   $("weeks").innerHTML = html;
   $("weeks").querySelectorAll("[data-day]").forEach(b => {
-    b.addEventListener("click", () => { if (drag.skip){ drag.skip = false; return; } S.sel = b.dataset.day; renderMonth(); });
+    b.addEventListener("click", () => { if (drag.skip){ drag.skip = false; return; } S.sel = b.dataset.day; renderMonth(); if (isPhone()) openDay(b.dataset.day); });
     b.addEventListener("dblclick", () => openForm(null, b.dataset.day));
     b.addEventListener("pointerdown", ev => { if (ev.pointerType !== "mouse" || ev.button !== 0) return; drag.a = drag.b = b.dataset.day; });
   });
   $("weeks").querySelectorAll(".ev").forEach(b => b.addEventListener("click", ev => { ev.stopPropagation(); openDetail(b.dataset.id); }));
   renderDay();
+}
+
+const isPhone = () => matchMedia("(max-width:600px)").matches;
+function openDay(ds){
+  const list = sortEv(onDay(visible(), ds)), hol = HOLIDAYS[ds];
+  sheet(`<h3>${mdw(ds)} ${teamTag(ds, "tmw")}<button class="x" data-close aria-label="닫기">✕</button></h3>
+    ${hol ? `<p class="hint" style="margin:-8px 0 10px;color:var(--sun)">${esc(hol)}</p>` : ""}
+    <div class="items" style="padding:0 0 12px">${list.length ? list.map(itemHTML).join("") : `<div class="empty">등록된 일정이 없습니다.</div>`}</div>
+    <div class="actions"><button class="btn btn-line" id="dWeek">주간 보기</button><button class="btn btn-fire grow" id="dAdd">＋ 이날 일정 등록</button></div>`,
+  (root, close) => {
+    root.querySelectorAll("[data-id]").forEach(b => b.addEventListener("click", () => openDetail(b.dataset.id)));
+    root.querySelector("#dAdd").addEventListener("click", () => openForm(null, ds));
+    root.querySelector("#dWeek").addEventListener("click", () => { close(); S.sel = ds; setView("week"); });
+  });
 }
 
 function itemHTML(e){
@@ -1277,7 +1328,13 @@ function render(){
 function sheet(html, onMount){
   const root = $("sheetRoot");
   root.innerHTML = `<div class="scrim"><div class="sheet" role="dialog" aria-modal="true"><div class="grab"></div>${html}</div></div>`;
-  const close = () => { root.innerHTML = ""; document.removeEventListener("keydown", esc_); };
+  document.body.classList.add("locked");
+  const close = () => { root.innerHTML = ""; document.body.classList.remove("locked"); document.removeEventListener("keydown", esc_); };
+  // 폰: 시트를 아래로 끌어내려 닫기
+  const sh = root.querySelector(".sheet"); let y0 = null, dy = 0;
+  sh.addEventListener("touchstart", e => { if (sh.scrollTop > 0 || /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) { y0 = null; return; } y0 = e.touches[0].clientY; dy = 0; }, { passive:true });
+  sh.addEventListener("touchmove", e => { if (y0 === null) return; dy = e.touches[0].clientY - y0; if (dy > 0){ sh.style.transform = `translateY(${dy}px)`; sh.style.transition = "none"; } }, { passive:true });
+  sh.addEventListener("touchend", () => { if (y0 === null) return; y0 = null; sh.style.transition = "transform .18s"; if (dy > 110) close(); else sh.style.transform = ""; });
   const esc_ = e => { if (e.key === "Escape") close(); };
   document.addEventListener("keydown", esc_);
   root.querySelector(".scrim").addEventListener("click", e => { if (e.target.classList.contains("scrim")) close(); });
