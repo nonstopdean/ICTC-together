@@ -1,0 +1,16 @@
+{
+  "name": "ICTC 함께 · 지휘역량강화센터 일정",
+  "short_name": "ICTC 함께",
+  "description": "지휘역량강화센터 연간 교육일정과 직원 출장·연가 공유",
+  "lang": "ko",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f1f3f5",
+  "theme_color": "#ffffff",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

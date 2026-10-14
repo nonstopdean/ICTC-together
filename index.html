@@ -448,7 +448,7 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent}
 <body>
 <header class="top">
   <div class="top-in">
-    <div class="mark" id="logo" role="button" tabindex="0" title="홈으로" style="cursor:pointer"><b>ICTC <em>함께</em></b><span>긴급구조지휘역량강화센터 일정</span></div>
+    <div class="mark" id="logo" role="button" tabindex="0" title="홈으로" style="cursor:pointer"><b>ICTC <em>함께</em></b><span>지휘역량강화센터 일정</span></div>
     <div class="top-right" id="topRight"></div>
   </div>
 </header>
@@ -1634,7 +1634,7 @@ function showLogin(msg){
   S.me = null; S.adminUntil = 0;
   const open = S.access.open, pin = S.access.numeric;
   showGate(`<h1>ICTC <em>함께</em></h1>
-    <p>긴급구조지휘역량강화센터 직원 일정입니다.<br>${open ? "이름을 적고 들어와 주세요." : "센터에서 받은 공용 비밀번호를 넣어 주세요."}</p>
+    <p>지휘역량강화센터 직원 일정입니다.<br>${open ? "이름을 적고 들어와 주세요." : "센터에서 받은 공용 비밀번호를 넣어 주세요."}</p>
     ${msg ? `<p class="hint" style="color:var(--fire);margin-top:-8px">${esc(msg)}</p>` : ""}
     <form id="lForm" style="text-align:left">
       <div class="f"><label for="lName">내 이름</label><input id="lName" value="${esc(myName())}" maxlength="20" placeholder="일정 등록할 때 쓰입니다" autocomplete="name"></div>
