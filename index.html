@@ -134,7 +134,7 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent}
 .cell.out{background:var(--soft)}
 .cell.out .dn{opacity:.45}
 .cell.sel{background:var(--edu-bg)}
-.dn{position:absolute;top:4px;left:6px;font-size:12.5px;font-weight:600;font-variant-numeric:tabular-nums;display:flex;align-items:center;gap:4px;max-width:calc(100% - 8px);white-space:nowrap;overflow:hidden}
+.dn{position:absolute;top:4px;left:6px;font-size:12.5px;font-weight:600;font-variant-numeric:tabular-nums;display:flex;align-items:center;gap:4px;max-width:calc(100% - 40px);white-space:nowrap;overflow:hidden}
 .dn em{font-style:normal;font-size:10px;font-weight:500;color:var(--sun);overflow:hidden;text-overflow:ellipsis}
 .cell.sun .dn,.cell.hol .dn{color:var(--sun)} .cell.sat .dn{color:var(--sat)}
 .cell.today .dn b{background:var(--fire);color:#fff;border-radius:999px;padding:0 6px;font-weight:700}
@@ -395,6 +395,20 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent}
   .phead h2::after{content:" · ICTC 함께";font-size:12px;font-weight:500;color:#666}
 }
 
+/* ---------- 근무 팀 ---------- */
+.tm{position:absolute;top:5px;right:5px;font-size:10.5px;font-weight:600;color:var(--muted);background:var(--soft);border-radius:4px;padding:0 4px;line-height:16px}
+.tm.mine,.tmw.mine,.tms.mine{background:var(--fire);color:#fff}
+.cell.out .tm{opacity:.5}
+.tmw{display:inline-block;font-size:10.5px;font-weight:600;color:var(--muted);background:var(--soft);border-radius:4px;padding:0 5px;line-height:16px;margin-top:2px}
+.tms{align-self:center;font-size:10.5px;font-weight:600;color:var(--muted);background:var(--soft);border-radius:4px;padding:0 5px;line-height:16px}
+.board{position:relative}
+.btm{position:absolute;top:10px;right:12px;font-size:12.5px;font-weight:600;color:var(--ink2);background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:3px 10px}
+.btm b{font-size:15px;color:var(--ink);font-weight:700}
+.btm.mine{background:var(--fire);border-color:var(--fire);color:#fff}
+.btm.mine b{color:#fff}
+.board-body:has(.btm) .board-row:first-of-type{padding-right:118px}
+@media print{.tm{background:none;padding:0}}
+
 /* ---------- 좁은 화면 ---------- */
 @media (max-width:900px){
   .layout{grid-template-columns:1fr}
@@ -409,6 +423,11 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent}
   .ev.cc:not(.out){box-shadow:none}
   .dn{left:4px;font-size:12px}
   .dn em{display:none}
+  .tm{top:4px;right:2px;font-size:9.5px;padding:0 2px;line-height:14px}
+  .btm{position:static;align-self:flex-end;font-size:12px;padding:2px 8px;margin:-2px -2px 0 0}
+  .btm b{font-size:14px}
+  .board-body:has(.btm) .board-row:first-of-type{padding-right:0}
+  .dn{max-width:calc(100% - 26px)}
   .more{font-size:10px;padding-left:3px}
   .year{grid-template-columns:1fr;padding:10px}
   .board-date{min-width:88px;padding:12px}
@@ -544,6 +563,8 @@ const FIREBASE_CONFIG = {
   projectId: "ictc-together",
   appId: "1:741564454402:web:6c0fad5c9c73cce53b791b"
 };
+// 근무 팀 순환: 기준일에 몇 팀이었는지와 팀 수. (2026-10-01 = 3팀 → 10-02 1팀 → 10-03 2팀 → 10-04 3팀 …)
+const SHIFT = { base: "2026-10-01", team: 3, teams: 3 };
 const ADMIN_MINUTES = 100;   // 관리자 모드 유지 시간(분). 보안 규칙상 최대 120분.
 const MIN_PW = 8;            // 비밀번호 최소 길이
 
@@ -596,7 +617,11 @@ const S = {
   week: null, weekend: false, notices: [], printing: false
 };
 const PERSONAL = ["trip","leave","etc"];
-const SEEN_KEY = "ictc-hamkke-seen", THEME_KEY = "ictc-hamkke-theme";
+const SEEN_KEY = "ictc-hamkke-seen", THEME_KEY = "ictc-hamkke-theme", TEAM_KEY = "ictc-hamkke-team";
+const teamOf = ds => { const k = ((diff(SHIFT.base, ds) % SHIFT.teams) + SHIFT.teams) % SHIFT.teams; return ((SHIFT.team - 1 + k) % SHIFT.teams) + 1; };
+const teamPref = () => { try { return JSON.parse(localStorage.getItem(TEAM_KEY)) || { show:true, mine:0 }; } catch(e){ return { show:true, mine:0 }; } };
+const setTeamPref = p => { try { localStorage.setItem(TEAM_KEY, JSON.stringify(p)); } catch(e){} };
+const teamTag = (ds, cls = "tm") => { const p = teamPref(); if (!p.show) return ""; const n = teamOf(ds); return `<span class="${cls} ${p.mine === n ? "mine" : ""}" title="${n}팀 근무">${n}팀</span>`; };
 const PREV_SEEN = (() => { try { return localStorage.getItem(SEEN_KEY) || ""; } catch(e){ return ""; } })();
 setTimeout(() => { try { localStorage.setItem(SEEN_KEY, new Date().toISOString()); } catch(e){} }, 8000);
 function applyTheme(v){
@@ -851,6 +876,7 @@ function renderBoard(){
   $("board").innerHTML = `
     <div class="board-date"><small>오늘</small><strong>${d.getMonth()+1}.${pad(d.getDate())}</strong><span>${WD[d.getDay()]}요일${hol ? " · " + esc(hol) : ""}</span></div>
     <div class="board-body">
+      ${teamPref().show ? `<span class="btm ${teamPref().mine === teamOf(TODAY) ? "mine" : ""}" title="근무 팀은 내 이름 → 근무 팀 표시에서 바꿀 수 있습니다">오늘 <b>${teamOf(TODAY)}팀</b> 근무</span>` : ""}
       <div class="board-row"><b>교육</b><div class="val">${training.length ? training.map(tag).join("") : `<span class="none">진행 중인 교육·평가 없음</span>`}</div></div>
       <div class="board-row"><b>부재</b><div class="val">${away.length ? away.map(tag).join("") : `<span class="none">오늘 등록된 출장·연가 없음</span>`}</div></div>
       ${etc.length ? `<div class="board-row"><b>기타</b><div class="val">${etc.map(tag).join("")}</div></div>` : ""}
@@ -887,7 +913,7 @@ function renderHome(){
     const crs = sortEv(on.filter(e => e.cat === "edu" || e.cat === "eval")).slice(0, 3);
     const n = new Set(on.filter(e => e.cat === "trip" || e.cat === "leave").map(e => e.person)).size;
     return `<button class="sday ${ds === TODAY ? "today" : ""} ${hol ? "hol" : ""}" data-wk="${ds}" title="${esc([hol, ...crs.map(e => e.title)].filter(Boolean).join(", "))}">
-      <span class="w">${WD[x.getDay()]}${hol ? " · " + esc(hol) : ""}</span><span class="n">${x.getDate()}</span>
+      <span class="w">${WD[x.getDay()]}${hol ? " · " + esc(hol) : ""}</span><span class="n">${x.getDate()}</span>${teamTag(ds, "tms")}
       <span class="bars">${crs.map(e => `<i class="${e.cat === "eval" ? "solid" : ""}" style="${tst(e)}"></i>`).join("")}</span>
       <span class="ab ${n >= 3 ? "hi" : ""}">${n ? `부재 ${n}` : "–"}</span></button>`;
   }).join("");
@@ -978,7 +1004,7 @@ function renderMonth(){
     for (let i = 0; i < 7; i++){
       const d = addDays(ws, i), ds = ymd(d), hol = HOLIDAYS[ds];
       const cls = ["cell", d.getMonth() !== mo && "out", i === 0 && "sun", i === 6 && "sat", hol && "hol", ds === TODAY && "today", ds === S.sel && "sel"].filter(Boolean).join(" ");
-      cells += `<button class="${cls}" style="grid-column:${i+1}" data-day="${ds}" aria-label="${mdw(ds)}"><span class="dn"><b>${d.getDate()}</b>${hol ? `<em>${esc(hol)}</em>` : ""}</span></button>`;
+      cells += `<button class="${cls}" style="grid-column:${i+1}" data-day="${ds}" aria-label="${mdw(ds)}"><span class="dn"><b>${d.getDate()}</b>${hol ? `<em>${esc(hol)}</em>` : ""}</span>${teamTag(ds)}</button>`;
     }
     // 주 단위로 막대 배치
     const evs = sortEv(vis.filter(e => e.start <= weS && e.end >= wsS));
@@ -1098,7 +1124,7 @@ function weekText(){
   const lines = [`[ICTC 함께] ${md(ymd(mon))}~${md(ymd(addDays(mon,4)))} 주간 일정`];
   for (let i = 0; i < 5; i++){
     const ds = ymd(addDays(mon, i)), list = sortEv(onDay(S.events, ds));
-    lines.push("", `${mdw(ds)}${HOLIDAYS[ds] ? " " + HOLIDAYS[ds] : ""}`);
+    lines.push("", `${mdw(ds)}${teamPref().show ? ` [${teamOf(ds)}팀]` : ""}${HOLIDAYS[ds] ? " " + HOLIDAYS[ds] : ""}`);
     if (!list.length) lines.push("- 일정 없음");
     list.forEach(e => lines.push(`- ${label(e)}`));
   }
@@ -1141,7 +1167,7 @@ function renderWeek(){
   days.forEach((ds, i) => {
     const d = pd(ds), dow = d.getDay(), hol = HOLIDAYS[ds];
     const cls = ["wh", ds === TODAY && "today", dow === 0 && "sun", dow === 6 && "sat", hol && "hol"].filter(Boolean).join(" ");
-    html += `<button class="${cls}" style="grid-column:${i+2};grid-row:1" data-wday="${ds}">${WD[dow]}<b>${d.getDate()}</b><em>${esc(hol || "")}</em></button>`;
+    html += `<button class="${cls}" style="grid-column:${i+2};grid-row:1" data-wday="${ds}">${WD[dow]}<b>${d.getDate()}</b><em>${esc(hol || "")}</em>${teamTag(ds, "tmw")}</button>`;
     html += `<div class="colbg ${ds === TODAY ? "today" : ""}" style="grid-column:${i+2}"></div>`;
   });
   row = 2;
@@ -1599,11 +1625,19 @@ function openAccount(){
   sheet(`<h3>내 접속<button class="x" data-close aria-label="닫기">✕</button></h3>
     <div class="f"><label for="myName">내 이름</label><input id="myName" value="${esc(S.me.name)}" maxlength="20">
       <p class="hint">일정을 등록할 때 '누가'와 '등록'에 들어갑니다. 이 기기에만 기억합니다.</p></div>
+    <div class="f"><span class="lbl">근무 팀 표시 <span style="font-weight:500;color:var(--muted)">· 오늘 ${teamOf(TODAY)}팀</span></span>
+      <div class="picks" id="tmPick">${[["off","끄기"],["0","켜기"],["1","내 팀 1팀"],["2","내 팀 2팀"],["3","내 팀 3팀"]].map(([k,x]) => { const p = teamPref(); const on = k === "off" ? !p.show : (p.show && String(p.mine) === k); return `<button type="button" class="pick plain" data-v="${k}" aria-pressed="${on}">${x}</button>`; }).join("")}</div>
+      <p class="hint">내 팀을 고르면 그 팀 근무일이 빨갛게 표시됩니다. 이 기기에만 기억합니다.</p></div>
     <div class="f"><span class="lbl">화면 밝기</span><div class="picks" id="thPick">${[["auto","기기 설정 따라"],["light","밝게"],["dark","어둡게"]].map(([k,t]) => `<button type="button" class="pick plain" data-v="${k}" aria-pressed="${(document.documentElement.dataset.theme || "auto") === k}">${t}</button>`).join("")}</div></div>
     <dl class="dl"><dt>접속</dt><dd>${S.mode === "demo" ? "체험 모드 (이 기기에만 저장)" : "직원 공용 접속"} · ${MODE_TEXT[accessMode()]}</dd><dt>권한</dt><dd>${isAdmin() ? "관리자 모드" : "직원"}</dd></dl>
     <div class="actions"><button class="btn btn-line" id="out">로그아웃</button><button class="btn btn-ink grow" id="saveName">이름 저장</button></div>
     ${S.mode === "demo" ? `<button class="btn btn-danger" id="reset" style="width:100%;margin-top:10px">체험 데이터 처음으로</button>` : ""}`,
   (root, close) => {
+    root.querySelector("#tmPick").addEventListener("click", ev => {
+      const b = ev.target.closest(".pick"); if (!b) return; const v = b.dataset.v;
+      setTeamPref(v === "off" ? { show:false, mine: teamPref().mine } : { show:true, mine: +v });
+      root.querySelectorAll("#tmPick .pick").forEach(x => x.setAttribute("aria-pressed", x === b)); render();
+    });
     root.querySelector("#thPick").addEventListener("click", ev => {
       const b = ev.target.closest(".pick"); if (!b) return; applyTheme(b.dataset.v);
       root.querySelectorAll("#thPick .pick").forEach(x => x.setAttribute("aria-pressed", x === b));
