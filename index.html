@@ -398,6 +398,16 @@ body.locked{overflow:hidden}
   .phead h2::after{content:" · ICTC 함께";font-size:12px;font-weight:500;color:#666}
 }
 
+/* ---------- 시간 고르기 ---------- */
+.tbox{background:var(--soft);border-radius:12px;padding:6px 10px 10px;margin-top:8px}
+.tlbl{font-size:12px;font-weight:700;color:var(--muted);margin:8px 0 5px}
+.tchips{display:flex;flex-wrap:wrap;gap:5px}
+.tchips button{border:1px solid var(--line);background:var(--card);border-radius:8px;padding:6px 9px;font-size:13px;font-weight:600;color:var(--ink2);font-variant-numeric:tabular-nums}
+.tchips button[aria-pressed="true"]{background:var(--ink);color:var(--card);border-color:var(--ink)}
+.trange{display:flex;align-items:center;gap:8px;margin-top:10px;flex-wrap:wrap}
+.trange input{width:auto!important;flex:0 1 130px;padding:8px 10px!important}
+.trange b{font-size:13px;color:var(--muted);font-weight:600}
+
 /* ---------- 근무 팀 ---------- */
 .tm{position:absolute;top:5px;right:5px;font-size:10.5px;font-weight:600;color:var(--muted);background:var(--soft);border-radius:4px;padding:0 4px;line-height:16px}
 .tm.mine,.tmw.mine,.tms.mine{background:var(--fire);color:#fff}
@@ -449,6 +459,8 @@ body.locked{overflow:hidden}
   .sheet h3{font-size:18px}
   .pick{padding:10px 13px}
   .quick button{padding:6px 10px;font-size:13px}
+  .tchips button{padding:8px 10px;font-size:13.5px}
+  #fHours button{min-width:calc((100% - 20px) / 5)}
   .item{padding:11px 10px 11px 0}
   .hrow{padding:10px 4px}
   .wrap{padding:12px 10px 110px}
@@ -668,7 +680,10 @@ function applyTheme(v){
 try { applyTheme(localStorage.getItem(THEME_KEY) || "auto"); } catch(e){}
 const isAdmin = () => S.adminUntil > Date.now();
 const canEdit = e => isAdmin() || PERSONAL.includes(e.cat);
-const label = e => (e.time && e.cat !== "leave" ? e.time + " " : "") + label0(e);
+const timeText = e => e.time && e.cat !== "leave" ? (e.timeEnd ? `${e.time}~${e.timeEnd}` : e.time) : "";
+const label = e => (timeText(e) ? timeText(e) + " " : "") + label0(e);
+const toMin = s => { const [h, m] = String(s || "0:0").split(":").map(Number); return h * 60 + (m || 0); };
+const fromMin = n => { n = Math.max(0, Math.min(23 * 60 + 59, n)); return `${pad(Math.floor(n / 60))}:${pad(n % 60)}`; };
 const label0 = e => {
   if ((e.cat === "trip" || e.cat === "leave") && !e.person) return e.title || CATS[e.cat];
   if (e.cat === "trip") return `${e.person} 출장${e.place ? " · " + e.place : (e.title ? " · " + e.title : "")}`;
@@ -1140,7 +1155,7 @@ function exportCsv(){
   if (!list.length) return toast("저장할 일정이 없습니다.");
   const cell = v => `"${String(v ?? "").replace(/"/g, '""')}"`;
   const head = ["분류","과정·내용","이름","시작","종료","일수","시간","장소","담당 교관","계획(안)","메모","등록"];
-  const rows = list.map(e => [CATS[e.cat] + (e.cat === "leave" && e.half !== "full" ? `(${HALF[e.half]})` : ""), e.title || "", e.person || "", e.start, e.end, diff(e.start, e.end) + 1, e.time || "", e.place || "", staffOf(e).join(", "), e.plan ? "O" : "", e.memo || "", e.ownerName || ""]);
+  const rows = list.map(e => [CATS[e.cat] + (e.cat === "leave" && e.half !== "full" ? `(${HALF[e.half]})` : ""), e.title || "", e.person || "", e.start, e.end, diff(e.start, e.end) + 1, timeText(e), e.place || "", staffOf(e).join(", "), e.plan ? "O" : "", e.memo || "", e.ownerName || ""]);
   const csv = "\ufeff" + [head, ...rows].map(r => r.map(cell).join(",")).join("\r\n");
   const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([csv], { type:"text/csv;charset=utf-8" }));
   a.download = `ICTC함께_일정_${TODAY}.csv`; document.body.append(a); a.click(); a.remove();
@@ -1250,7 +1265,7 @@ function renderWeek(){
     const mine = [...personal.filter(e => e.person === n), ...assigned.filter(e => staffOf(e).includes(n)).map(e => ({ ...e, _asg: true }))], k = pack(mine);
     html += `<div class="nm ${n === S.me.name ? "me" : ""}" style="grid-row:${row}/${row+k}" title="${esc(n)}">${esc(n)}</div>`;
     days.forEach((ds, i) => { const dow = pd(ds).getDay(); html += `<button class="slot ${dow === 0 || dow === 6 || HOLIDAYS[ds] ? "wkend" : ""}" style="grid-column:${i+2};grid-row:${row}/${row+k}" data-slot="${ds}" data-person="${esc(n)}" aria-label="${esc(n)} ${mdw(ds)} 일정 등록"></button>`; });
-    mine.forEach(e => html += bar(e, row, e._asg ? `담당 · ${e.title}` : e.cat === "leave" ? (e.half && e.half !== "full" ? HALF[e.half] : "연가") : e.cat === "trip" ? `${e.time ? e.time + " " : ""}출장${e.place ? " · " + e.place : ""}` : label(e)));
+    mine.forEach(e => html += bar(e, row, e._asg ? `담당 · ${e.title}` : e.cat === "leave" ? (e.half && e.half !== "full" ? HALF[e.half] : "연가") : e.cat === "trip" ? `${timeText(e) ? timeText(e) + " " : ""}출장${e.place ? " · " + e.place : ""}` : label(e)));
     row += k;
   });
   const etc = personal.filter(e => !e.person);
@@ -1357,7 +1372,8 @@ function choose(title, options){
 function icsText(list){
   const d = s => s.replace(/-/g, ""), x = s => String(s || "").replace(/\\/g, "\\\\").replace(/[;,]/g, m => "\\" + m).replace(/\n/g, "\\n");
   const stamp = new Date().toISOString().replace(/[-:]/g, "").slice(0, 15) + "Z";
-  const ev = list.map(e => ["BEGIN:VEVENT", `UID:${e.id}@ictc-hamkke`, `DTSTAMP:${stamp}`, `DTSTART;VALUE=DATE:${d(e.start)}`, `DTEND;VALUE=DATE:${d(ymd(addDays(pd(e.end), 1)))}`,
+  const ev = list.map(e => ["BEGIN:VEVENT", `UID:${e.id}@ictc-hamkke`, `DTSTAMP:${stamp}`, ...(timeText(e) ? [`DTSTART:${d(e.start)}T${e.time.replace(":", "")}00`, `DTEND:${d(e.end)}T${(e.timeEnd || fromMin(toMin(e.time) + 60)).replace(":", "")}00`]
+      : [`DTSTART;VALUE=DATE:${d(e.start)}`, `DTEND;VALUE=DATE:${d(ymd(addDays(pd(e.end), 1)))}`]),
     `SUMMARY:${x(label(e))}`, e.place && `LOCATION:${x(e.place)}`, e.memo && `DESCRIPTION:${x(e.memo)}`, "END:VEVENT"].filter(Boolean).join("\r\n"));
   return ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//ICTC hamkke//KO", "CALSCALE:GREGORIAN", ...ev, "END:VCALENDAR"].join("\r\n");
 }
@@ -1378,7 +1394,7 @@ function openDetail(id){
   const rows = [
     ["분류", (e.cat === "edu" || e.cat === "eval" ? tone(e).name + " · " : "") + CATS[e.cat] + (e.cat === "leave" ? ` · ${HALF[e.half||"full"]}` : "") + (e.plan ? " · 계획(안)" : "")],
     ["기간", rangeText(e) + (days > 1 ? ` · ${days}일` : "")],
-    e.time && e.cat !== "leave" && ["시간", e.time],
+    timeText(e) && ["시간", timeText(e)],
     e.person && ["담당", e.person],
     staffOf(e).length && ["담당 교관", staffOf(e).join(", ")],
     e.place && ["장소", e.place],
@@ -1433,8 +1449,16 @@ function openForm(e, day, preset){
     <div class="f" id="wPlace"><label for="fPlace">어디로</label><input id="fPlace" value="${esc(v.place)}" maxlength="40" placeholder="예: 경남소방본부, 중앙소방학교">
       <div class="quick">${["경남","울산","창원","중앙소방학교","소방청"].map(p=>`<button type="button" data-place="${p}">${p}</button>`).join("")}</div></div>
     <div class="f" id="wTitle"><label for="fTitle" id="lTitle">내용</label><input id="fTitle" value="${esc(v.title)}" maxlength="60"></div>
-    <div class="f" id="wTime"><label for="fTime">시간 (선택)</label><input id="fTime" type="time" value="${esc(v.time || "")}" step="600" style="max-width:180px">
-      <div class="quick">${["09:00","10:00","13:30","14:00","16:00"].map(x => `<button type="button" data-time="${x}">${x}</button>`).join("")}<button type="button" data-time="">지우기</button></div></div>
+    <div class="f" id="wTime"><span class="lbl">시간</span>
+      <div class="picks" id="fTmode"><button type="button" class="pick plain" data-v="all" aria-pressed="${!v.time}">종일</button><button type="button" class="pick plain" data-v="time" aria-pressed="${!!v.time}">시간 지정</button></div>
+      <div class="tbox ${v.time ? "" : "hide"}" id="fTbox">
+        <div class="tlbl">시작</div>
+        <div class="tchips" id="fHours">${Array.from({ length: 15 }, (_, k) => k + 7).map(h => `<button type="button" data-h="${h}">${h}시</button>`).join("")}</div>
+        <div class="tchips" id="fMins" style="margin-top:6px">${["00","10","20","30","40","50"].map(m => `<button type="button" data-m="${m}">:${m}</button>`).join("")}</div>
+        <div class="tlbl">얼마나</div>
+        <div class="tchips" id="fDurs">${[[30,"30분"],[60,"1시간"],[90,"1시간 30분"],[120,"2시간"],[180,"3시간"],[240,"4시간"],["18:00","18시까지"]].map(([d, x]) => `<button type="button" data-d="${d}">${x}</button>`).join("")}</div>
+        <div class="trange"><input id="fTime" type="time" step="600" value="${esc(v.time || "")}" aria-label="시작 시간"><span>~</span><input id="fTimeEnd" type="time" step="600" value="${esc(v.timeEnd || "")}" aria-label="끝 시간"><b id="fTlen"></b></div>
+      </div></div>
     <div class="f" id="wStaff"><label for="fStaff">담당 교관 (선택)</label><input id="fStaff" value="${esc(staffOf(v).join(", "))}" placeholder="이름을 쉼표로 구분 (예: 김기석, 이도경)">
       <div class="quick" id="fStaffQ">${people().map(n => `<button type="button" data-staff="${esc(n)}">${esc(n)}</button>`).join("")}</div></div>
     <label class="f" id="wPlan" style="display:flex;gap:8px;align-items:center;font-size:14px"><input type="checkbox" id="fPlan" ${v.plan ? "checked" : ""} style="width:18px;height:18px"> 확정 전 계획(안)으로 표시</label>
@@ -1456,7 +1480,34 @@ function openForm(e, day, preset){
       q("#wStaff").classList.toggle("hide", !course); q("#wPlan").classList.toggle("hide", !course);
       q("#wTime").classList.toggle("hide", c === "leave");
     };
-    root.querySelectorAll("[data-time]").forEach(b => b.addEventListener("click", () => { q("#fTime").value = b.dataset.time; }));
+    // 시간: 시 → 분 → 얼마나 세 번이면 끝
+    let tmode = v.time ? "time" : "all";
+    const tPaint = () => {
+      const s = q("#fTime").value, en = q("#fTimeEnd").value, sm = toMin(s);
+      q("#fHours").querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", !!s && +b.dataset.h === Math.floor(sm / 60)));
+      q("#fMins").querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", !!s && +b.dataset.m === sm % 60));
+      const len = s && en ? toMin(en) - sm : null;
+      q("#fDurs").querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", len !== null && (b.dataset.d.includes(":") ? en === b.dataset.d : +b.dataset.d === len)));
+      q("#fTlen").textContent = len === null ? "" : len > 0 ? `${len >= 60 ? Math.floor(len / 60) + "시간" : ""}${len % 60 ? " " + (len % 60) + "분" : ""}`.trim() : (q("#fEnd").value > q("#fStart").value ? "다음 날까지" : "끝 시간을 확인해 주세요");
+    };
+    const curLen = () => { const s = q("#fTime").value, en = q("#fTimeEnd").value; const l = s && en ? toMin(en) - toMin(s) : 60; return l > 0 ? l : 60; };
+    const setStart = m => { const l = curLen(); q("#fTime").value = fromMin(m); q("#fTimeEnd").value = fromMin(m + l); tPaint(); };
+    q("#fTmode").addEventListener("click", ev => {
+      const b = ev.target.closest(".pick"); if (!b) return; tmode = b.dataset.v;
+      q("#fTmode").querySelectorAll(".pick").forEach(x => x.setAttribute("aria-pressed", x === b));
+      q("#fTbox").classList.toggle("hide", tmode !== "time");
+      if (tmode === "time" && !q("#fTime").value){ q("#fTime").value = "09:00"; q("#fTimeEnd").value = "10:00"; }
+      tPaint();
+    });
+    q("#fHours").addEventListener("click", ev => { const b = ev.target.closest("[data-h]"); if (!b) return; setStart(+b.dataset.h * 60 + (q("#fTime").value ? toMin(q("#fTime").value) % 60 : 0)); });
+    q("#fMins").addEventListener("click", ev => { const b = ev.target.closest("[data-m]"); if (!b) return; const h = q("#fTime").value ? Math.floor(toMin(q("#fTime").value) / 60) : 9; setStart(h * 60 + +b.dataset.m); });
+    q("#fDurs").addEventListener("click", ev => {
+      const b = ev.target.closest("[data-d]"); if (!b) return;
+      if (!q("#fTime").value) q("#fTime").value = "09:00";
+      q("#fTimeEnd").value = b.dataset.d.includes(":") ? b.dataset.d : fromMin(toMin(q("#fTime").value) + +b.dataset.d); tPaint();
+    });
+    ["#fTime", "#fTimeEnd"].forEach(s => q(s).addEventListener("input", tPaint));
+    tPaint();
     root.querySelectorAll("[data-staff]").forEach(b => b.addEventListener("click", () => {
       const cur = q("#fStaff").value.split(/[,·\s]+/).map(s => s.trim()).filter(Boolean), n = b.dataset.staff;
       q("#fStaff").value = (cur.includes(n) ? cur.filter(x => x !== n) : [...cur, n]).join(", ");
@@ -1499,13 +1550,16 @@ function openForm(e, day, preset){
         half: v.cat === "leave" ? v.half : "full",
         person: q("#fPerson").value.trim(), place: q("#fPlace").value.trim(), title: q("#fTitle").value.trim(), memo: q("#fMemo").value.trim(),
         plan: (v.cat === "edu" || v.cat === "eval") ? q("#fPlan").checked : false,
-        time: v.cat === "leave" ? "" : q("#fTime").value,
+        time: v.cat === "leave" || tmode !== "time" ? "" : q("#fTime").value,
+        timeEnd: v.cat === "leave" || tmode !== "time" ? "" : q("#fTimeEnd").value,
         staff: (v.cat === "edu" || v.cat === "eval") ? [...new Set(q("#fStaff").value.split(/[,·\s]+/).map(s => s.trim()).filter(Boolean))].slice(0, 12) : [],
         ownerName: e?.ownerName || S.me.name, editedBy: S.me.name, updatedAt: new Date().toISOString()
       };
       if (ev.cat === "leave" && ev.half !== "full") ev.end = ev.start;
       if (!ev.start) return toast("시작일을 골라 주세요.");
       if (ev.end < ev.start) return toast("종료일이 시작일보다 빠릅니다.");
+      if (ev.time && ev.timeEnd && ev.start === ev.end && toMin(ev.timeEnd) <= toMin(ev.time)) return toast("끝 시간이 시작 시간보다 늦어야 합니다.");
+      if (tmode === "time" && !ev.time && v.cat !== "leave") return toast("시작 시간을 골라 주세요.");
       if ((ev.cat === "trip" || ev.cat === "leave") && !ev.person) return toast("누구의 일정인지 이름을 적어 주세요.");
       if ((ev.cat === "edu" || ev.cat === "eval" || ev.cat === "etc") && !ev.title) return toast(v.cat === "etc" ? "무엇을 하는지 적어 주세요." : "과정명을 적어 주세요.");
       let list = [ev];
