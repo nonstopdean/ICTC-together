@@ -471,6 +471,27 @@ body.locked{overflow:hidden}
 .ckrow small{grid-column:1/-1;font-size:11.5px;color:var(--muted);margin:-2px 0 0 28px}
 .ckb{display:inline-block;font-size:11px;font-weight:700;border-radius:5px;padding:0 5px;margin-left:4px;background:var(--trip-bg);color:var(--trip);vertical-align:1px;white-space:nowrap}
 .ckb.ok{background:var(--leave-bg);color:var(--leave)}
+.msum{padding:14px 16px 4px}
+.mbal{background:var(--ink);color:var(--card);border-radius:14px;padding:16px 18px}
+.mbal small{display:block;font-size:13px;opacity:.75}
+.mbal b{font-size:30px;font-weight:700;letter-spacing:-.5px;font-variant-numeric:tabular-nums}
+.mmini{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.mmini span{background:var(--soft);border-radius:12px;padding:10px 12px}
+.mmini small{display:block;font-size:12px;color:var(--muted)} .mmini b{font-size:17px;font-variant-numeric:tabular-nums}
+.pos{color:var(--leave)} .neg{color:var(--fire)}
+.mact{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px 16px 12px}
+.mact .btn{padding:13px;font-size:15px}
+.mrow{display:grid;grid-template-columns:52px 1fr auto;gap:10px;align-items:center;width:100%;border:0;border-top:1px solid var(--line2);background:transparent;padding:10px 16px;text-align:left}
+.mrow:hover{background:var(--soft)}
+.md2{font-weight:700;font-variant-numeric:tabular-nums;line-height:1.2} .md2 small{display:block;font-weight:500;color:var(--muted);font-size:11.5px}
+.mi{min-width:0} .mi b{display:block;font-size:14.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap} .mi small{font-size:12px;color:var(--muted)}
+.ma{text-align:right;font-variant-numeric:tabular-nums} .ma b{display:block;font-size:15px} .ma small{font-size:11.5px;color:var(--muted)}
+.sttable .ok{color:var(--leave);font-weight:700} .sttable .no{color:var(--fire);font-weight:700} .sttable .part{color:var(--trip);font-weight:700}
+.amtwrap{display:flex;align-items:center;gap:8px}
+.amtwrap input{font-size:22px!important;font-weight:700;text-align:right;font-variant-numeric:tabular-nums}
+.amtwrap span{font-size:17px;font-weight:600}
+.rcpt{margin:-4px 0 14px;font-size:13px;color:var(--muted)} .rcpt img{max-width:100%;border-radius:10px;border:1px solid var(--line)}
+#mnTabs{flex:0 0 auto}
 /* ---------- 기록·통계·예약·과정 ---------- */
 .hlist{display:flex;flex-direction:column}
 .hrow2{display:grid;grid-template-columns:26px 1fr auto;gap:8px;align-items:center;padding:9px 0;border-top:1px solid var(--line2)}
@@ -641,7 +662,9 @@ body.locked{overflow:hidden}
   .hphotos{grid-template-columns:repeat(4,minmax(0,1fr))}
   .hphotos .pth:nth-child(n+9){display:none}
   .vnav{display:none}
-  #viewTabs button{font-size:10.5px}
+  #viewTabs button{font-size:10px;padding:5px 0}
+  #viewTabs .ico svg{width:20px;height:20px}
+  .mbal b{font-size:26px}
   .dty{font-size:9.5px;left:2px;bottom:2px;max-width:calc(100% - 4px)}
   #mPrint,#wPrint{display:none}
   .phead .right .btn,.ttl{white-space:nowrap}
@@ -676,7 +699,7 @@ body.locked{overflow:hidden}
   .install{flex-wrap:wrap}
   .install .acts{margin-left:0;width:100%;justify-content:flex-start}
   #viewTabs{position:fixed;left:0;right:0;bottom:0;z-index:40;border-radius:0;border:0;border-top:1px solid var(--line);
-    padding:4px 6px calc(4px + env(safe-area-inset-bottom,0px));display:grid;grid-template-columns:repeat(6,1fr);background:var(--card);box-shadow:0 -4px 16px rgba(0,0,0,.05)}
+    padding:4px 6px calc(4px + env(safe-area-inset-bottom,0px));display:grid;grid-template-columns:repeat(7,1fr);background:var(--card);box-shadow:0 -4px 16px rgba(0,0,0,.05)}
   #viewTabs button{display:flex;flex-direction:column;align-items:center;gap:1px;font-size:11px;padding:5px 0;border-radius:10px}
   #viewTabs button[aria-pressed="true"]{background:transparent;color:var(--fire)}
   #viewTabs .ico{display:block;line-height:0}
@@ -721,6 +744,7 @@ body.locked{overflow:hidden}
       <button data-view="month" aria-pressed="false"><span class="ico"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></span>월간</button>
       <button data-view="year" aria-pressed="false"><span class="ico"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span>연간</button>
       <button data-view="photo" aria-pressed="false"><span class="ico"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="15" rx="2"/><circle cx="9" cy="11" r="2"/><path d="M21 17l-5-5-8 8"/></svg></span>사진</button>
+      <button data-view="money" aria-pressed="false"><span class="ico"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M16 15h2"/></svg></span>공금</button>
       <button data-view="list" aria-pressed="false"><span class="ico"><svg viewBox="0 0 24 24"><path d="M9 6h12M9 12h12M9 18h12M4 6h.01M4 12h.01M4 18h.01"/></svg></span>목록</button>
 </div>
     <div class="filters" id="filters"></div>
@@ -778,6 +802,15 @@ body.locked{overflow:hidden}
     <div id="pGrid" class="pgrid-wrap"></div>
   </section>
 
+  <section id="vMoney" class="panel hide">
+    <div class="phead"><h2>공금</h2><div class="right"><button class="btn btn-line btn-sm" id="mnCfg">⚙ 공금 설정</button></div></div>
+    <div class="msum" id="mnSum"></div>
+    <div class="mact"><button class="btn btn-ink" id="mnIn">＋ 입금</button><button class="btn btn-fire" id="mnOut">－ 지출</button></div>
+    <div class="listtools"><div class="seg" id="mnTabs"><button data-v="list" aria-pressed="true">내역</button><button data-v="people" aria-pressed="false">사람별</button><button data-v="month" aria-pressed="false">월별</button></div>
+      <input class="search" id="mnQ" type="search" placeholder="내용, 사람으로 찾기"></div>
+    <div id="mnBody"></div>
+  </section>
+
   <section id="vList" class="panel hide">
     <div class="listtools">
       <input class="search" id="q" type="search" placeholder="과정명, 이름, 장소로 찾기">
@@ -792,7 +825,7 @@ body.locked{overflow:hidden}
     <div id="listBody"></div>
   </section>
 
-  <p class="foot keys">단축키 · ← → 이동 · T 오늘 · N 새 일정 · 1~6 보기 전환 (1 = 홈) · 달력에서 날짜를 끌면 기간 등록, 두 번 누르면 그날 등록</p>
+  <p class="foot keys">단축키 · ← → 이동 · T 오늘 · N 새 일정 · 1~7 보기 전환 (1 = 홈) · 달력에서 날짜를 끌면 기간 등록, 두 번 누르면 그날 등록</p>
   <p class="foot">교육·평가 일정은 2026년 연간 교육계획과 2027~2028 지휘대장 편성표(3안)에서 옮겼습니다. 빗금 무늬는 확정 전 계획(안)입니다. 휴가 사유는 직원 모두에게 보이니 필요한 만큼만 적어 주세요.</p>
 </main>
 
@@ -872,7 +905,7 @@ const S = {
   mode: "demo", fb: null, me: null, adminUntil: 0, events: [], access: { open:false, numeric:false }, colors: {},
   view: "home", month: pd(TODAY.slice(0,8)+"01"), year: pd(TODAY).getFullYear(), sel: TODAY,
   on: new Set(Object.keys(CATS)), person: "", q: "", range: "next",
-  week: null, weekend: true, notices: [], printing: false, homeBg: "", comments: [], photos: [], detailId: null, album: ""
+  week: null, weekend: true, ledger: [], ledgerCfg: null, mTab: "list", notices: [], printing: false, homeBg: "", comments: [], photos: [], detailId: null, album: ""
 };
 const PERSONAL = ["trip","leave","duty","resv","etc"];
 const SEEN_KEY = "ictc-hamkke-seen", THEME_KEY = "ictc-hamkke-theme", TEAM_KEY = "ictc-hamkke-team";
@@ -1064,6 +1097,29 @@ const store = {
       const { fs, db } = S.fb;
       for (let i = 0; i < list.length; i += 20){ const b = fs.writeBatch(db); list.slice(i, i + 20).forEach(h => b.set(fs.doc(db, "history", h.id), h)); await b.commit(); }
     } catch(e){ console.warn("변경 기록을 남기지 못했습니다(보안 규칙 확인)", e); }
+  },
+  async saveLedger(rec, img){
+    const prev = S.ledger.find(x => x.id === rec.id);
+    if (S.mode === "demo"){ S.ledger = [...S.ledger.filter(x => x.id !== rec.id), rec]; local.data.ledger = S.ledger; if (img) RECEIPT.set(rec.id, img); local.save(); renderMoneyIfOpen(); }
+    else {
+      const { fs, db } = S.fb; const b = fs.writeBatch(db);
+      b.set(fs.doc(db, "ledger", rec.id), rec); if (img) b.set(fs.doc(db, "receipts", rec.id), { data: img, uid: myUid() }); await b.commit(); if (img) RECEIPT.set(rec.id, img);
+    }
+    this.log([histEntry(prev ? "update" : "create", null, { label: `공금 ${rec.type === "in" ? "입금" : "지출"} ${won(rec.amount)} · ${rec.who} · ${rec.item || rec.cat}`, changes: prev && prev.amount !== rec.amount ? `금액: ${won(prev.amount)} → ${won(rec.amount)}` : "" })]);
+  },
+  async delLedger(rec){
+    if (S.mode === "demo"){ S.ledger = S.ledger.filter(x => x.id !== rec.id); local.data.ledger = S.ledger; local.save(); renderMoneyIfOpen(); }
+    else { const { fs, db } = S.fb; const b = fs.writeBatch(db); b.delete(fs.doc(db, "ledger", rec.id)); if (rec.hasImg) b.delete(fs.doc(db, "receipts", rec.id)); await b.commit(); }
+    this.log([histEntry("delete", null, { label: `공금 ${rec.type === "in" ? "입금" : "지출"} ${won(rec.amount)} · ${rec.who} · ${rec.item || rec.cat}` })]);
+  },
+  async receipt(id){
+    if (RECEIPT.has(id)) return RECEIPT.get(id);
+    if (S.mode === "demo") return "";
+    const { fs, db } = S.fb; const d = await fs.getDoc(fs.doc(db, "receipts", id)); const v = d.exists() ? d.data().data : ""; RECEIPT.set(id, v); return v;
+  },
+  async setLedgerCfg(cfg){
+    if (S.mode === "demo"){ local.data.ledgerCfg = cfg; local.save(); return; }
+    const { fs, db } = S.fb; await fs.setDoc(fs.doc(db, "settings", "ledger"), cfg);
   },
   async setChecklist(list){
     if (S.mode === "demo"){ local.data.checklist = list; local.save(); return; }
@@ -1323,7 +1379,7 @@ function openNotice(edit){
     const text = root.querySelector("#nText").value.trim(); if (!text) return toast("내용을 적어 주세요.");
     const n = edit ? { ...edit, text, until: root.querySelector("#nUntil").value || "", editedBy: S.me.name, editedAt: new Date().toISOString() }
       : { id: "n" + Date.now().toString(36), text, until: root.querySelector("#nUntil").value || "", by: S.me.name, at: new Date().toISOString() };
-    try { await store.saveNotice(n); close(); toast(edit ? "공지를 고쳤습니다." : "공지를 올렸습니다."); } catch(e){ console.error(e); toast("저장하지 못했습니다. 보안 규칙을 확인해 주세요."); }
+    try { await store.saveNotice(n); close(); toast(edit ? "공지를 고쳤습니다." : "공지를 올렸습니다.", { label: "💬 카톡으로 알리기", fn: () => shareOut(`[ICTC 함께] 📢 공지\n${n.text}${n.until ? `\n(${md(n.until)}까지)` : ""}\n\n앱에서 보기: ${appUrl()}`) }); } catch(e){ console.error(e); toast("저장하지 못했습니다. 보안 규칙을 확인해 주세요."); }
   }));
 }
 function openNoticeArchive(){
@@ -1782,6 +1838,8 @@ function setView(v){
   if (v === "week") S.week = monday(pd(S.sel));
   $("vList").classList.toggle("hide", v !== "list");
   $("vPhoto").classList.toggle("hide", v !== "photo");
+  $("vMoney").classList.toggle("hide", v !== "money");
+  $("fab").classList.toggle("hide", v === "money");
   render();
 }
 
@@ -1789,7 +1847,7 @@ function renderLegend(){
   let from, to;
   if (S.view === "month"){ const y = S.month.getFullYear(), m = S.month.getMonth(); from = ymd(new Date(y, m, 1, 12)); to = ymd(new Date(y, m+1, 0, 12)); }
   else if (S.view === "year"){ from = `${S.year}-01-01`; to = `${S.year}-12-31`; }
-  else if (S.view === "home" || S.view === "photo"){ $("legend").innerHTML = ""; return; }
+  else if (S.view === "home" || S.view === "photo" || S.view === "money"){ $("legend").innerHTML = ""; return; }
   else if (S.view === "week"){ const w = S.week || monday(pd(S.sel)); from = ymd(w); to = ymd(addDays(w, 6)); }
   else { $("legend").innerHTML = ""; return; }
   const seen = new Map();
@@ -1811,7 +1869,8 @@ function render(){
   if (S.view === "week") renderWeek();
   if (S.view === "list") renderList();
   if (S.view === "photo") renderPhotos();
-  $("filters").classList.toggle("hide", S.view === "home" || S.view === "photo");
+  if (S.view === "money") renderMoney();
+  $("filters").classList.toggle("hide", S.view === "home" || S.view === "photo" || S.view === "money");
 }
 
 /* ---------- 사진첩 ---------- */
@@ -2100,7 +2159,7 @@ const BK_KEY = "ictc-hamkke-lastbackup";
 function backupData(){
   const strip = o => Object.fromEntries(Object.entries(o).filter(([k]) => !k.startsWith("_")));
   return { app: "ICTC 함께", version: 1, at: new Date().toISOString(), by: S.me?.name || "",
-    events: S.events.map(strip), notices: S.notices.map(strip), comments: S.comments.map(strip),
+    events: S.events.map(strip), notices: S.notices.map(strip), ledger: S.ledger.map(strip), comments: S.comments.map(strip),
     settings: { colors: S.colors || {}, resources: S.resources || null, checklist: S.checklist || null },
     photos: S.photos.map(p => ({ id: p.id, album: p.album, caption: p.caption, by: p.by, at: p.at, date: p.date })) };
 }
@@ -2140,6 +2199,7 @@ function openBackup(){
             const { fs, db } = S.fb; const cm = d.comments || [];
             for (let i = 0; i < cm.length; i += 20){ const b = fs.writeBatch(db); cm.slice(i, i + 20).forEach(c => b.set(fs.doc(db, "comments", c.id), { ...c, uid: myUid() })); await b.commit(); }
           } else { S.comments = d.comments || []; local.data.comments = S.comments; local.save(); }
+          for (const x of d.ledger || []) await store.saveLedger(x);
           if (d.settings?.resources) await store.setResources(d.settings.resources);
           if (d.settings?.checklist) await store.setChecklist(d.settings.checklist);
           close(); render(); toast("백업으로 되돌렸습니다.");
@@ -2353,6 +2413,145 @@ function openMyCal(){
   });
 }
 
+/* =========================================================
+   공금관리
+   ========================================================= */
+const MCATS = { in: ["회비", "이월", "후원", "환급", "기타"], out: ["간식·식비", "경조사", "물품", "행사", "기타"] };
+const won = n => (n < 0 ? "-" : "") + Math.abs(Math.round(n)).toLocaleString("ko-KR") + "원";
+const ledgerLocked = () => !!S.ledgerCfg?.lock;
+const canLedger = () => !ledgerLocked() || isAdmin();
+const RECEIPT = new Map();
+function ledgerSorted(){ return [...S.ledger].sort((a, b) => (a.date + (a.at || "")).localeCompare(b.date + (b.at || ""))); }
+function renderMoney(){
+  const all = ledgerSorted(), ym = TODAY.slice(0, 7);
+  const bal = all.reduce((s, x) => s + (x.type === "in" ? x.amount : -x.amount), 0);
+  const mi = all.filter(x => x.date.startsWith(ym) && x.type === "in").reduce((s, x) => s + x.amount, 0);
+  const mo = all.filter(x => x.date.startsWith(ym) && x.type === "out").reduce((s, x) => s + x.amount, 0);
+  $("mnSum").innerHTML = `<div class="mbal"><small>현재 잔액</small><b>${won(bal)}</b></div>
+    <div class="mmini"><span><small>${+ym.slice(5)}월 들어온 돈</small><b class="pos">+${won(mi)}</b></span><span><small>${+ym.slice(5)}월 쓴 돈</small><b class="neg">-${won(mo)}</b></span></div>
+    ${ledgerLocked() ? `<p class="hint" style="margin:8px 0 0">🔒 입력은 관리자만 할 수 있게 잠겨 있습니다.${isAdmin() ? " (지금 열려 있음)" : ""}</p>` : ""}`;
+  const tab = S.mTab || "list";
+  $("mnTabs").querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", b.dataset.v === tab));
+  const body = $("mnBody");
+  if (!all.length){ body.innerHTML = `<div class="empty" style="padding:30px 12px">아직 기록이 없습니다.<br>처음이면 지금 남은 돈을 <b>입금 → 분류 '이월'</b>로 넣어 시작하세요.</div>`; return; }
+  if (tab === "list"){
+    const k = ($("mnQ").value || "").trim().toLowerCase();
+    let run = 0; const rows = all.map(x => { run += x.type === "in" ? x.amount : -x.amount; return { ...x, run }; }).reverse()
+      .filter(x => !k || `${x.item} ${x.who} ${x.cat} ${x.memo}`.toLowerCase().includes(k));
+    let lastM = "";
+    body.innerHTML = rows.map(x => {
+      const m = x.date.slice(0, 7), head = m !== lastM ? `<div class="month-h">${m.slice(0, 4)}년 ${+m.slice(5)}월</div>` : ""; lastM = m;
+      return `${head}<button class="mrow" data-lg="${esc(x.id)}"><span class="md2">${md(x.date)}<small>${WD[pd(x.date).getDay()]}</small></span>
+        <span class="mi"><b>${esc(x.item || x.cat)}</b><small>${esc(x.cat)} · ${esc(x.who || "")}${x.hasImg ? " · 🧾" : ""}</small></span>
+        <span class="ma"><b class="${x.type === "in" ? "pos" : "neg"}">${x.type === "in" ? "+" : "-"}${won(x.amount)}</b><small>잔액 ${won(x.run)}</small></span></button>`;
+    }).join("") || `<div class="empty">찾는 내역이 없습니다.</div>`;
+    body.querySelectorAll("[data-lg]").forEach(b => b.addEventListener("click", () => openLedgerItem(S.ledger.find(x => x.id === b.dataset.lg))));
+  } else if (tab === "people"){
+    const dues = S.ledgerCfg?.dues || 0, map = new Map();
+    all.forEach(x => { if (!x.who) return; if (!map.has(x.who)) map.set(x.who, { name: x.who, paid: 0, spent: 0, n: 0, last: "", thisM: 0 });
+      const r = map.get(x.who); if (x.type === "in" && x.cat !== "이월"){ r.paid += x.amount; r.n++; r.last = x.date; if (x.date.startsWith(ym)) r.thisM += x.amount; } else if (x.type === "out") r.spent += x.amount; });
+    people().forEach(n => map.has(n) || map.set(n, { name: n, paid: 0, spent: 0, n: 0, last: "", thisM: 0 }));
+    const rows = [...map.values()].sort((a, b) => a.name.localeCompare(b.name, "ko"));
+    body.innerHTML = `<div class="sttable"><table><thead><tr><th>이름</th><th>낸 돈<small>합계</small></th><th>횟수</th><th>최근 납부</th>${dues ? `<th>${+ym.slice(5)}월 회비<small>${won(dues)}</small></th>` : ""}<th>쓴 돈<small>대신 결제</small></th></tr></thead><tbody>
+      ${rows.map(r => `<tr><th>${esc(r.name)}</th><td>${r.paid ? won(r.paid) : ""}</td><td>${r.n || ""}</td><td>${r.last ? md(r.last) : ""}</td>${dues ? `<td>${r.thisM >= dues ? `<span class="ok">✓ 납부</span>` : r.thisM ? `<span class="part">${won(r.thisM)}</span>` : `<span class="no">미납</span>`}</td>` : ""}<td>${r.spent ? won(r.spent) : ""}</td></tr>`).join("")}</tbody></table></div>
+      ${dues ? "" : `<p class="hint" style="padding:0 4px">월 회비 금액을 정하면 이번 달 납부·미납이 함께 보입니다. (위쪽 ⚙ 공금 설정)</p>`}`;
+  } else {
+    const months = new Map(); let run = 0;
+    all.forEach(x => { const m = x.date.slice(0, 7); if (!months.has(m)) months.set(m, { m, in: 0, out: 0, end: 0 }); const r = months.get(m); x.type === "in" ? r.in += x.amount : r.out += x.amount; run += x.type === "in" ? x.amount : -x.amount; r.end = run; });
+    body.innerHTML = `<div class="sttable"><table><thead><tr><th>월</th><th>들어온 돈</th><th>쓴 돈</th><th>월말 잔액</th></tr></thead><tbody>
+      ${[...months.values()].reverse().map(r => `<tr><th>${r.m.slice(0, 4)}.${+r.m.slice(5)}월</th><td class="pos">${r.in ? "+" + won(r.in) : ""}</td><td class="neg">${r.out ? "-" + won(r.out) : ""}</td><td><b>${won(r.end)}</b></td></tr>`).join("")}</tbody></table></div>`;
+  }
+}
+function openLedgerItem(x){
+  if (!x) return;
+  sheet(`<h3><span class="badge ${x.type === "in" ? "t-leave" : "t-trip"}" style="font-size:12px;border-radius:6px;padding:3px 8px">${x.type === "in" ? "입금" : "지출"}</span>${esc(x.item || x.cat)}<button class="x" data-close aria-label="닫기">✕</button></h3>
+    <dl class="dl"><dt>금액</dt><dd><b class="${x.type === "in" ? "pos" : "neg"}">${x.type === "in" ? "+" : "-"}${won(x.amount)}</b></dd><dt>날짜</dt><dd>${mdw(x.date)}</dd><dt>분류</dt><dd>${esc(x.cat)}</dd>
+      <dt>${x.type === "in" ? "낸 사람" : "쓴 사람"}</dt><dd>${esc(x.who || "")}</dd>${x.memo ? `<dt>메모</dt><dd>${esc(x.memo)}</dd>` : ""}<dt>기록</dt><dd>${esc(x.by || "")} · ${ago(x.at)}</dd></dl>
+    ${x.hasImg ? `<div class="rcpt" id="rcpt">영수증 불러오는 중…</div>` : ""}
+    ${canLedger() ? `<div class="actions"><button class="btn btn-danger" id="lgDel">삭제</button><button class="btn btn-ink grow" id="lgEdit">수정</button></div>` : `<p class="hint">🔒 입력·수정은 관리자만 할 수 있습니다.</p>`}`,
+  async (root, close) => {
+    root.querySelector("#lgEdit")?.addEventListener("click", () => openLedgerForm(x));
+    root.querySelector("#lgDel")?.addEventListener("click", async () => {
+      if (!confirm(`'${x.item || x.cat}' ${won(x.amount)} 기록을 지울까요?`)) return;
+      try { await store.delLedger(x); close(); toast("지웠습니다.", { label: "되돌리기", fn: () => store.saveLedger(x) }); } catch(e){ toast("지우지 못했습니다. 잠금이나 보안 규칙을 확인해 주세요."); }
+    });
+    if (x.hasImg){ const d = await store.receipt(x.id).catch(() => ""); const box = root.querySelector("#rcpt"); if (box) box.innerHTML = d ? `<img src="${d}" alt="영수증">` : "영수증을 불러오지 못했습니다."; }
+  });
+}
+function openLedgerForm(x0, type){
+  if (!canLedger()) return adminGate("공금 입력", () => openLedgerForm(x0, type));
+  const x = x0 ? { ...x0 } : { type: type || "in", date: TODAY, amount: 0, who: S.me.name, item: "", cat: type === "out" ? "간식·식비" : "회비", memo: "" };
+  let img = "";
+  const dues = S.ledgerCfg?.dues || 0;
+  sheet(`<h3>${x0 ? "공금 기록 수정" : "공금 기록"}<button class="x" data-close aria-label="닫기">✕</button></h3>
+    <div class="f"><div class="seg" id="lgT" style="width:100%"><button type="button" data-v="in" aria-pressed="${x.type === "in"}" style="flex:1">＋ 입금 (들어온 돈)</button><button type="button" data-v="out" aria-pressed="${x.type === "out"}" style="flex:1">－ 지출 (쓴 돈)</button></div></div>
+    <div class="f"><label for="lgAmt">금액</label><div class="amtwrap"><input id="lgAmt" inputmode="numeric" value="${x.amount ? x.amount.toLocaleString("ko-KR") : ""}" placeholder="0" autocomplete="off"><span>원</span></div>
+      <div class="quick" id="lgQ">${[10000, 20000, 30000, 50000, 100000].map(n => `<button type="button" data-n="${n}">${n >= 10000 ? n / 10000 + "만" : n}</button>`).join("")}${dues ? `<button type="button" data-n="${dues}">회비 ${won(dues)}</button>` : ""}<button type="button" data-n="0">지우기</button></div></div>
+    <div class="f"><span class="lbl">분류</span><div class="picks" id="lgC"></div></div>
+    <div class="two"><div class="f"><label for="lgDate">날짜</label><input id="lgDate" type="date" value="${x.date}"></div>
+      <div class="f"><label for="lgWho" id="lgWhoL">${x.type === "in" ? "낸 사람" : "쓴 사람"}</label><input id="lgWho" list="lgNames" value="${esc(x.who || "")}" maxlength="20"><datalist id="lgNames">${people().map(n => `<option value="${esc(n)}">`).join("")}</datalist></div></div>
+    <div class="f"><label for="lgItem">내용</label><input id="lgItem" value="${esc(x.item || "")}" maxlength="60" placeholder="예: 10월 회비, 교육생 간식, 경조사비(○○ 결혼)"></div>
+    <div class="f"><label for="lgMemo">메모 (선택)</label><input id="lgMemo" value="${esc(x.memo || "")}" maxlength="120"></div>
+    <div class="f"><label class="btn btn-line" for="lgImg" style="width:100%">🧾 영수증 사진 ${x.hasImg ? "바꾸기" : "붙이기 (선택)"}</label><input id="lgImg" type="file" accept="image/*" class="hide"><div id="lgImgP" class="hint"></div></div>
+    <div class="actions"><button class="btn btn-line" data-close>취소</button><button class="btn btn-fire grow" id="lgSave">저장</button></div>`,
+  (root, close) => {
+    const q = s => root.querySelector(s);
+    const amt = () => parseInt(q("#lgAmt").value.replace(/[^\d]/g, ""), 10) || 0;
+    const drawC = () => {
+      q("#lgC").innerHTML = MCATS[x.type].map(c => `<button type="button" class="pick plain" data-v="${c}" aria-pressed="${x.cat === c}">${c}</button>`).join("");
+      q("#lgC").querySelectorAll(".pick").forEach(b => b.onclick = () => { x.cat = b.dataset.v; drawC(); if (!q("#lgItem").value && x.cat === "회비") q("#lgItem").value = `${+q("#lgDate").value.slice(5, 7)}월 회비`; });
+      q("#lgWhoL").textContent = x.type === "in" ? "낸 사람" : "쓴 사람";
+    };
+    q("#lgT").addEventListener("click", ev => { const b = ev.target.closest("[data-v]"); if (!b) return; x.type = b.dataset.v; if (!MCATS[x.type].includes(x.cat)) x.cat = MCATS[x.type][0]; q("#lgT").querySelectorAll("button").forEach(y => y.setAttribute("aria-pressed", y === b)); drawC(); });
+    q("#lgAmt").addEventListener("input", () => { const n = amt(); q("#lgAmt").value = n ? n.toLocaleString("ko-KR") : ""; });
+    q("#lgQ").addEventListener("click", ev => { const b = ev.target.closest("[data-n]"); if (!b) return; const n = +b.dataset.n; q("#lgAmt").value = n ? n.toLocaleString("ko-KR") : ""; });
+    q("#lgImg").addEventListener("change", async ev => { const f = ev.target.files[0]; if (!f) return; const r = await shrink(f, 1100, 0.72); img = r.url; q("#lgImgP").innerHTML = `<img src="${img}" style="max-width:120px;border-radius:8px;margin-top:6px" alt="">`; });
+    q("#lgSave").addEventListener("click", async () => {
+      const rec = { ...x, id: x.id || "L" + Date.now().toString(36) + Math.random().toString(36).slice(2, 5), amount: amt(), date: q("#lgDate").value, who: q("#lgWho").value.trim(),
+        item: q("#lgItem").value.trim(), memo: q("#lgMemo").value.trim(), hasImg: !!(img || x.hasImg), by: x.by || S.me.name, uid: myUid(), at: x.at || new Date().toISOString(), editedBy: S.me.name, editedAt: new Date().toISOString() };
+      if (!rec.amount) return toast("금액을 넣어 주세요.");
+      if (!rec.date) return toast("날짜를 골라 주세요.");
+      if (!rec.who) return toast(rec.type === "in" ? "낸 사람을 적어 주세요." : "쓴 사람을 적어 주세요.");
+      try { q("#lgSave").disabled = true; await store.saveLedger(rec, img); close(); toast(`${rec.type === "in" ? "입금" : "지출"} ${won(rec.amount)}을 기록했습니다.`); }
+      catch(e){ console.error(e); q("#lgSave").disabled = false; toast("저장하지 못했습니다. 잠금이나 보안 규칙을 확인해 주세요."); }
+    });
+    drawC();
+  });
+}
+function openLedgerCfg(){
+  adminGate("공금 설정", () => sheet(`<h3>⚙ 공금 설정<button class="x" data-close aria-label="닫기">✕</button></h3>
+    <div class="f"><label for="lcDues">월 회비 금액 (선택)</label><div class="amtwrap"><input id="lcDues" inputmode="numeric" value="${S.ledgerCfg?.dues ? S.ledgerCfg.dues.toLocaleString("ko-KR") : ""}" placeholder="0"><span>원</span></div><p class="hint">정해 두면 '사람별'에서 이번 달 납부·미납이 보입니다.</p></div>
+    <div class="f"><span class="lbl">누가 입력·수정할 수 있나요?</span><div class="picks" id="lcLock"><button type="button" class="pick plain" data-v="0" aria-pressed="${!ledgerLocked()}">직원 누구나</button><button type="button" class="pick plain" data-v="1" aria-pressed="${ledgerLocked()}">관리자만 (총무용)</button></div><p class="hint">어느 쪽이든 보기는 직원 누구나 할 수 있고, 누가 언제 기록했는지는 남습니다.</p></div>
+    <div class="actions"><button class="btn btn-line" id="lcCsv">엑셀로 저장</button><button class="btn btn-fire grow" id="lcSave">저장</button></div>`,
+  (root, close) => {
+    const q = s => root.querySelector(s); let lock = ledgerLocked();
+    q("#lcLock").addEventListener("click", ev => { const b = ev.target.closest(".pick"); if (!b) return; lock = b.dataset.v === "1"; q("#lcLock").querySelectorAll(".pick").forEach(y => y.setAttribute("aria-pressed", y === b)); });
+    q("#lcDues").addEventListener("input", () => { const n = parseInt(q("#lcDues").value.replace(/[^\d]/g, ""), 10) || 0; q("#lcDues").value = n ? n.toLocaleString("ko-KR") : ""; });
+    q("#lcCsv").addEventListener("click", exportLedger);
+    q("#lcSave").addEventListener("click", async () => {
+      const cfg = { lock, dues: parseInt(q("#lcDues").value.replace(/[^\d]/g, ""), 10) || 0 };
+      try { await store.setLedgerCfg(cfg); S.ledgerCfg = cfg; close(); renderMoney(); toast("공금 설정을 저장했습니다."); } catch(e){ console.error(e); toast("저장하지 못했습니다. 보안 규칙을 확인해 주세요."); }
+    });
+  }));
+}
+function exportLedger(){
+  let run = 0;
+  const rows = ledgerSorted().map(x => { run += x.type === "in" ? x.amount : -x.amount; return [x.date, x.type === "in" ? "입금" : "지출", x.cat, x.item, x.who, x.type === "in" ? x.amount : "", x.type === "out" ? x.amount : "", run, x.memo, x.by]; });
+  const csv = "\ufeff" + [["날짜","구분","분류","내용","사람","입금","지출","잔액","메모","기록자"], ...rows].map(r => r.map(c => `"${String(c ?? "").replace(/"/g, '""')}"`).join(",")).join("\r\n");
+  const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" })); a.download = `ICTC함께_공금_${TODAY}.csv`; document.body.append(a); a.click(); a.remove();
+}
+
+/* ---------- 카톡 등으로 알리기 (폰 공유 창) ---------- */
+const appUrl = () => location.origin + location.pathname;
+function eventShareText(e, head = "새 일정"){
+  return `[ICTC 함께] ${head}\n${label(e)}\n${rangeText(e)}${e.place ? "\n장소: " + e.place : ""}${e.cat === "duty" ? "\n근무: " + dutyTimeText(dutyKind(e)) : ""}${e.memo && e.cat !== "edu" ? "\n" + e.memo : ""}\n\n앱에서 보기: ${appUrl()}`;
+}
+async function shareOut(text){
+  if (navigator.share){ try { await navigator.share({ text }); return; } catch(e){ if (e.name === "AbortError") return; } }
+  copyText(text);
+}
+
+const renderMoneyIfOpen = () => { if (S.view === "money" && S.me) renderMoney(); };
 const DEMO_PHOTO = new Map(), PHOTO_CACHE = new Map();
 const renderPhotoIfOpen = () => { if (S.view === "photo") renderPhotos(); };
 const canDelPhoto = p => true;
@@ -2575,7 +2774,7 @@ function openDetail(id){
     <dl class="dl">${rows.map(([k,v]) => `<dt>${k}</dt><dd>${esc(v)}</dd>`).join("")}</dl>
     ${courseHTML(e)}
     <div id="social" class="social"></div>
-    <div class="more-act"><button class="btn btn-line btn-sm" id="ics">📅 내 폰 캘린더에 추가</button><button class="btn btn-line btn-sm" id="cpy">글 복사</button>${e.cat === "duty" ? `<button class="btn btn-line btn-sm" id="swap">🔁 맞교대</button>` : ""}${e.cat === "edu" || e.cat === "eval" ? `<button class="btn btn-line btn-sm" id="crs">📚 과정 상세</button><button class="btn btn-line btn-sm" id="ckl">✅ 준비${checkProg(e) ? ` ${checkProg(e)[0]}/${checkProg(e)[1]}` : ""}</button>` : ""}<button class="btn btn-line btn-sm" id="hist">🕘 기록</button>${canEdit(e) ? `<button class="btn btn-line btn-sm" id="dup">복제</button>` : ""}</div>
+    <div class="more-act"><button class="btn btn-line btn-sm" id="ics">📅 내 폰 캘린더에 추가</button><button class="btn btn-line btn-sm" id="cpy">💬 카톡으로 알리기</button>${e.cat === "duty" ? `<button class="btn btn-line btn-sm" id="swap">🔁 맞교대</button>` : ""}${e.cat === "edu" || e.cat === "eval" ? `<button class="btn btn-line btn-sm" id="crs">📚 과정 상세</button><button class="btn btn-line btn-sm" id="ckl">✅ 준비${checkProg(e) ? ` ${checkProg(e)[0]}/${checkProg(e)[1]}` : ""}</button>` : ""}<button class="btn btn-line btn-sm" id="hist">🕘 기록</button>${canEdit(e) ? `<button class="btn btn-line btn-sm" id="dup">복제</button>` : ""}</div>
     ${e.seriesId ? `<p class="hint" style="margin:-6px 0 12px">반복 일정입니다. (모두 ${S.events.filter(x => x.seriesId === e.seriesId).length}건)</p>` : ""}
     ${canEdit(e) ? `<div class="actions"><button class="btn btn-danger" id="del">삭제</button><button class="btn btn-ink grow" id="edit">수정</button></div>`
       : `<p class="hint">등록한 사람이 아니어도 누구나 고칠 수 있습니다.</p>`}`,
@@ -2584,7 +2783,7 @@ function openDetail(id){
     S.detailId = e.id; paintSocial(root.querySelector("#social"), e.id);
     new MutationObserver((_, o) => { if (!root.querySelector("#social")){ S.detailId = null; o.disconnect(); } }).observe(root, { childList:true });
     root.querySelector("#ics").addEventListener("click", () => downloadIcs([e], `${label(e)}.ics`));
-    root.querySelector("#cpy").addEventListener("click", () => copyText(`[ICTC 함께] ${label(e)}\n${rangeText(e)}${e.place ? "\n장소: " + e.place : ""}${e.memo ? "\n" + e.memo : ""}`));
+    root.querySelector("#cpy").addEventListener("click", () => shareOut(eventShareText(e, "일정 안내")));
     root.querySelector("#swap")?.addEventListener("click", () => openSwap(e));
     root.querySelector("#crs")?.addEventListener("click", () => openCourse(e));
     root.querySelector("#ckl")?.addEventListener("click", () => openChecklist(e));
@@ -2833,7 +3032,7 @@ function openForm(e, day, preset){
         q("#fSave").disabled = true;
         await (list.length > 1 ? store.saveMany(list) : store.saveEvent(ev)); close();
         S.sel = ev.start; S.month = pd(ev.start.slice(0,8)+"01"); render();
-        toast(isNew ? `등록했습니다${list.length > 1 ? ` (${list.length}건)` : ""}.${S.mode === "demo" ? "" : " 직원 모두에게 보입니다."}` : "저장했습니다.");
+        toast(isNew ? `등록했습니다${list.length > 1 ? ` (${list.length}건)` : ""}.` : "저장했습니다.", { label: "💬 카톡으로 알리기", fn: () => shareOut(eventShareText(ev, isNew ? (list.length > 1 ? `새 반복 일정 (${list.length}건)` : "새 일정") : "일정 변경")) });
       } catch(err){ console.error(err); q("#fSave").disabled = false; toast("저장하지 못했습니다. 다시 로그인하거나 보안 규칙을 확인해 주세요."); }
     });
   });
@@ -3092,7 +3291,7 @@ function showLogin(msg){
 
 /* --- 체험 모드 --- */
 function enterDemo(){
-  S.events = local.data.events; S.colors = local.data.colors || {}; S.notices = local.data.notices || []; S.comments = local.data.comments || []; S.homeBg = local.data.homeBg || ""; S.resources = local.data.resources || null; S.checklist = local.data.checklist || null; S.me = { name: myName() };
+  S.events = local.data.events; S.colors = local.data.colors || {}; S.notices = local.data.notices || []; S.comments = local.data.comments || []; S.homeBg = local.data.homeBg || ""; S.resources = local.data.resources || null; S.checklist = local.data.checklist || null; S.ledger = local.data.ledger || []; S.ledgerCfg = local.data.ledgerCfg || null; S.me = { name: myName() };
   S.adminUntil = local.data.adminUntil || 0;
   showApp();
 }
@@ -3117,6 +3316,8 @@ async function enterShared(){
     unsubs.push(fs.onSnapshot(fs.doc(db, "homeBg", "main"), d => {
       S.homeBg = d.exists() ? (d.data().bg || "") : ""; if (!first && S.view === "home") renderHome();
     }, err => console.warn("홈 배경을 불러오지 못했습니다(보안 규칙 확인)", err)));
+    unsubs.push(fs.onSnapshot(fs.collection(db, "ledger"), snap => { S.ledger = snap.docs.map(d => ({ ...d.data(), id: d.id })); renderMoneyIfOpen(); }, err => console.warn("공금을 불러오지 못했습니다(보안 규칙 확인)", err)));
+    unsubs.push(fs.onSnapshot(fs.doc(db, "settings", "ledger"), d => { S.ledgerCfg = d.exists() ? d.data() : null; renderMoneyIfOpen(); }, err => console.warn(err)));
     unsubs.push(fs.onSnapshot(fs.collection(db, "comments"), snap => {
       S.comments = snap.docs.map(d => ({ ...d.data(), id: d.id })); if (!first) onSocial();
     }, err => console.warn("댓글을 불러오지 못했습니다(보안 규칙 확인)", err)));
@@ -3208,7 +3409,7 @@ document.addEventListener("keydown", e => {
   if (k === "ArrowLeft") shift(-1); else if (k === "ArrowRight") shift(1);
   else if (k === "t" || k === "T" || k === "ㅅ") goToday();
   else if (k === "n" || k === "N" || k === "ㅜ") { e.preventDefault(); openForm(null, S.sel); }
-  else if ("123456".includes(k) && k.length === 1) setView(["home","week","month","year","photo","list"][+k - 1]);
+  else if ("1234567".includes(k) && k.length === 1) setView(["home","week","month","year","photo","money","list"][+k - 1]);
   else if (k === "/") { e.preventDefault(); setView("list"); $("q").focus(); }
   else return;
 });
@@ -3231,6 +3432,11 @@ $("csv").addEventListener("click", exportCsv);
 $("wImg").addEventListener("click", () => shareWeekImage().catch(e => { console.error(e); toast("이미지를 만들지 못했습니다."); }));
 $("stats").addEventListener("click", openStats);
 $("pUp").addEventListener("click", openUpload);
+$("mnIn").addEventListener("click", () => openLedgerForm(null, "in"));
+$("mnOut").addEventListener("click", () => openLedgerForm(null, "out"));
+$("mnCfg").addEventListener("click", openLedgerCfg);
+$("mnQ").addEventListener("input", renderMoney);
+$("mnTabs").addEventListener("click", ev => { const b = ev.target.closest("[data-v]"); if (!b) return; S.mTab = b.dataset.v; $("mnQ").classList.toggle("hide", S.mTab !== "list"); renderMoney(); });
 $("logo").addEventListener("click", () => { if (S.me) setView("home"); });
 $("fab").addEventListener("click", () => openForm(null, S.sel));
 
