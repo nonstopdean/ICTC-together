@@ -226,6 +226,7 @@ body.locked{overflow:hidden}
 .pick[data-v="edu"][aria-pressed="true"]{background:var(--edu)} .pick[data-v="eval"][aria-pressed="true"]{background:var(--eval)}
 .pick[data-v="trip"][aria-pressed="true"]{background:var(--trip)} .pick[data-v="leave"][aria-pressed="true"]{background:var(--leave)}
 .pick[data-v="etc"][aria-pressed="true"]{background:var(--etc)}
+.pick[data-v="duty"][aria-pressed="true"]{background:#4338ca}
 .pick.plain[aria-pressed="true"]{background:var(--ink)}
 .quick{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
 .quick button{border:1px dashed var(--line);background:transparent;border-radius:8px;padding:4px 9px;font-size:12.5px;color:var(--ink2)}
@@ -337,12 +338,15 @@ body.locked{overflow:hidden}
 .hello{position:relative}
 .hello .hl{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;flex:1;min-width:0}
 .bgbtn{margin-left:auto;border:1px solid var(--line);background:var(--card);border-radius:999px;padding:4px 10px;font-size:12px;font-weight:600;color:var(--muted);align-self:center}
-.hello.hero{min-height:190px;border-radius:16px;overflow:hidden;padding:18px 18px 16px;margin:0 0 14px;background-size:cover;background-position:center;align-items:flex-end;box-shadow:var(--shadow)}
-.hello.hero::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.05) 30%,rgba(0,0,0,.62))}
-.hello.hero .hl{position:relative;flex-direction:column;align-items:flex-start;gap:4px}
+.hello.hero{display:block;border-radius:16px;overflow:hidden;padding:0;margin:0 0 14px;box-shadow:var(--shadow);background:#111;isolation:isolate}
+.hello.hero .hbg{position:absolute;inset:-30px;background:center/cover no-repeat;filter:blur(24px) brightness(.7) saturate(1.1);z-index:-1}
+.hello.hero .himg{display:block;width:100%;max-height:min(52vh,440px);object-fit:contain;margin:0 auto}
+.hello.hero.fill .himg{height:220px;max-height:none;object-fit:cover}
+.hello.hero::after{content:"";position:absolute;left:0;right:0;bottom:0;height:55%;background:linear-gradient(180deg,transparent,rgba(0,0,0,.6));pointer-events:none}
+.hello.hero .hl{position:absolute;left:0;right:0;bottom:0;z-index:1;flex-direction:column;align-items:flex-start;gap:3px;padding:14px 16px}
 .hello.hero h1{color:#fff;font-size:24px;text-shadow:0 1px 6px rgba(0,0,0,.35)}
 .hello.hero p{color:rgba(255,255,255,.9)}
-.hello.hero .bgbtn{position:absolute;top:10px;right:10px;background:rgba(0,0,0,.35);color:#fff;border-color:rgba(255,255,255,.35);backdrop-filter:blur(4px)}
+.hello.hero .bgbtn{position:absolute;top:10px;right:10px;z-index:2;background:rgba(0,0,0,.35);color:#fff;border-color:rgba(255,255,255,.35);backdrop-filter:blur(4px)}
 .bgprev{height:150px;border-radius:12px;background:var(--soft) center/cover;margin-bottom:14px;display:grid;place-items:center;color:var(--muted);font-size:13px}
 .qtitle{margin:18px 2px 8px;font-size:15px;font-weight:700}
 .quick-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:0 0 14px}
@@ -430,6 +434,11 @@ body.locked{overflow:hidden}
 
 .setgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
 .setgrid .btn{padding:12px}
+.dkinds{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.dkind{border:1px solid var(--line);background:var(--card);border-radius:12px;padding:12px 10px;text-align:left;display:flex;flex-direction:column;gap:3px}
+.dkind b{font-size:16px} .dkind small{font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.dkind[aria-pressed="true"]{border-color:#4338ca;background:color-mix(in srgb,#4338ca 10%,var(--card));box-shadow:inset 0 0 0 1px #4338ca}
+.dinfo{background:var(--soft);border-radius:10px;padding:9px 11px;margin-top:10px;font-size:13px;line-height:1.6;color:var(--ink2)}
 /* ---------- 좋아요·댓글 ---------- */
 .social{border-top:1px solid var(--line2);border-bottom:1px solid var(--line2);padding:12px 0;margin:0 0 14px}
 .react{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
@@ -583,7 +592,9 @@ body.locked{overflow:hidden}
   .home-grid{grid-template-columns:1fr}
   .quick-row{grid-template-columns:repeat(2,minmax(0,1fr))}
   .hello h1{font-size:19px}
-  .hello.hero{min-height:160px;margin:0 -2px 12px}
+  .hello.hero{margin:0 -2px 12px}
+  .hello.hero.fill .himg{height:180px}
+  .hello.hero .himg{max-height:38vh}
   .hello.hero h1{font-size:21px}
   .strip{gap:4px}
   .sday{padding:7px 3px 6px}
@@ -749,6 +760,8 @@ const HOLIDAYS = {
 };
 const CATS = { edu:"교육", eval:"평가", trip:"출장", leave:"휴가", duty:"당직", etc:"기타" };
 const DUTY_KINDS = ["일직","숙직"];
+const DUTY_TIME = { "일직": ["09:00","18:00"], "숙직": ["18:00","09:00"] };   // 숙직은 다음 날 09시까지
+const dutyTimeText = k => k === "숙직" ? "18:00 ~ 다음 날 09:00" : "09:00 ~ 18:00";
 const dutyKind = e => (e.kind === "일직" ? "일직" : "숙직");   // 예전 "당직"은 숙직으로 봄
 const HALF = { full:"종일", am:"오전 반차", pm:"오후 반차", time:"시간 지정" };
 const KINDS = ["연가","지각","외출","조퇴","병가","공가","특별휴가","대체휴무","당직휴무","기타"];
@@ -799,7 +812,7 @@ function applyTheme(v){
 try { applyTheme(localStorage.getItem(THEME_KEY) || "auto"); } catch(e){}
 const isAdmin = () => S.adminUntil > Date.now();
 const canEdit = e => true;   // 누구나 고치고 지울 수 있음
-const timeText = e => e.time && (e.cat !== "leave" || e.half === "time") ? (e.timeEnd ? `${e.time}~${e.timeEnd}` : e.time) : "";
+const timeText = e => e.cat === "duty" ? "" : e.time && (e.cat !== "leave" || e.half === "time") ? (e.timeEnd ? `${e.time}~${e.timeEnd}` : e.time) : "";
 const label = e => (timeText(e) ? timeText(e) + " " : "") + label0(e);
 const toMin = s => { const [h, m] = String(s || "0:0").split(":").map(Number); return h * 60 + (m || 0); };
 const fromMin = n => { n = Math.max(0, Math.min(23 * 60 + 59, n)); return `${pad(Math.floor(n / 60))}:${pad(n % 60)}`; };
@@ -1106,9 +1119,10 @@ function renderHome(){
   const wk = Array.from({ length: 5 }, (_, i) => ymd(addDays(mon, i)));
   const awayWeek = all.filter(e => (e.cat === "trip" || e.cat === "leave") && e.start <= wk[4] && e.end >= wk[0]);
   const bg = bgNow();
-  $("hello").className = "hello" + (bg ? " hero" : "");
-  $("hello").style.backgroundImage = bg ? `url("${bg}")` : "";
-  $("hello").innerHTML = `<div class="hl"><h1>${esc(S.me.name)} 님, 안녕하세요</h1><p>${d.getMonth()+1}월 ${d.getDate()}일 ${WD[d.getDay()]}요일 · 이번 주 출장·휴가 ${new Set(awayWeek.map(e => e.person)).size}명</p></div>
+  const bv = bgView();
+  $("hello").className = "hello" + (bg ? ` hero ${bv.fit}` : "");
+  $("hello").style.backgroundImage = "";
+  $("hello").innerHTML = (bg ? `<div class="hbg" style="background-image:url('${bg}')"></div><img class="himg" src="${bg}" alt="" style="object-position:center ${bv.pos}">` : "") + `<div class="hl"><h1>${esc(S.me.name)} 님, 안녕하세요</h1><p>${d.getMonth()+1}월 ${d.getDate()}일 ${WD[d.getDay()]}요일 · 이번 주 출장·휴가 ${new Set(awayWeek.map(e => e.person)).size}명</p></div>
     <button class="bgbtn" id="bgBtn" title="홈 배경 사진">🖼 배경</button>`;
   $("bgBtn").addEventListener("click", openBg);
   setTimeout(() => {
@@ -1196,10 +1210,17 @@ function openNotice(){
 const BG_KEY = "ictc-hamkke-bg";
 const myBg = () => { try { return localStorage.getItem(BG_KEY) || ""; } catch(e){ return ""; } };
 const bgNow = () => myBg() || S.homeBg || "";
+const BGV_KEY = "ictc-hamkke-bgview";
+const bgView = () => { try { return { fit:"fit", pos:"center", ...JSON.parse(localStorage.getItem(BGV_KEY) || "{}") }; } catch(e){ return { fit:"fit", pos:"center" }; } };
+const setBgView = v => { try { localStorage.setItem(BGV_KEY, JSON.stringify(v)); } catch(e){} };
 function openBg(){
   const mine = myBg();
   sheet(`<h3>홈 배경 사진<button class="x" data-close aria-label="닫기">✕</button></h3>
     <div class="bgprev" style="${bgNow() ? `background-image:url('${bgNow()}')` : ""}">${bgNow() ? "" : "배경 사진 없음"}</div>
+    <div class="f"><span class="lbl">보기 방식 <span style="font-weight:500;color:var(--muted)">· 이 기기 설정</span></span>
+      <div class="picks" id="bgFit"><button type="button" class="pick plain" data-v="fit" aria-pressed="${bgView().fit === "fit"}">사진 전체 보이기</button><button type="button" class="pick plain" data-v="fill" aria-pressed="${bgView().fit === "fill"}">가로로 꽉 채우기</button></div>
+      <div class="picks ${bgView().fit === "fill" ? "" : "hide"}" id="bgPos" style="margin-top:6px">${[["top","위쪽 보이기"],["center","가운데"],["bottom","아래쪽 보이기"]].map(([k, x]) => `<button type="button" class="pick plain" data-v="${k}" aria-pressed="${bgView().pos === k}">${x}</button>`).join("")}</div>
+      <p class="hint">"사진 전체 보이기"는 잘리지 않고, 남는 곳은 같은 사진을 흐리게 채웁니다.</p></div>
     <div class="f"><span class="lbl">어디에 적용할까요?</span><div class="picks" id="bgWho">
       <button type="button" class="pick plain" data-v="me" aria-pressed="true">이 기기만 (나만)</button>
       <button type="button" class="pick plain" data-v="all" aria-pressed="false" >센터 전체 (모든 직원)</button></div>
@@ -1212,6 +1233,9 @@ function openBg(){
     <div class="actions" style="margin-top:12px"><button class="btn btn-danger grow" id="bgDel">배경 없애기</button></div>`,
   (root, close) => {
     const q = s => root.querySelector(s); let who = "me";
+    const setV = (k, val, box) => { const v = { ...bgView(), [k]: val }; setBgView(v); q(box).querySelectorAll(".pick").forEach(x => x.setAttribute("aria-pressed", x.dataset.v === val)); q("#bgPos").classList.toggle("hide", v.fit !== "fill"); renderHome(); };
+    q("#bgFit").addEventListener("click", ev => { const b = ev.target.closest(".pick"); if (b) setV("fit", b.dataset.v, "#bgFit"); });
+    q("#bgPos").addEventListener("click", ev => { const b = ev.target.closest(".pick"); if (b) setV("pos", b.dataset.v, "#bgPos"); });
     q("#bgWho").addEventListener("click", ev => { const b = ev.target.closest(".pick"); if (!b || b.disabled) return; who = b.dataset.v; q("#bgWho").querySelectorAll(".pick").forEach(x => x.setAttribute("aria-pressed", x === b)); });
     const apply = async url => {
       try {
@@ -1307,7 +1331,7 @@ function openRoster(month, rk = "숙직"){
         if (ex[0]){
           if (ex[0].person !== who || ex[0].kind !== rk) save.push({ ...ex[0], person: who, kind: rk, editedBy: S.me.name, updatedAt: now });
           ex.slice(1).forEach(e => del.push(e.id));
-        } else save.push({ id: `duty-${rk === "일직" ? "d" : "n"}-${ds}`, cat: "duty", kind: rk, start: ds, end: ds, person: who, title: "", place: "", memo: "", half: "full", time: "", timeEnd: "", staff: [], plan: false, ownerName: S.me.name, editedBy: S.me.name, updatedAt: now });
+        } else save.push({ id: `duty-${rk === "일직" ? "d" : "n"}-${ds}`, cat: "duty", kind: rk, start: ds, end: ds, person: who, title: "", place: "", memo: "", half: "full", time: DUTY_TIME[rk][0], timeEnd: DUTY_TIME[rk][1], staff: [], plan: false, ownerName: S.me.name, editedBy: S.me.name, updatedAt: now });
       });
       if (!save.length && !del.length) return toast("바뀐 내용이 없습니다.");
       try { q("#rSave").disabled = true; if (save.length) await store.saveMany(save); if (del.length) await store.deleteMany(del); close(); render(); toast(`${rk}표를 저장했습니다. (${save.length + del.length}건 변경)`); }
@@ -1762,7 +1786,8 @@ function choose(title, options){
 function icsText(list){
   const d = s => s.replace(/-/g, ""), x = s => String(s || "").replace(/\\/g, "\\\\").replace(/[;,]/g, m => "\\" + m).replace(/\n/g, "\\n");
   const stamp = new Date().toISOString().replace(/[-:]/g, "").slice(0, 15) + "Z";
-  const ev = list.map(e => ["BEGIN:VEVENT", `UID:${e.id}@ictc-hamkke`, `DTSTAMP:${stamp}`, ...(timeText(e) ? [`DTSTART:${d(e.start)}T${e.time.replace(":", "")}00`, `DTEND:${d(e.end)}T${(e.timeEnd || fromMin(toMin(e.time) + 60)).replace(":", "")}00`]
+  const ev = list.map(e => ["BEGIN:VEVENT", `UID:${e.id}@ictc-hamkke`, `DTSTAMP:${stamp}`, ...(e.cat === "duty" ? [`DTSTART:${d(e.start)}T${DUTY_TIME[dutyKind(e)][0].replace(":", "")}00`, `DTEND:${d(dutyKind(e) === "숙직" ? ymd(addDays(pd(e.start), 1)) : e.start)}T${DUTY_TIME[dutyKind(e)][1].replace(":", "")}00`] :
+        timeText(e) ? [`DTSTART:${d(e.start)}T${e.time.replace(":", "")}00`, `DTEND:${d(e.end)}T${(e.timeEnd || fromMin(toMin(e.time) + 60)).replace(":", "")}00`]
       : [`DTSTART;VALUE=DATE:${d(e.start)}`, `DTEND;VALUE=DATE:${d(ymd(addDays(pd(e.end), 1)))}`]),
     `SUMMARY:${x(label(e))}`, e.place && `LOCATION:${x(e.place)}`, e.memo && `DESCRIPTION:${x(e.memo)}`, "END:VEVENT"].filter(Boolean).join("\r\n"));
   return ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//ICTC hamkke//KO", "CALSCALE:GREGORIAN", ...ev, "END:VCALENDAR"].join("\r\n");
@@ -1811,6 +1836,7 @@ function openDetail(id){
     ["분류", (e.cat === "edu" || e.cat === "eval" ? tone(e).name + " · " : "") + CATS[e.cat] + (e.cat === "leave" ? ` · ${kindOf(e)} · ${HALF[e.half||"full"]}` : e.cat === "duty" ? ` · ${dutyKind(e)}` : "") + (e.plan ? " · 계획(안)" : "")],
     ["기간", rangeText(e) + (days > 1 ? ` · ${days}일` : "")],
     timeText(e) && ["시간", timeText(e)],
+    e.cat === "duty" && ["근무 시간", dutyTimeText(dutyKind(e))],
     e.person && [PERSONAL.includes(e.cat) ? "이름" : "담당", e.person],
     staffOf(e).length && ["담당 교관", staffOf(e).join(", ")],
     e.place && ["장소", e.place],
@@ -1858,8 +1884,10 @@ function openForm(e, day, preset){
   sheet(`<h3>${isNew ? "일정 등록" : "일정 수정"}<button class="x" data-close aria-label="닫기">✕</button></h3>
     <div class="f"><span class="lbl">분류</span><div class="picks" id="fCat">${cats.map(c => `<button type="button" class="pick" data-v="${c}" aria-pressed="${v.cat===c}">${CATS[c]}</button>`).join("")}</div></div>
     <div class="f" id="wPerson"><label for="fPerson">누가</label><input id="fPerson" list="names" value="${esc(v.person)}" maxlength="20" placeholder="이름"><datalist id="names">${names.map(n=>`<option value="${esc(n)}">`).join("")}</datalist></div>
-    <div class="f" id="wDuty"><span class="lbl">당직 종류</span><div class="picks" id="fDuty">${DUTY_KINDS.map(k => `<button type="button" class="pick plain" data-v="${k}" aria-pressed="${(v.cat === "duty" ? dutyKind(v) : "숙직") === k}">${k}</button>`).join("")}</div>
-      <p class="hint">한 달 당직을 한꺼번에 넣으려면 월간 보기의 <b>당직표</b>를 쓰세요.</p></div>
+    <div class="f" id="wDuty"><span class="lbl">당직 종류</span><div class="dkinds" id="fDuty">${DUTY_KINDS.map(k => `<button type="button" class="dkind" data-v="${k}" aria-pressed="${(v.cat === "duty" ? dutyKind(v) : "숙직") === k}"><b>${k === "일직" ? "☀️ 일직" : "🌙 숙직"}</b><small>${dutyTimeText(k)}</small></button>`).join("")}</div>
+      <div class="quick" id="fDday" style="margin-top:10px"></div>
+      <div class="dinfo" id="fDinfo"></div>
+      <button type="button" class="btn btn-line" id="fRoster" style="width:100%;margin-top:10px">📋 한 달 당직표로 한꺼번에 넣기</button></div>
     <div class="f" id="wKind"><span class="lbl">휴가 종별</span><div class="picks" id="fKind">${KINDS.map(k => `<button type="button" class="pick plain" data-v="${k}" aria-pressed="${(v.kind || "연가") === k}">${k}</button>`).join("")}</div></div>
     <div class="two">
       <div class="f"><label for="fStart" id="lStart">시작일</label><input id="fStart" type="date" value="${v.start}"></div>
@@ -1904,7 +1932,7 @@ function openForm(e, day, preset){
       const duty = c === "duty";
       q("#wDuty").classList.toggle("hide", !duty);
       q("#wEnd").classList.toggle("hide", duty); q("#fQuick").classList.toggle("hide", duty);
-      if (duty) q("#fEnd").value = q("#fStart").value;
+      if (duty){ q("#fEnd").value = q("#fStart").value; dPaint(); }
       q("#wReason").classList.toggle("hide", c !== "leave");
       q("#wTitle").classList.toggle("hide", c === "leave" || duty);
       q("#wRep")?.classList.toggle("hide", c === "leave" || duty);
@@ -1958,7 +1986,18 @@ function openForm(e, day, preset){
     q("#fCat").addEventListener("click", ev => { const b = ev.target.closest(".pick"); if (!b) return; v.cat = b.dataset.v; q("#fCat").querySelectorAll(".pick").forEach(x => x.setAttribute("aria-pressed", x === b)); sync(); });
     v.dkind = v.cat === "duty" ? dutyKind(v) : "숙직";
     v.kind = v.cat === "duty" ? "연가" : (v.kind || "연가");
-    q("#fDuty").addEventListener("click", ev => { const b = ev.target.closest(".pick"); if (!b) return; v.dkind = b.dataset.v; q("#fDuty").querySelectorAll(".pick").forEach(x => x.setAttribute("aria-pressed", x === b)); });
+    function dPaint(){
+      const ds = q("#fStart").value || TODAY, sat = (() => { const x = pd(ds); return x.getDay(); })();
+      const days = [["오늘", TODAY], ["내일", ymd(addDays(pd(TODAY), 1))], ["이번 토", ymd(addDays(pd(TODAY), (6 - pd(TODAY).getDay() + 7) % 7))], ["이번 일", ymd(addDays(pd(TODAY), (7 - pd(TODAY).getDay()) % 7))]];
+      q("#fDday").innerHTML = days.map(([x, d]) => `<button type="button" data-dd="${d}" ${d === ds ? 'style="border-style:solid;border-color:var(--ink);color:var(--ink)"' : ""}>${x} ${md(d)}</button>`).join("");
+      q("#fDday").querySelectorAll("[data-dd]").forEach(b => b.onclick = () => { q("#fStart").value = q("#fEnd").value = b.dataset.dd; dPaint(); info(); });
+      const same = S.events.filter(e => e.cat === "duty" && e.start === ds && e.id !== (typeof e_id !== "undefined" ? e_id : "") && e.id !== v.id);
+      q("#fDinfo").innerHTML = `<div><b>${mdw(ds)}</b> · ${teamOf(ds)}팀 근무 · ${v.dkind} ${dutyTimeText(v.dkind)}</div>`
+        + (same.length ? `<div>이날 당직: ${same.map(e => `${esc(e.person)}(${dutyKind(e)})`).join(", ")}</div>` : "")
+        + (HOLIDAYS[ds] || sat === 0 || sat === 6 ? `<div style="color:var(--sun)">${esc(HOLIDAYS[ds] || "주말")}</div>` : "");
+    }
+    q("#fDuty").addEventListener("click", ev => { const b = ev.target.closest(".dkind"); if (!b) return; v.dkind = b.dataset.v; q("#fDuty").querySelectorAll(".dkind").forEach(x => x.setAttribute("aria-pressed", x === b)); dPaint(); });
+    q("#fRoster").addEventListener("click", () => { const m = pd((q("#fStart").value || TODAY).slice(0, 8) + "01"); openRoster(m, v.dkind); });
     q("#fKind").addEventListener("click", ev => {
       const b = ev.target.closest(".pick"); if (!b) return; v.kind = b.dataset.v;
       q("#fKind").querySelectorAll(".pick").forEach(x => x.setAttribute("aria-pressed", x === b));
@@ -1974,7 +2013,7 @@ function openForm(e, day, preset){
     q("#fHalf").addEventListener("click", ev => { const b = ev.target.closest(".pick"); if (!b) return; v.half = b.dataset.v; q("#fHalf").querySelectorAll(".pick").forEach(x => x.setAttribute("aria-pressed", x === b)); if (v.half !== "full") q("#fEnd").value = q("#fStart").value; sync(); });
     q("#fQuick").addEventListener("click", ev => { const n = ev.target.dataset.n; if (n == null) return; q("#fEnd").value = ymd(addDays(pd(q("#fStart").value), +n)); });
     root.querySelectorAll("[data-place]").forEach(b => b.addEventListener("click", () => { q("#fPlace").value = b.dataset.place; }));
-    q("#fStart").addEventListener("change", () => { if (q("#fEnd").value < q("#fStart").value || (v.cat==="leave" && v.half!=="full")) q("#fEnd").value = q("#fStart").value; info(); });
+    q("#fStart").addEventListener("change", () => { if (v.cat === "duty") dPaint(); if (q("#fEnd").value < q("#fStart").value || (v.cat==="leave" && v.half!=="full")) q("#fEnd").value = q("#fStart").value; info(); });
     // 같은 기간 교육·부재 안내
     const info = () => {
       const s = q("#fStart").value, en = q("#fEnd").value || s, who = q("#fPerson").value.trim();
@@ -2024,7 +2063,7 @@ function openForm(e, day, preset){
       if (ev.time && ev.timeEnd && ev.start === ev.end && toMin(ev.timeEnd) <= toMin(ev.time)) return toast("끝 시간이 시작 시간보다 늦어야 합니다.");
       if (tmode === "time" && !ev.time && (v.cat !== "leave" || v.half === "time")) return toast("시작 시간을 골라 주세요.");
       if (ev.cat === "leave" && ev.half === "time" && (!ev.time || !ev.timeEnd)) return toast("휴가 시작·끝 시간을 골라 주세요.");
-      if (ev.cat === "duty"){ ev.end = ev.start; ev.place = ""; ev.title = ""; ev.time = ""; ev.timeEnd = ""; }
+      if (ev.cat === "duty"){ ev.end = ev.start; ev.place = ""; ev.title = ""; [ev.time, ev.timeEnd] = DUTY_TIME[v.dkind]; }
       if ((ev.cat === "trip" || ev.cat === "leave" || ev.cat === "duty") && !ev.person) return toast("누구의 일정인지 이름을 적어 주세요.");
       if ((ev.cat === "edu" || ev.cat === "eval" || ev.cat === "etc") && !ev.title) return toast(v.cat === "etc" ? "무엇을 하는지 적어 주세요." : "과정명을 적어 주세요.");
       let list = [ev];
