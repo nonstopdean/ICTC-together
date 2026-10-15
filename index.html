@@ -772,7 +772,7 @@ body.locked{overflow:hidden}
       </div>
       <button class="btn btn-line btn-sm" id="copyWeek">이번 주 일정 글 복사</button>
       <button class="btn btn-line btn-sm" id="csv">엑셀로 저장</button>
-      <button class="btn btn-line btn-sm" id="stats">📊 통계</button>
+      <button class="btn btn-line btn-sm" id="stats">📊 통계 🔒</button>
     </div>
     <div id="listBody"></div>
   </section>
@@ -1890,7 +1890,20 @@ function statsFor(from, to){
   });
   return [...rows.values()].filter(r => r.nw + r.nh + r.dy + r.leave + r.hours + r.trip > 0 || people().includes(r.name)).sort((x, y) => x.name.localeCompare(y.name, "ko"));
 }
+function adminGate(title, next){
+  if (isAdmin()) return next();
+  sheet(`<h3>🔒 ${title}<button class="x" data-close aria-label="닫기">✕</button></h3>
+    <p class="hint" style="margin:-6px 0 14px">관리자만 볼 수 있습니다. 관리자 비밀번호를 넣어 주세요. 한 번 넣으면 ${ADMIN_MINUTES}분 동안 다시 묻지 않습니다.</p>
+    <form id="gForm"><div class="f"><label for="gPw">관리자 비밀번호</label><input id="gPw" type="password" autocomplete="current-password"></div>
+    <button class="btn btn-ink" style="width:100%">열기</button></form>`,
+  (root, close) => root.querySelector("#gForm").addEventListener("submit", async ev => {
+    ev.preventDefault(); const btn = root.querySelector("#gForm button"); btn.disabled = true;
+    try { S.adminUntil = await store.adminOn(root.querySelector("#gPw").value); close(); renderTop(); next(); }
+    catch(e){ btn.disabled = false; toast(e instanceof AuthError ? e.message : "확인하지 못했습니다. 연결을 확인해 주세요."); }
+  }));
+}
 function openStats(){
+  if (!isAdmin()) return adminGate("당직·휴가 통계", openStats);
   let mode = "month", cur = new Date(pd(TODAY).getFullYear(), pd(TODAY).getMonth(), 1, 12);
   sheet(`<h3>📊 당직·휴가 통계<button class="x" data-close aria-label="닫기">✕</button></h3>
     <div class="stbar"><div class="seg" id="stMode"><button data-v="month" aria-pressed="true">월별</button><button data-v="year" aria-pressed="false">연간</button></div>
@@ -2561,7 +2574,7 @@ const commonSettings = () => `<div class="setgrid">
     <button class="btn btn-line" data-set="bg">🖼 홈 배경 사진</button>
     <button class="btn btn-line" data-set="hist">🕘 변경 기록</button>
     <button class="btn btn-line" data-set="trash">🗑 휴지통</button>
-    <button class="btn btn-line" data-set="stats">📊 당직·휴가 통계</button>
+    <button class="btn btn-line" data-set="stats">📊 당직·휴가 통계 🔒</button>
     <button class="btn btn-line" data-set="rb">📅 예약 현황</button>
     <button class="btn btn-line" data-set="res">🚗 예약 대상 관리</button>
     <button class="btn btn-line" data-set="img">🖼 주간 공유 이미지</button>
