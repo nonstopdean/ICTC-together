@@ -456,6 +456,21 @@ body.locked{overflow:hidden}
 .pinfo:empty{display:none}
 .pgroup h4{display:flex;align-items:baseline;gap:6px;flex-wrap:wrap}
 .zipbtn{margin-left:auto;border:0;background:transparent;color:var(--muted);font-size:12.5px;font-weight:600}
+.bkbox{border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:12px}
+.bkbox > b{font-size:15px}
+.ckprog{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.ckprog > div{flex:1;height:8px;border-radius:9px;background:var(--soft);overflow:hidden}
+.ckprog i{display:block;height:100%;background:var(--leave);transition:width .2s}
+.ckprog span{font-size:13px;font-weight:700;white-space:nowrap}
+.ckrow{display:grid;grid-template-columns:1fr 96px 30px;gap:6px;align-items:center;padding:7px 0;border-top:1px solid var(--line2)}
+.ckrow label{display:flex;gap:8px;align-items:center;font-size:14.5px;cursor:pointer;min-width:0}
+.ckrow label input{width:20px;height:20px;flex:0 0 auto;accent-color:var(--leave)}
+.ckrow.done label span{text-decoration:line-through;color:var(--muted)}
+.ckrow .ckwho{border:1px solid var(--line);border-radius:8px;padding:6px 8px;background:var(--card);min-width:0;width:100%}
+.ckrow .x{border:0;background:var(--soft);border-radius:7px;width:30px;height:30px}
+.ckrow small{grid-column:1/-1;font-size:11.5px;color:var(--muted);margin:-2px 0 0 28px}
+.ckb{display:inline-block;font-size:11px;font-weight:700;border-radius:5px;padding:0 5px;margin-left:4px;background:var(--trip-bg);color:var(--trip);vertical-align:1px;white-space:nowrap}
+.ckb.ok{background:var(--leave-bg);color:var(--leave)}
 /* ---------- 기록·통계·예약·과정 ---------- */
 .hlist{display:flex;flex-direction:column}
 .hrow2{display:grid;grid-template-columns:26px 1fr auto;gap:8px;align-items:center;padding:9px 0;border-top:1px solid var(--line2)}
@@ -1050,6 +1065,10 @@ const store = {
       for (let i = 0; i < list.length; i += 20){ const b = fs.writeBatch(db); list.slice(i, i + 20).forEach(h => b.set(fs.doc(db, "history", h.id), h)); await b.commit(); }
     } catch(e){ console.warn("변경 기록을 남기지 못했습니다(보안 규칙 확인)", e); }
   },
+  async setChecklist(list){
+    if (S.mode === "demo"){ local.data.checklist = list; local.save(); return; }
+    const { fs, db } = S.fb; await fs.setDoc(fs.doc(db, "settings", "checklist"), { list });
+  },
   async setResources(list){
     if (S.mode === "demo"){ local.data.resources = list; local.save(); return; }
     const { fs, db } = S.fb; await fs.setDoc(fs.doc(db, "settings", "resources"), { list });
@@ -1260,9 +1279,9 @@ ${showInstall ? `<div class="card wide install"><img src="icon-192.png" alt="" o
       <div class="acts">${installEvt ? `<button class="btn btn-fire btn-sm" id="doInstall">앱 설치</button>` : ""}<button class="btn btn-line btn-sm" id="noInstall">다시 보지 않기</button></div></div>` : ""}
     ${S.photos.length ? `<div class="card wide"><h3>최근 사진<button class="lnk" data-go="photo">사진첩 ›</button></h3><div class="body"><div class="hphotos">${S.photos.slice(0, 8).map(p => `<button class="pth" data-hp="${esc(p.id)}"><img src="${p.thumb}" alt="" loading="lazy"></button>`).join("")}</div></div></div>` : ""}
     <div class="card wide"><h3>이번 주<button class="lnk" data-go="week">주간 보기 ›</button></h3><div class="body"><div class="strip">${strip}</div></div></div>
-    <div class="card"><h3>내 다음 일정<button class="lnk" data-go="mine">전체 ›</button></h3><div class="body">${mine.length ? mine.map(e => row(e, staffOf(e).includes(S.me.name) ? "담당" : "")).join("") :
+    <div class="card"><h3>내 다음 일정<button class="lnk" id="myCal">📅 폰 캘린더로</button><button class="lnk" data-go="mine">전체 ›</button></h3><div class="body">${mine.length ? mine.map(e => row(e, staffOf(e).includes(S.me.name) ? "담당" : "")).join("") :
       `<div class="empty" style="padding:14px 6px">다가오는 내 출장·휴가·담당 교육이 없습니다.</div>`}</div></div>
-    <div class="card"><h3>다가오는 교육·평가<button class="lnk" data-go="list">목록 ›</button></h3><div class="body">${crs.length ? crs.map(e => row(e, e.cat === "eval" ? "평가" : "")).join("") :
+    <div class="card"><h3>다가오는 교육·평가<button class="lnk" data-go="list">목록 ›</button></h3><div class="body">${crs.length ? crs.map(e => row(e, (e.cat === "eval" ? "평가" : "") + checkBadge(e))).join("") :
       `<div class="empty" style="padding:14px 6px">예정된 교육이 없습니다.</div>`}</div></div>
     <div class="card wide"><h3>최근 올라온 일정</h3><div class="body">${recent.length ? recent.map(e => row(e, `${isNew(e) ? `<span class="newt">NEW</span> ` : ""}${esc(e.editedBy || e.ownerName || "")} · ${ago(e.updatedAt)}`)).join("") :
       `<div class="empty" style="padding:14px 6px">아직 등록된 출장·휴가가 없습니다. 맨 아래 빠른 등록으로 첫 일정을 올려 보세요.</div>`}</div></div>`;
@@ -1272,6 +1291,7 @@ ${showInstall ? `<div class="card wide install"><img src="icon-192.png" alt="" o
   g.querySelectorAll("[data-id]").forEach(b => b.addEventListener("click", () => openDetail(b.dataset.id)));
   g.querySelectorAll("[data-hp]").forEach(b => b.addEventListener("click", () => openViewer(b.dataset.hp, [...S.photos])));
   g.querySelectorAll("[data-wk]").forEach(b => b.addEventListener("click", () => { S.sel = b.dataset.wk; setView("week"); }));
+  $("myCal")?.addEventListener("click", openMyCal);
   g.querySelectorAll("[data-go]").forEach(b => b.addEventListener("click", () => {
     const go = b.dataset.go;
     if (go === "mine"){ S.person = S.me.name; S.on = new Set(PERSONAL); S.range = "next"; setView("list"); toast("교육·평가 버튼을 누르면 다시 함께 보입니다."); }
@@ -1544,7 +1564,7 @@ function itemHTML(e){
   const sub = e.cat === "edu" || e.cat === "eval"
     ? `${span}${e.plan ? "계획(안)" : CATS[e.cat]}${staffOf(e).length ? " · 담당 " + esc(staffText(e)) : ""}`
     : `${span}${e.cat === "leave" ? esc(leaveText(e)) + (e.reason ? " · " + esc(e.reason) : "") : CATS[e.cat]}${e.ownerName ? " · 등록 " + esc(e.ownerName) : ""}`;
-  return `<button class="item" data-id="${esc(e.id)}"><span class="stripe cc" style="${tst(e)}"></span><span><span class="t">${esc(label(e))}${rc(e)}</span><span class="m">${sub}</span></span><span class="badge ${tcls(e)}" style="${tst(e)}">${e.cat === "edu" || e.cat === "eval" ? esc(tone(e).name.split(" ")[0]) + (e.cat === "eval" ? " 평가" : "") : CATS[e.cat]}</span></button>`;
+  return `<button class="item" data-id="${esc(e.id)}"><span class="stripe cc" style="${tst(e)}"></span><span><span class="t">${esc(label(e))}${rc(e)}${checkBadge(e)}</span><span class="m">${sub}</span></span><span class="badge ${tcls(e)}" style="${tst(e)}">${e.cat === "edu" || e.cat === "eval" ? esc(tone(e).name.split(" ")[0]) + (e.cat === "eval" ? " 평가" : "") : CATS[e.cat]}</span></button>`;
 }
 
 function renderDay(){
@@ -2033,16 +2053,17 @@ function courseHTML(e){
   return `<div class="course"><div class="cinfo">${e.trainees ? `<span>👥 교육생 <b>${e.trainees}</b>명</span>` : ""}${e.room ? `<span>🏫 ${esc(e.room)}</span>` : ""}</div>
     ${sc.length ? `<div class="ctable">${[...byDay].map(([d, ss]) => `<div class="cday"><b>${md(d)} ${WD[pd(d).getDay()]}</b>${ss.map(s => `<div class="crow"><span>${esc(s.t || "")}</span><span>${esc(s.s || "")}</span><span class="${s.who === S.me?.name ? "me" : ""}">${esc(s.who || "")}</span></div>`).join("")}</div>`).join("")}</div>` : ""}</div>`;
 }
-function openCourse(e){
+function openCourse(e, pre){
+  e = S.events.find(x => x.id === e.id) || e;
   const days = []; for (let d = pd(e.start); ymd(d) <= e.end; d = addDays(d, 1)) days.push(ymd(d));
-  let rows = (e.sched || []).map(s => ({ ...s }));
+  let rows = (pre?.rows || e.sched || []).map(s => ({ ...s }));
   if (!rows.length) rows = [{ d: e.start, t: "09:00~12:00", s: "", who: "" }];
   const names = people();
   sheet(`<h3>📚 과정 상세<button class="x" data-close aria-label="닫기">✕</button></h3>
     <p class="hint" style="margin:-6px 0 12px"><b>${esc(e.title)}</b> · ${rangeText(e)}</p>
-    <div class="two"><div class="f"><label for="cTr">교육생 수</label><input id="cTr" type="number" min="0" inputmode="numeric" value="${e.trainees || ""}" placeholder="예: 24"></div>
-      <div class="f"><label for="cRoom">교육장</label><input id="cRoom" value="${esc(e.room || "")}" placeholder="예: 지휘훈련실"></div></div>
-    <div class="f"><span class="lbl">시간표 · 담당 교관</span><datalist id="cNames">${names.map(n => `<option value="${esc(n)}">`).join("")}</datalist><div id="cRows"></div>
+    <div class="two"><div class="f"><label for="cTr">교육생 수</label><input id="cTr" type="number" min="0" inputmode="numeric" value="${(pre?.trainees ?? e.trainees) || ""}" placeholder="예: 24"></div>
+      <div class="f"><label for="cRoom">교육장</label><input id="cRoom" value="${esc((pre?.room ?? e.room) || "")}" placeholder="예: 지휘훈련실"></div></div>
+    <div class="f"><span class="lbl" style="display:flex;align-items:center;gap:8px">시간표 · 담당 교관<button type="button" class="btn btn-line btn-sm" id="cTpl" style="margin-left:auto">📋 지난 기수에서 불러오기</button></span>${pre ? `<p class="hint" style="margin:0 0 8px;color:var(--leave)">불러온 시간표입니다. 확인하고 저장을 눌러 주세요.</p>` : ""}<datalist id="cNames">${names.map(n => `<option value="${esc(n)}">`).join("")}</datalist><div id="cRows"></div>
       <button type="button" class="btn btn-line btn-sm" id="cAdd" style="margin-top:6px">＋ 줄 추가</button></div>
     <div class="actions"><button class="btn btn-line" data-close>취소</button><button class="btn btn-fire grow" id="cSave">저장</button></div>`,
   (root, close) => {
@@ -2057,6 +2078,11 @@ function openCourse(e){
       q("#cRows").querySelectorAll("[data-k]").forEach(inp => inp.addEventListener("input", () => { rows[+inp.closest(".srow").dataset.i][inp.dataset.k] = inp.value; }));
       q("#cRows").querySelectorAll("[data-del]").forEach(b => b.addEventListener("click", () => { rows.splice(+b.dataset.del, 1); draw(); }));
     };
+    q("#cTpl").addEventListener("click", () => {
+      const cur = { trainees: parseInt(q("#cTr").value, 10) || 0, room: q("#cRoom").value };
+      if (rows.some(r => r.s || r.who) && !confirm("지금 시간표를 지난 기수 시간표로 바꿀까요?")) return;
+      pickTemplate(e, (rws, x) => openCourse(e, { rows: rws, trainees: cur.trainees || x.trainees || 0, room: cur.room || x.room || "" }));
+    });
     q("#cAdd").addEventListener("click", () => { const last = rows[rows.length - 1]; rows.push({ d: last ? last.d : e.start, t: "", s: "", who: "" }); draw(); });
     q("#cSave").addEventListener("click", async () => {
       const sched = rows.filter(r => r.s || r.who || r.t).map(r => ({ d: r.d, t: (r.t || "").trim(), s: (r.s || "").trim(), who: (r.who || "").trim() })).slice(0, 80);
@@ -2064,6 +2090,266 @@ function openCourse(e){
       try { await store.saveEvent(ev); close(); toast("과정 상세를 저장했습니다."); } catch(err){ console.error(err); toast("저장하지 못했습니다."); }
     });
     draw();
+  });
+}
+
+/* =========================================================
+   1) 전체 백업 · 복원
+   ========================================================= */
+const BK_KEY = "ictc-hamkke-lastbackup";
+function backupData(){
+  const strip = o => Object.fromEntries(Object.entries(o).filter(([k]) => !k.startsWith("_")));
+  return { app: "ICTC 함께", version: 1, at: new Date().toISOString(), by: S.me?.name || "",
+    events: S.events.map(strip), notices: S.notices.map(strip), comments: S.comments.map(strip),
+    settings: { colors: S.colors || {}, resources: S.resources || null, checklist: S.checklist || null },
+    photos: S.photos.map(p => ({ id: p.id, album: p.album, caption: p.caption, by: p.by, at: p.at, date: p.date })) };
+}
+function downloadBackup(){
+  const d = backupData();
+  const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([JSON.stringify(d)], { type: "application/json" }));
+  a.download = `ICTC함께_백업_${TODAY}.json`; document.body.append(a); a.click(); a.remove();
+  try { localStorage.setItem(BK_KEY, new Date().toISOString()); } catch(e){}
+  toast(`백업했습니다. 일정 ${d.events.length}건 · 공지 ${d.notices.length}건 · 댓글 ${d.comments.length}건`);
+}
+function openBackup(){
+  let last = ""; try { last = localStorage.getItem(BK_KEY) || ""; } catch(e){}
+  sheet(`<h3>💾 백업 · 복원<button class="x" data-close aria-label="닫기">✕</button></h3>
+    <div class="bkbox"><b>백업 받기</b><p class="hint">일정·공지·댓글·설정을 파일 하나(.json)로 내려받습니다. 한 달에 한 번 받아 센터 PC나 공유 드라이브에 보관해 두세요. 사진 파일 자체는 사진첩의 "⬇ 모두 저장"으로 따로 받으세요.</p>
+      <p class="hint">${last ? `이 기기에서 마지막 백업: <b>${ago(last)}</b> (${new Date(last).toLocaleDateString("ko-KR")})` : "이 기기에서 받은 백업이 없습니다."}</p>
+      <button class="btn btn-ink" id="bkDown" style="width:100%">💾 지금 백업 받기</button></div>
+    <div class="bkbox"><b>백업으로 되돌리기 🔒</b><p class="hint">백업 파일의 내용을 다시 넣습니다. 지금 있는 일정은 지우지 않고, 백업에 있던 일정은 백업 당시 모습으로 돌아옵니다. 관리자 비밀번호가 필요합니다.</p>
+      <label class="btn btn-line" for="bkFile" style="width:100%">📂 백업 파일 고르기</label><input id="bkFile" type="file" accept=".json,application/json" class="hide">
+      <div id="bkPrev"></div></div>`,
+  (root, close) => {
+    const q = s => root.querySelector(s);
+    q("#bkDown").addEventListener("click", () => { downloadBackup(); close(); });
+    q("#bkFile").addEventListener("change", async ev => {
+      const f = ev.target.files[0]; if (!f) return;
+      let d; try { d = JSON.parse(await f.text()); } catch(e){ return toast("백업 파일을 읽지 못했습니다."); }
+      if (d.app !== "ICTC 함께" || !Array.isArray(d.events)) return toast("ICTC 함께 백업 파일이 아닙니다.");
+      const have = new Set(S.events.map(e => e.id)), missing = d.events.filter(e => !have.has(e.id)).length;
+      q("#bkPrev").innerHTML = `<div class="dinfo"><b>${new Date(d.at).toLocaleString("ko-KR")}</b> 백업 (${esc(d.by || "")})<br>일정 ${d.events.length}건 (지금 없는 일정 ${missing}건) · 공지 ${(d.notices || []).length}건 · 댓글 ${(d.comments || []).length}건</div>
+        <button class="btn btn-fire" id="bkGo" style="width:100%;margin-top:10px">이 백업으로 되돌리기</button>`;
+      q("#bkGo").addEventListener("click", () => adminGate("백업으로 되돌리기", async () => {
+        if (!confirm(`일정 ${d.events.length}건과 공지·댓글을 백업 당시 모습으로 되돌릴까요?\n(지금 있는 다른 일정은 그대로 둡니다)`)) return;
+        try {
+          toast("되돌리는 중…");
+          await store.saveMany(d.events, { action: "restore", note: `백업 복원 (${new Date(d.at).toLocaleDateString("ko-KR")} 백업, 일정 ${d.events.length}건)` });
+          for (const n of d.notices || []) await store.saveNotice(n);
+          if (S.mode === "shared"){
+            const { fs, db } = S.fb; const cm = d.comments || [];
+            for (let i = 0; i < cm.length; i += 20){ const b = fs.writeBatch(db); cm.slice(i, i + 20).forEach(c => b.set(fs.doc(db, "comments", c.id), { ...c, uid: myUid() })); await b.commit(); }
+          } else { S.comments = d.comments || []; local.data.comments = S.comments; local.save(); }
+          if (d.settings?.resources) await store.setResources(d.settings.resources);
+          if (d.settings?.checklist) await store.setChecklist(d.settings.checklist);
+          close(); render(); toast("백업으로 되돌렸습니다.");
+        } catch(e){ console.error(e); toast("되돌리지 못했습니다. 보안 규칙과 연결을 확인해 주세요."); }
+      }));
+    });
+  });
+}
+
+/* =========================================================
+   2) 시간표 템플릿 (지난 기수 시간표 불러오기)
+   ========================================================= */
+function schedTemplates(e){
+  const g = tone(e).name, base = e.title.replace(/\d+\s*(기|회)/g, "").replace(/\s+/g, "");
+  return sortEv(S.events.filter(x => x.id !== e.id && (x.cat === "edu" || x.cat === "eval") && (x.sched || []).length &&
+    (tone(x).name === g || x.title.replace(/\d+\s*(기|회)/g, "").replace(/\s+/g, "") === base))).reverse();
+}
+function pickTemplate(e, apply){
+  const list = schedTemplates(e);
+  sheet(`<h3>📋 지난 기수 시간표 불러오기<button class="x" data-close aria-label="닫기">✕</button></h3>
+    <p class="hint" style="margin:-6px 0 12px">같은 과정의 지난 시간표를 날짜만 맞춰 그대로 가져옵니다. 1일차는 1일차로, 2일차는 2일차로 옮겨집니다.</p>
+    <div class="swlist">${list.length ? list.map(x => `<button class="swrow" data-tp="${esc(x.id)}"><span class="d">${md(x.start)}~${md(x.end)}</span><b>${esc(x.title)}</b><em>${x.sched.length}교시${x.trainees ? ` · ${x.trainees}명` : ""}</em></button>`).join("")
+      : `<div class="empty">시간표가 들어 있는 같은 종류의 과정이 아직 없습니다.<br>이번 기수 시간표를 한 번 만들어 두면 다음 기수부터 불러올 수 있습니다.</div>`}</div>`,
+  (root, close) => root.querySelectorAll("[data-tp]").forEach(b => b.addEventListener("click", () => {
+    const x = S.events.find(y => y.id === b.dataset.tp);
+    // 교육일(평일)만 세어서 n일차 → n일차로 맞춤
+    const days = ev => { const out = []; for (let d = pd(ev.start); ymd(d) <= ev.end; d = addDays(d, 1)) if (isWork(ymd(d)) || ev.start === ev.end) out.push(ymd(d)); return out.length ? out : [ev.start]; };
+    const src = days(x), dst = days(e);
+    const rows = x.sched.map(s => { const k = Math.max(0, src.indexOf(s.d)); return { ...s, d: dst[Math.min(k, dst.length - 1)] }; });
+    close(); apply(rows, x);
+    toast(`${x.title} 시간표 ${rows.length}줄을 불러왔습니다. 확인 후 저장해 주세요.`);
+  })));
+}
+
+/* =========================================================
+   4) 교육 준비 체크리스트
+   ========================================================= */
+const DEFAULT_CHECK = ["교육생 명단 확인", "훈련실·강의실 세팅", "시뮬레이션 장비 점검", "교재·평가지 인쇄", "강사·교관 확인", "수료증 준비", "결과 보고"];
+const checkItems = () => (S.checklist && S.checklist.length ? S.checklist : DEFAULT_CHECK);
+const checkProg = e => { const c = e.check || []; return c.length ? [c.filter(x => x.done).length, c.length] : null; };
+const checkBadge = e => { const p = checkProg(e); return p ? ` <span class="ckb ${p[0] === p[1] ? "ok" : ""}">준비 ${p[0]}/${p[1]}</span>` : ""; };
+function openChecklist(e0){
+  let e = S.events.find(x => x.id === e0.id) || e0;
+  let items = (e.check || []).map(x => ({ ...x }));
+  const names = people();
+  sheet(`<h3>✅ 준비 체크리스트<button class="x" data-close aria-label="닫기">✕</button></h3>
+    <p class="hint" style="margin:-6px 0 12px"><b>${esc(e.title)}</b> · ${rangeText(e)}</p>
+    <div class="ckprog"><div><i id="ckBar"></i></div><span id="ckTxt"></span></div>
+    <datalist id="ckNames">${names.map(n => `<option value="${esc(n)}">`).join("")}</datalist>
+    <div id="ckList"></div>
+    <div class="cform" style="margin-top:8px"><input id="ckNew" placeholder="항목 추가 (예: 차량 배차)" maxlength="60"><button class="btn btn-ink btn-sm" id="ckAdd">추가</button></div>
+    <div class="actions" style="margin-top:12px;flex-wrap:wrap"><button class="btn btn-line btn-sm" id="ckDef">기본 항목 넣기</button><button class="btn btn-line btn-sm" id="ckEditDef">기본 항목 고치기</button></div>`,
+  (root, close) => {
+    const q = s => root.querySelector(s);
+    const save = async () => {
+      e = { ...e, check: items, editedBy: S.me.name, updatedAt: new Date().toISOString() };
+      try { await store._saveEvent(e); } catch(err){ console.error(err); toast("저장하지 못했습니다."); }
+    };
+    const draw = () => {
+      const done = items.filter(x => x.done).length;
+      q("#ckBar").style.width = items.length ? `${Math.round(done / items.length * 100)}%` : "0";
+      q("#ckTxt").textContent = items.length ? `${done} / ${items.length} 완료` : "항목이 없습니다";
+      q("#ckList").innerHTML = items.map((x, i) => `<div class="ckrow ${x.done ? "done" : ""}">
+        <label><input type="checkbox" data-i="${i}" ${x.done ? "checked" : ""}><span>${esc(x.t)}</span></label>
+        <input class="ckwho" data-w="${i}" list="ckNames" value="${esc(x.who || "")}" placeholder="담당">
+        <button class="x" data-d="${i}" aria-label="항목 삭제">✕</button>
+        ${x.done && x.by ? `<small>${esc(x.by)} · ${ago(x.at)} 완료</small>` : ""}</div>`).join("");
+      q("#ckList").querySelectorAll("[data-i]").forEach(c => c.addEventListener("change", () => { const x = items[+c.dataset.i]; x.done = c.checked; x.by = c.checked ? S.me.name : ""; x.at = c.checked ? new Date().toISOString() : ""; draw(); save(); }));
+      q("#ckList").querySelectorAll("[data-w]").forEach(c => c.addEventListener("change", () => { items[+c.dataset.w].who = c.value.trim(); save(); }));
+      q("#ckList").querySelectorAll("[data-d]").forEach(c => c.addEventListener("click", () => { items.splice(+c.dataset.d, 1); draw(); save(); }));
+    };
+    q("#ckAdd").addEventListener("click", () => { const t = q("#ckNew").value.trim(); if (!t) return; items.push({ t, who: "", done: false }); q("#ckNew").value = ""; draw(); save(); });
+    q("#ckNew").addEventListener("keydown", ev => { if (ev.key === "Enter"){ ev.preventDefault(); q("#ckAdd").click(); } });
+    q("#ckDef").addEventListener("click", () => { const have = new Set(items.map(x => x.t)); checkItems().forEach(t => have.has(t) || items.push({ t, who: "", done: false })); draw(); save(); });
+    q("#ckEditDef").addEventListener("click", openCheckDefaults);
+    if (!items.length){ checkItems().forEach(t => items.push({ t, who: "", done: false })); save(); }
+    draw();
+  });
+}
+function openCheckDefaults(){
+  sheet(`<h3>기본 준비 항목<button class="x" data-close aria-label="닫기">✕</button></h3>
+    <p class="hint" style="margin:-6px 0 12px">새 과정의 체크리스트를 처음 열 때 자동으로 들어가는 항목입니다. 한 줄에 하나씩 적어 주세요.</p>
+    <div class="f"><textarea id="cdTxt" style="min-height:200px">${esc(checkItems().join("\n"))}</textarea></div>
+    <div class="actions"><button class="btn btn-line" data-close>취소</button><button class="btn btn-fire grow" id="cdSave">저장</button></div>`,
+  (root, close) => root.querySelector("#cdSave").addEventListener("click", async () => {
+    const list = [...new Set(root.querySelector("#cdTxt").value.split("\n").map(s => s.trim()).filter(Boolean))].slice(0, 30);
+    try { await store.setChecklist(list); S.checklist = list; close(); toast("기본 항목을 저장했습니다."); } catch(e){ toast("저장하지 못했습니다. 보안 규칙을 확인해 주세요."); }
+  }));
+}
+
+/* =========================================================
+   5) 연간 계획 직접 불러오기 (엑셀 · CSV)
+   ========================================================= */
+function parseDateAny(v){
+  if (v == null || v === "") return "";
+  if (v instanceof Date && !isNaN(v)) return ymd(new Date(v.getFullYear(), v.getMonth(), v.getDate(), 12));
+  if (typeof v === "number" && v > 20000 && v < 80000){ const d = new Date(Date.UTC(1899, 11, 30) + v * 864e5); return ymd(new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), 12)); }
+  const m = String(v).trim().match(/(\d{4})\D+(\d{1,2})\D+(\d{1,2})/);
+  return m ? `${m[1]}-${pad(+m[2])}-${pad(+m[3])}` : "";
+}
+const PLAN_COLS = { title:["과정명","과정","교육명","제목","일정"], start:["시작일","시작","시작 날짜","교육 시작"], end:["종료일","종료","끝","끝날","교육 종료"],
+  cat:["분류","구분","종류"], plan:["계획안","안","확정"], staff:["담당교관","담당 교관","교관","담당"], room:["교육장","장소"], trainees:["인원","교육생","교육생 수"], memo:["메모","비고"] };
+function downloadPlanTemplate(){
+  const rows = [["과정명","시작일","종료일","분류","계획안","담당교관","교육장","인원","메모"],
+    ["12기 초급현장지휘관 양성과정","2027-03-02","2027-03-06","교육","","김기석, 이도경","지휘훈련실","24",""],
+    ["5회 초급현장지휘관 자격인증 평가","2027-03-16","2027-03-20","평가","O","","","",""]];
+  const csv = "\ufeff" + rows.map(r => r.map(c => `"${c}"`).join(",")).join("\r\n");
+  const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" })); a.download = "ICTC함께_연간계획_양식.csv"; document.body.append(a); a.click(); a.remove();
+}
+async function readSheet(file){
+  const name = file.name.toLowerCase();
+  if (name.endsWith(".csv") || name.endsWith(".txt")){
+    let text = await file.text();
+    if (text.includes("\ufffd")){ try { text = new TextDecoder("euc-kr").decode(await file.arrayBuffer()); } catch(e){} }
+    const rows = []; let row = [], cur = "", inQ = false;
+    for (let i = 0; i < text.length; i++){
+      const ch = text[i];
+      if (inQ){ if (ch === '"'){ if (text[i + 1] === '"'){ cur += '"'; i++; } else inQ = false; } else cur += ch; }
+      else if (ch === '"') inQ = true; else if (ch === ","){ row.push(cur); cur = ""; }
+      else if (ch === "\n" || ch === "\r"){ if (ch === "\r" && text[i + 1] === "\n") i++; row.push(cur); rows.push(row); row = []; cur = ""; }
+      else cur += ch;
+    }
+    if (cur || row.length){ row.push(cur); rows.push(row); }
+    return rows.map(r => r.map(c => c.replace(/^\ufeff/, "").trim()));
+  }
+  if (!window.XLSX) await new Promise((ok, no) => { const s = document.createElement("script"); s.src = "https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"; s.onload = ok; s.onerror = no; document.head.append(s); });
+  const wb = window.XLSX.read(await file.arrayBuffer(), { cellDates: true });
+  return window.XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header: 1, raw: true, defval: "" });
+}
+function openPlanImport(){
+  sheet(`<h3>📥 연간 계획 불러오기<button class="x" data-close aria-label="닫기">✕</button></h3>
+    <p class="hint" style="margin:-6px 0 12px">엑셀(.xlsx)이나 CSV 파일의 첫 줄에 <b>과정명, 시작일, 종료일</b> 칸이 있으면 됩니다. 분류(교육/평가), 계획안(O), 담당교관, 교육장, 인원, 메모는 있으면 함께 들어갑니다.</p>
+    <div class="actions" style="flex-wrap:wrap"><button class="btn btn-line grow" id="plTpl">⬇ 양식 내려받기</button><label class="btn btn-ink grow" for="plFile">📂 파일 고르기</label><input id="plFile" type="file" accept=".xlsx,.xls,.csv" class="hide"></div>
+    <div id="plPrev" style="margin-top:12px"></div>`,
+  (root, close) => {
+    const q = s => root.querySelector(s);
+    q("#plTpl").addEventListener("click", downloadPlanTemplate);
+    q("#plFile").addEventListener("change", async ev => {
+      const f = ev.target.files[0]; if (!f) return;
+      let rows; try { rows = await readSheet(f); } catch(e){ console.error(e); return toast("파일을 읽지 못했습니다. 인터넷 연결이나 파일 형식을 확인해 주세요."); }
+      const hi = rows.findIndex(r => r.some(c => PLAN_COLS.title.includes(String(c).replace(/\s/g, "") ) || PLAN_COLS.title.includes(String(c).trim())));
+      if (hi < 0) return toast("첫 줄에서 '과정명' 칸을 찾지 못했습니다. 양식을 확인해 주세요.");
+      const head = rows[hi].map(c => String(c).trim()), col = k => head.findIndex(h => PLAN_COLS[k].includes(h) || PLAN_COLS[k].includes(h.replace(/\s/g, "")));
+      const C = Object.fromEntries(Object.keys(PLAN_COLS).map(k => [k, col(k)]));
+      if (C.start < 0) return toast("'시작일' 칸을 찾지 못했습니다.");
+      const importId = "imp" + Date.now().toString(36);
+      const items = rows.slice(hi + 1).filter(r => r.some(c => String(c).trim())).map((r, i) => {
+        const title = String(r[C.title] ?? "").trim(), start = parseDateAny(r[C.start]), end = parseDateAny(C.end >= 0 ? r[C.end] : "") || start;
+        const catTxt = C.cat >= 0 ? String(r[C.cat]) : "", plan = C.plan >= 0 && /^(o|O|○|예|안|y|Y|true)$/.test(String(r[C.plan]).trim());
+        const err = !title ? "과정명 없음" : !start ? "시작일 확인" : end < start ? "종료일이 빠름" : "";
+        const id = "i" + Array.from(title + start).reduce((h, ch) => (h * 31 + ch.charCodeAt(0)) >>> 0, 7).toString(36);
+        const dup = S.events.find(e => (e.cat === "edu" || e.cat === "eval") && e.title === title && e.start === start);
+        return { err, dup, ev: { id: dup ? dup.id : id, cat: /평가/.test(catTxt + title) && !/사전연습|대비/.test(title) ? "eval" : "edu", title, start, end, plan,
+          staff: C.staff >= 0 ? String(r[C.staff]).split(/[,·\/\s]+/).map(s => s.trim()).filter(Boolean) : (dup?.staff || []),
+          room: C.room >= 0 ? String(r[C.room]).trim() : (dup?.room || ""), trainees: C.trainees >= 0 ? (parseInt(r[C.trainees], 10) || 0) : (dup?.trainees || 0),
+          memo: C.memo >= 0 ? String(r[C.memo]).trim() : (dup?.memo || `${f.name}에서 불러옴`), person: "", place: "", half: "full",
+          sched: dup?.sched || [], check: dup?.check || [], importId, ownerName: S.me.name, editedBy: S.me.name, updatedAt: new Date().toISOString() } };
+      });
+      const ok = items.filter(x => !x.err), news = ok.filter(x => !x.dup).length;
+      q("#plPrev").innerHTML = `<div class="dinfo">${items.length}줄 중 <b>새 일정 ${news}건</b>, 이미 있는 일정 ${ok.length - news}건(덮어씀)${items.length - ok.length ? `, <span style="color:var(--fire)">확인 필요 ${items.length - ok.length}건</span>` : ""}</div>
+        <div class="sttable" style="max-height:40vh;overflow:auto;margin-top:8px"><table><thead><tr><th>상태</th><th>과정명</th><th>기간</th><th>분류</th></tr></thead><tbody>
+        ${items.map(x => `<tr><td>${x.err ? `<span style="color:var(--fire)">${x.err}</span>` : x.dup ? "덮어씀" : "새로"}</td><th style="white-space:normal">${esc(x.ev.title)}${x.ev.plan ? " (안)" : ""}</th><td>${x.ev.start ? md(x.ev.start) : "?"}${x.ev.end !== x.ev.start ? "~" + md(x.ev.end) : ""}</td><td>${CATS[x.ev.cat]}</td></tr>`).join("")}</tbody></table></div>
+        <button class="btn btn-fire" id="plGo" style="width:100%;margin-top:10px" ${ok.length ? "" : "disabled"}>${ok.length}건 불러오기</button>`;
+      q("#plGo")?.addEventListener("click", async () => {
+        const list = ok.map(x => x.ev);
+        try {
+          q("#plGo").disabled = true;
+          await store.saveMany(list, { note: `연간 계획 불러오기: ${f.name} (${list.length}건)` });
+          close(); render();
+          const newIds = ok.filter(x => !x.dup).map(x => x.ev.id);
+          toast(`${list.length}건을 불러왔습니다.`, newIds.length ? { label: "되돌리기", fn: async () => { await store.deleteMany(newIds); toast("새로 불러온 일정을 지웠습니다."); } } : null);
+        } catch(e){ console.error(e); q("#plGo").disabled = false; toast("불러오지 못했습니다."); }
+      });
+    });
+  });
+}
+
+/* =========================================================
+   7) 내 일정 한꺼번에 폰 캘린더로
+   ========================================================= */
+function myEventsFor(from, to, kinds){
+  const me = S.me.name, out = [];
+  S.events.forEach(e => {
+    if (e.end < from || e.start > to) return;
+    if (PERSONAL.includes(e.cat) && e.person === me && kinds.has(e.cat)) out.push(e);
+    if ((e.cat === "edu" || e.cat === "eval") && kinds.has("lecture")){
+      const ss = (e.sched || []).filter(s => s.who === me && s.d >= from && s.d <= to);
+      if (ss.length) ss.forEach((s, i) => { const [a, b] = String(s.t || "").split(/[~\-]/).map(x => x.trim()); out.push({ ...e, id: `${e.id}-L${i}`, cat: "etc", start: s.d, end: s.d, title: `[강의] ${s.s || e.title}`, person: "", time: /^\d{1,2}:\d{2}$/.test(a || "") ? a.padStart(5, "0") : "", timeEnd: /^\d{1,2}:\d{2}$/.test(b || "") ? b.padStart(5, "0") : "", place: e.room || "" }); });
+      else if ((e.staff || []).includes(me)) out.push({ ...e, title: `[담당] ${e.title}` });
+    }
+  });
+  return sortEv(out);
+}
+function openMyCal(){
+  const K = [["trip","출장"],["leave","휴가"],["duty","당직"],["lecture","강의·담당 교육"],["resv","예약"],["etc","회의·기타"]];
+  sheet(`<h3>📅 내 일정을 폰 캘린더로<button class="x" data-close aria-label="닫기">✕</button></h3>
+    <p class="hint" style="margin:-6px 0 12px"><b>${esc(S.me.name)}</b> 님 일정만 골라 파일 하나로 만듭니다. 파일을 열면 아이폰·갤럭시 캘린더에 한꺼번에 들어가고, 폰 캘린더 알림도 받을 수 있습니다.</p>
+    <div class="f"><span class="lbl">기간</span><div class="picks" id="mcR"><button type="button" class="pick plain" data-v="3" aria-pressed="true">앞으로 3개월</button><button type="button" class="pick plain" data-v="y" aria-pressed="false">올해 남은 기간</button><button type="button" class="pick plain" data-v="12" aria-pressed="false">앞으로 1년</button></div></div>
+    <div class="f"><span class="lbl">넣을 일정</span><div class="picks" id="mcK">${K.map(([k, x]) => `<button type="button" class="pick plain" data-v="${k}" aria-pressed="true">${x}</button>`).join("")}</div></div>
+    <div class="dinfo" id="mcInfo"></div>
+    <div class="actions" style="margin-top:12px"><button class="btn btn-fire grow" id="mcGo">📅 캘린더 파일 만들기</button></div>
+    <p class="hint">같은 기간을 다시 넣으면 폰 캘린더에 같은 일정이 두 번 생길 수 있습니다. 새로 넣기 전에 예전에 넣은 일정을 정리하거나, 새로 생긴 기간만 골라 넣어 주세요.</p>`,
+  (root) => {
+    const q = s => root.querySelector(s); let r = "3"; const kinds = new Set(K.map(k => k[0]));
+    const range = () => { const to = r === "y" ? `${pd(TODAY).getFullYear()}-12-31` : ymd(new Date(pd(TODAY).getFullYear(), pd(TODAY).getMonth() + +r, pd(TODAY).getDate(), 12)); return [TODAY, to]; };
+    const info = () => { const [a, b] = range(), list = myEventsFor(a, b, kinds); q("#mcInfo").innerHTML = `${md(a)} ~ ${md(b)} · <b>${list.length}건</b>${list.length ? " — " + esc(list.slice(0, 3).map(label).join(", ")) + (list.length > 3 ? " …" : "") : ""}`; return list; };
+    q("#mcR").addEventListener("click", ev => { const b = ev.target.closest(".pick"); if (!b) return; r = b.dataset.v; q("#mcR").querySelectorAll(".pick").forEach(x => x.setAttribute("aria-pressed", x === b)); info(); });
+    q("#mcK").addEventListener("click", ev => { const b = ev.target.closest(".pick"); if (!b) return; const k = b.dataset.v; kinds.has(k) ? kinds.delete(k) : kinds.add(k); b.setAttribute("aria-pressed", kinds.has(k)); info(); });
+    q("#mcGo").addEventListener("click", () => { const list = info(); if (!list.length) return toast("넣을 일정이 없습니다."); downloadIcs(list, `ICTC함께_${S.me.name}_일정.ics`); });
+    info();
   });
 }
 
@@ -2289,7 +2575,7 @@ function openDetail(id){
     <dl class="dl">${rows.map(([k,v]) => `<dt>${k}</dt><dd>${esc(v)}</dd>`).join("")}</dl>
     ${courseHTML(e)}
     <div id="social" class="social"></div>
-    <div class="more-act"><button class="btn btn-line btn-sm" id="ics">📅 내 폰 캘린더에 추가</button><button class="btn btn-line btn-sm" id="cpy">글 복사</button>${e.cat === "duty" ? `<button class="btn btn-line btn-sm" id="swap">🔁 맞교대</button>` : ""}${e.cat === "edu" || e.cat === "eval" ? `<button class="btn btn-line btn-sm" id="crs">📚 과정 상세</button>` : ""}<button class="btn btn-line btn-sm" id="hist">🕘 기록</button>${canEdit(e) ? `<button class="btn btn-line btn-sm" id="dup">복제</button>` : ""}</div>
+    <div class="more-act"><button class="btn btn-line btn-sm" id="ics">📅 내 폰 캘린더에 추가</button><button class="btn btn-line btn-sm" id="cpy">글 복사</button>${e.cat === "duty" ? `<button class="btn btn-line btn-sm" id="swap">🔁 맞교대</button>` : ""}${e.cat === "edu" || e.cat === "eval" ? `<button class="btn btn-line btn-sm" id="crs">📚 과정 상세</button><button class="btn btn-line btn-sm" id="ckl">✅ 준비${checkProg(e) ? ` ${checkProg(e)[0]}/${checkProg(e)[1]}` : ""}</button>` : ""}<button class="btn btn-line btn-sm" id="hist">🕘 기록</button>${canEdit(e) ? `<button class="btn btn-line btn-sm" id="dup">복제</button>` : ""}</div>
     ${e.seriesId ? `<p class="hint" style="margin:-6px 0 12px">반복 일정입니다. (모두 ${S.events.filter(x => x.seriesId === e.seriesId).length}건)</p>` : ""}
     ${canEdit(e) ? `<div class="actions"><button class="btn btn-danger" id="del">삭제</button><button class="btn btn-ink grow" id="edit">수정</button></div>`
       : `<p class="hint">등록한 사람이 아니어도 누구나 고칠 수 있습니다.</p>`}`,
@@ -2301,6 +2587,7 @@ function openDetail(id){
     root.querySelector("#cpy").addEventListener("click", () => copyText(`[ICTC 함께] ${label(e)}\n${rangeText(e)}${e.place ? "\n장소: " + e.place : ""}${e.memo ? "\n" + e.memo : ""}`));
     root.querySelector("#swap")?.addEventListener("click", () => openSwap(e));
     root.querySelector("#crs")?.addEventListener("click", () => openCourse(e));
+    root.querySelector("#ckl")?.addEventListener("click", () => openChecklist(e));
     root.querySelector("#hist").addEventListener("click", () => openHistory({ eventId: e.id }));
     root.querySelector("#dup")?.addEventListener("click", () => { close(); const { id, seriesId, ...rest } = e; openForm(null, e.start, { ...rest, ownerName: "" }); });
     root.querySelector("#del")?.addEventListener("click", async () => {
@@ -2578,6 +2865,10 @@ const commonSettings = () => `<div class="setgrid">
     <button class="btn btn-line" data-set="rb">📅 예약 현황</button>
     <button class="btn btn-line" data-set="res">🚗 예약 대상 관리</button>
     <button class="btn btn-line" data-set="img">🖼 주간 공유 이미지</button>
+    <button class="btn btn-line" data-set="mycal">📅 내 일정 폰 캘린더로</button>
+    <button class="btn btn-line" data-set="plan">📥 연간 계획 불러오기 (엑셀)</button>
+    <button class="btn btn-line" data-set="ckdef">✅ 기본 준비 항목</button>
+    <button class="btn btn-line" data-set="backup">💾 백업 · 복원</button>
     ${S.mode === "shared" ? `<button class="btn btn-line" data-set="imp">📥 교육계획 다시 불러오기</button>` : ""}
   </div>`;
 function bindCommon(root, close){
@@ -2589,6 +2880,10 @@ function bindCommon(root, close){
     else if (k === "stats") openStats();
     else if (k === "rb") openResBoard();
     else if (k === "res") openResList();
+    else if (k === "mycal") openMyCal();
+    else if (k === "plan") openPlanImport();
+    else if (k === "ckdef") openCheckDefaults();
+    else if (k === "backup") openBackup();
     else if (k === "img"){ close(); shareWeekImage().catch(e => { console.error(e); toast("이미지를 만들지 못했습니다."); }); }
     else if (k === "bg"){ close(); setView("home"); openBg(); }
     else if (k === "imp"){
@@ -2797,7 +3092,7 @@ function showLogin(msg){
 
 /* --- 체험 모드 --- */
 function enterDemo(){
-  S.events = local.data.events; S.colors = local.data.colors || {}; S.notices = local.data.notices || []; S.comments = local.data.comments || []; S.homeBg = local.data.homeBg || ""; S.resources = local.data.resources || null; S.me = { name: myName() };
+  S.events = local.data.events; S.colors = local.data.colors || {}; S.notices = local.data.notices || []; S.comments = local.data.comments || []; S.homeBg = local.data.homeBg || ""; S.resources = local.data.resources || null; S.checklist = local.data.checklist || null; S.me = { name: myName() };
   S.adminUntil = local.data.adminUntil || 0;
   showApp();
 }
@@ -2817,6 +3112,7 @@ async function enterShared(){
   try { const a = await fs.getDoc(fs.doc(db, "adminSessions", uid)); S.adminUntil = a.exists() ? a.data().exp.toMillis() : 0; } catch(e){ S.adminUntil = 0; }
   await new Promise((resolve, reject) => {
     let first = true;
+    unsubs.push(fs.onSnapshot(fs.doc(db, "settings", "checklist"), d => { S.checklist = d.exists() ? (d.data().list || null) : null; }, err => console.warn(err)));
     unsubs.push(fs.onSnapshot(fs.doc(db, "settings", "resources"), d => { S.resources = d.exists() ? (d.data().list || null) : null; }, err => console.warn(err)));
     unsubs.push(fs.onSnapshot(fs.doc(db, "homeBg", "main"), d => {
       S.homeBg = d.exists() ? (d.data().bg || "") : ""; if (!first && S.view === "home") renderHome();
