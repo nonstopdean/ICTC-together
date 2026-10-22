@@ -588,6 +588,8 @@ button.newb{border:0;cursor:pointer}
 .wxnow{margin-left:auto;font-size:13px;font-weight:600;color:var(--ink2)}
 .wxs{font-size:11px;font-weight:600;background:var(--soft);color:var(--muted);border-radius:5px;padding:1px 6px}
 .wk .wh .wxw{display:block;font-size:10.5px;font-weight:600;color:var(--muted);margin-top:2px}
+.h3btn{border:0;background:transparent;font:inherit;font-weight:700;padding:0;color:inherit;cursor:pointer;text-align:left}
+.h3btn:hover{text-decoration:underline}
 /* ---------- 기록·통계·예약·과정 ---------- */
 .hlist{display:flex;flex-direction:column}
 .hrow2{display:grid;grid-template-columns:26px 1fr auto;gap:8px;align-items:center;padding:9px 0;border-top:1px solid var(--line2)}
@@ -1472,7 +1474,7 @@ function renderHome(){
     if (last && last.bulk !== undefined && last.key === `${e.editedBy}|${e.updatedAt}|${e.cat}`){ last.list.push(e); return; }
     feed.push({ key: `${e.editedBy}|${e.updatedAt}|${e.cat}`, bulk: 0, list: [e] });
   });
-  const recent = feed.flatMap(g => g.list.length >= 4 ? [{ _bulk: true, list: g.list }] : g.list).slice(0, 6);
+  const feedAll = feed.flatMap(g => g.list.length >= 4 ? [{ _bulk: true, list: g.list }] : g.list), recent = feedAll.slice(0, 5);
   const bulkRow = g => { const l = sortEv([...g.list]), e0 = l[0], m = pd(e0.start);
     return `<button class="hrow" data-bulk="${esc(e0.start.slice(0, 7))}"><span class="dd">📋</span><span style="min-width:0"><span class="t"><i style="${tst(e0)}"></i>${m.getMonth() + 1}월 ${e0.cat === "duty" ? dutyKind(e0) + "표" : CATS[e0.cat] + " 일정"} ${l.length}건</span><span class="m">${md(l[0].start)} ~ ${md(l[l.length - 1].end)} · 한꺼번에 저장</span></span>
       <span class="r">${isNew(e0) ? `<span class="newt">NEW</span> ` : ""}${esc(e0.editedBy || "")} · ${ago(e0.updatedAt)}</span></button>`; };
@@ -1497,11 +1499,12 @@ ${showInstall ? `<div class="card wide install"><img src="icon-192.png" alt="" o
       `<div class="empty" style="padding:14px 6px">예정된 교육이 없습니다.</div>`}</div></div>
     ${linksHTML()}
     ${toolsHTML()}
-    <div data-fold="recent" class="card wide"><h3>최근 올라온 일정</h3><div class="body">${recent.length ? recent.map(e => e._bulk ? bulkRow(e) : row(e, `${isNew(e) ? `<span class="newt">NEW</span> ` : ""}${esc(e.editedBy || e.ownerName || "")} · ${ago(e.updatedAt)}`)).join("") :
+    <div data-fold="recent" class="card wide"><h3><button class="h3btn" id="recentAll">최근 올라온 일정 ›</button>${feedAll.length > 5 ? `<button class="lnk" id="recentMore">더보기 (${feedAll.length})</button>` : ""}</h3><div class="body">${recent.length ? recent.map(e => e._bulk ? bulkRow(e) : row(e, `${isNew(e) ? `<span class="newt">NEW</span> ` : ""}${esc(e.editedBy || e.ownerName || "")} · ${ago(e.updatedAt)}`)).join("") + (feedAll.length > 5 ? `<button class="bmore" id="recentMore2">${feedAll.length - 5}건 더보기 ›</button>` : "") :
       `<div class="empty" style="padding:14px 6px">아직 등록된 출장·휴가·당직이 없습니다. 맨 아래 빠른 등록으로 첫 일정을 올려 보세요.</div>`}</div></div>`;
   $("homeTop").innerHTML = alertBoardHTML(notices);
   const g = $("homeGrid");
   g.querySelectorAll("[data-id]").forEach(b => b.addEventListener("click", () => openDetail(b.dataset.id)));
+  ["#recentAll", "#recentMore", "#recentMore2"].forEach(s => g.querySelector(s)?.addEventListener("click", openRecent));
   g.querySelectorAll("[data-bulk]").forEach(b => b.addEventListener("click", () => { S.month = pd(b.dataset.bulk + "-01"); S.sel = b.dataset.bulk + "-01"; setView("month"); }));
   g.querySelectorAll("[data-hp]").forEach(b => b.addEventListener("click", () => openViewer(b.dataset.hp, [...S.photos])));
   g.querySelectorAll("[data-wk]").forEach(b => b.addEventListener("click", () => { S.sel = b.dataset.wk; setView("week"); }));
@@ -1628,6 +1631,37 @@ function openBg(){
       if (who === "me"){ try { localStorage.removeItem(BG_KEY); } catch(e){} close(); renderHome(); return toast(S.homeBg ? "이 기기 배경을 지웠습니다. 센터 배경이 보입니다." : "배경을 지웠습니다."); }
       try { await store.setHomeBg(""); S.homeBg = ""; close(); renderHome(); toast("센터 전체 배경을 지웠습니다."); } catch(e){ toast("지우지 못했습니다."); }
     });
+  });
+}
+
+function openRecent(){
+  let days = 14, who = "", cat = "";
+  sheet(`<h3>🕘 최근 올라온 일정<button class="x" data-close aria-label="닫기">✕</button></h3>
+    <div class="stbar"><div class="seg" id="rcD"><button data-v="7" aria-pressed="false">1주</button><button data-v="14" aria-pressed="true">2주</button><button data-v="30" aria-pressed="false">1달</button></div>
+      <select class="psel" id="rcW"><option value="">올린 사람 전체</option>${[...new Set(S.events.map(e => e.editedBy).filter(Boolean))].sort().map(n => `<option>${esc(n)}</option>`).join("")}</select>
+      <select class="psel" id="rcC"><option value="">모든 분류</option>${Object.entries(CATS).map(([k, v]) => `<option value="${k}">${v}</option>`).join("")}</select></div>
+    <div id="rcList"></div>`,
+  (root) => {
+    const q = s => root.querySelector(s);
+    const paint = () => {
+      const from = new Date(Date.now() - days * 864e5).toISOString();
+      const list = S.events.filter(e => e.updatedAt && String(e.updatedAt) >= from && (PERSONAL.includes(e.cat) || e.editedBy) && (!who || e.editedBy === who) && (!cat || e.cat === cat))
+        .sort((a, b) => String(b.updatedAt).localeCompare(String(a.updatedAt)));
+      const groups = []; list.forEach(e => { const last = groups[groups.length - 1], k = `${e.editedBy}|${e.updatedAt}|${e.cat}`; if (last && last.k === k) last.l.push(e); else groups.push({ k, l: [e] }); });
+      let lastD = "";
+      q("#rcList").innerHTML = groups.length ? groups.map(g => {
+        const e0 = g.l[0], d = String(e0.updatedAt).slice(0, 10), dt = new Date(e0.updatedAt), head = d !== lastD ? `<div class="month-h" style="padding:12px 2px 4px">${d === TODAY ? "오늘" : d === ymd(addDays(pd(TODAY), -1)) ? "어제" : mdw(d)}</div>` : ""; lastD = d;
+        const tm = dt.toLocaleTimeString("ko-KR", { hour: "2-digit", minute: "2-digit" });
+        if (g.l.length >= 4){ const l = sortEv([...g.l]); return `${head}<button class="nsrow" data-rb="${esc(l[0].start.slice(0, 7))}"><b>📋 ${new Date(l[0].start).getMonth() + 1}월 ${e0.cat === "duty" ? dutyKind(e0) + "표" : CATS[e0.cat]} ${l.length}건 한꺼번에</b><small>${tm} · ${esc(e0.editedBy || "")} · ${md(l[0].start)} ~ ${md(l[l.length - 1].end)}</small></button>`; }
+        return head + g.l.map(e => `<button class="nsrow" data-rid="${esc(e.id)}"><b><i style="${tst(e)}"></i>${esc(label(e))}</b><small>${tm} · ${esc(e.editedBy || e.ownerName || "")} · ${rangeText(e)}${e.ownerName && e.editedBy && e.ownerName !== e.editedBy ? " · 수정" : ""}</small></button>`).join("");
+      }).join("") : `<div class="empty">이 기간에 올라온 일정이 없습니다.</div>`;
+      q("#rcList").querySelectorAll("[data-rid]").forEach(b => b.onclick = () => openDetail(b.dataset.rid));
+      q("#rcList").querySelectorAll("[data-rb]").forEach(b => b.onclick = () => { $("sheetRoot").innerHTML = ""; document.body.classList.remove("locked"); S.month = pd(b.dataset.rb + "-01"); S.sel = b.dataset.rb + "-01"; setView("month"); });
+    };
+    q("#rcD").addEventListener("click", ev => { const b = ev.target.closest("[data-v]"); if (!b) return; days = +b.dataset.v; q("#rcD").querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", x === b)); paint(); });
+    q("#rcW").addEventListener("change", ev => { who = ev.target.value; paint(); });
+    q("#rcC").addEventListener("change", ev => { cat = ev.target.value; paint(); });
+    paint();
   });
 }
 
