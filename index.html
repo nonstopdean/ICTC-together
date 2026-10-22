@@ -561,6 +561,33 @@ body.locked{overflow:hidden}
 .fvimg{max-width:100%;height:auto}
 .fvmsg{color:#fff;padding:40px 20px;line-height:1.7;font-size:14px}
 .fvmsg small{opacity:.7}
+button.newb{border:0;cursor:pointer}
+.nsh{font-size:13px;font-weight:700;color:var(--ink2);margin:12px 0 4px}
+.nsrow{display:block;width:100%;text-align:left;border:0;border-top:1px solid var(--line2);background:transparent;padding:9px 2px}
+.nsrow b{display:flex;gap:6px;align-items:center;font-size:14px} .nsrow b i{width:8px;height:8px;border-radius:2px;background:var(--c);flex:0 0 auto}
+.nsrow small{display:block;font-size:12px;color:var(--muted);margin-top:2px}
+.anres{padding:4px 8px;font-size:12px;white-space:nowrap} .anres.need{border-color:var(--trip);color:var(--trip)}
+.ansum{grid-template-columns:repeat(auto-fit,minmax(100px,1fr))!important}
+.polls{display:flex;flex-direction:column;gap:6px}
+.popt{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:10px;background:var(--card);padding:11px 12px;text-align:left;display:grid;grid-template-columns:1fr auto;gap:2px 8px}
+.popt .pbar{position:absolute;inset:0 auto 0 0;background:var(--edu-bg);z-index:0;transition:width .3s}
+.popt.top .pbar{background:color-mix(in srgb,var(--fire) 14%,var(--card))}
+.popt > *:not(.pbar){position:relative;z-index:1}
+.popt .pl{font-weight:600;font-size:14.5px;display:flex;gap:8px;align-items:center}
+.popt .pl i{font-style:normal;width:20px;height:20px;border-radius:50%;border:1.5px solid var(--line);display:grid;place-items:center;font-size:12px;color:#fff;flex:0 0 auto}
+.popt.on{border-color:var(--fire)} .popt.on .pl i{background:var(--fire);border-color:var(--fire)}
+.popt .pc{font-weight:700;font-size:13.5px}
+.popt small{grid-column:1/-1;font-size:12px;color:var(--muted);padding-left:28px}
+.wx3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.wxd{background:var(--soft);border-radius:12px;padding:10px 8px;text-align:center;display:flex;flex-direction:column;gap:2px}
+.wxd b{font-size:28px;line-height:1.2} .wxd span{font-size:13px;font-weight:600} .wxd em{font-style:normal;font-size:15px;font-weight:700}
+.wxd small{font-size:11.5px;color:var(--muted)}
+.hi{font-style:normal;color:var(--fire)} .lo{font-style:normal;color:var(--sat)}
+.wxwarn{margin-top:8px;background:var(--trip-bg);color:var(--trip);border-radius:8px;padding:7px 10px;font-size:13px;font-weight:600}
+.wxtrip{display:flex;flex-direction:column;gap:4px;margin-top:8px;font-size:13px}
+.wxnow{margin-left:auto;font-size:13px;font-weight:600;color:var(--ink2)}
+.wxs{font-size:11px;font-weight:600;background:var(--soft);color:var(--muted);border-radius:5px;padding:1px 6px}
+.wk .wh .wxw{display:block;font-size:10.5px;font-weight:600;color:var(--muted);margin-top:2px}
 /* ---------- 기록·통계·예약·과정 ---------- */
 .hlist{display:flex;flex-direction:column}
 .hrow2{display:grid;grid-template-columns:26px 1fr auto;gap:8px;align-items:center;padding:9px 0;border-top:1px solid var(--line2)}
@@ -974,7 +1001,7 @@ const S = {
   mode: "demo", fb: null, me: null, adminUntil: 0, events: [], access: { open:false, numeric:false }, colors: {},
   view: "home", month: pd(TODAY.slice(0,8)+"01"), year: pd(TODAY).getFullYear(), sel: TODAY,
   on: new Set(Object.keys(CATS)), person: "", q: "", range: "next",
-  week: null, weekend: true, todos: [], library: [], links: null, ledger: [], ledgerCfg: null, mTab: "list", notices: [], printing: false, homeBg: "", comments: [], photos: [], detailId: null, album: ""
+  week: null, weekend: true, todos: [], polls: [], library: [], links: null, ledger: [], ledgerCfg: null, mTab: "list", notices: [], printing: false, homeBg: "", comments: [], photos: [], detailId: null, album: ""
 };
 const PERSONAL = ["trip","leave","duty","resv","etc"];
 const SEEN_KEY = "ictc-hamkke-seen", THEME_KEY = "ictc-hamkke-theme", TEAM_KEY = "ictc-hamkke-team";
@@ -1166,6 +1193,18 @@ const store = {
       const { fs, db } = S.fb;
       for (let i = 0; i < list.length; i += 20){ const b = fs.writeBatch(db); list.slice(i, i + 20).forEach(h => b.set(fs.doc(db, "history", h.id), h)); await b.commit(); }
     } catch(e){ console.warn("변경 기록을 남기지 못했습니다(보안 규칙 확인)", e); }
+  },
+  async savePoll(p){
+    if (S.mode === "demo"){ S.polls = [...S.polls.filter(x => x.id !== p.id), p]; local.data.polls = S.polls; local.save(); if (S.view === "home") renderHome(); return; }
+    const { fs, db } = S.fb; await fs.setDoc(fs.doc(db, "polls", p.id), p);
+  },
+  async delPoll(id){
+    if (S.mode === "demo"){ S.polls = S.polls.filter(x => x.id !== id); local.data.polls = S.polls; local.save(); if (S.view === "home") renderHome(); return; }
+    const { fs, db } = S.fb; await fs.deleteDoc(fs.doc(db, "polls", id));
+  },
+  async vote(p, arr){
+    if (S.mode === "demo"){ return this.savePoll({ ...p, votes: { ...(p.votes || {}), [S.me.name]: arr } }); }
+    const { fs, db } = S.fb; await fs.updateDoc(fs.doc(db, "polls", p.id), new fs.FieldPath("votes", S.me.name), arr);
   },
   async saveTodo(rec){
     if (S.mode === "demo"){ S.todos = [...S.todos.filter(x => x.id !== rec.id), rec]; local.data.todos = S.todos; local.save(); if (S.view === "home") renderHome(); return; }
@@ -1399,7 +1438,8 @@ function renderHome(){
     <button class="bgbtn" id="bgBtn" title="홈 배경 사진">🖼 배경</button>`;
   $("bgBtn").addEventListener("click", openBg);
   setTimeout(() => {
-    if (newCount) $("hello").querySelector(".hl")?.insertAdjacentHTML("beforeend", `<span class="newb">지난 접속 이후 새 일정 ${newCount}건</span>`);
+    const ns = newSince(), nAll = ns.ev.length + ns.no.length + ns.td.length + ns.po.length + ns.cm.length + ns.ph.length;
+    if (nAll){ $("hello").querySelector(".hl")?.insertAdjacentHTML("beforeend", `<button class="newb" id="newBtn">🆕 지난 접속 이후 새 소식 ${nAll}건 ›</button>`); $("newBtn").onclick = openNewSince; }
   });
   renderBoard();
   const Q = [["trip","출장 등록","어디로 언제",{ cat:"trip" }],["leave","휴가 등록","연가·병가·공가…",{ cat:"leave" }],["leave","외출·조퇴·지각","시간 단위",{ cat:"leave", kind:"외출", half:"time", time:"14:00", timeEnd:"16:00" }],["duty","당직 등록","일직·숙직",{ cat:"duty" }],["resv","예약하기","훈련실·차량",{ cat:"resv", time:"09:00", timeEnd:"12:00" }],["etc","회의·기타","센터 일정",{ cat:"etc" }]];
@@ -1449,6 +1489,7 @@ ${showInstall ? `<div class="card wide install"><img src="icon-192.png" alt="" o
       <p>${installEvt ? "아래 버튼 한 번이면 앱처럼 설치됩니다." : ios ? "사파리 아래쪽 <b>공유(□↑)</b> → <b>홈 화면에 추가</b>를 누르세요." : "크롬 오른쪽 위 <b>⋮</b> → <b>홈 화면에 추가</b>(또는 앱 설치)를 누르세요."}</p></div>
       <div class="acts">${installEvt ? `<button class="btn btn-fire btn-sm" id="doInstall">앱 설치</button>` : ""}<button class="btn btn-line btn-sm" id="noInstall">다시 보지 않기</button></div></div>` : ""}
     ${S.photos.length ? `<div data-fold="photos" class="card wide"><h3>최근 사진<button class="lnk" data-go="photo">사진첩 ›</button></h3><div class="body"><div class="hphotos">${S.photos.slice(0, 8).map(p => `<button class="pth" data-hp="${esc(p.id)}"><img src="${p.thumb}" alt="" loading="lazy"></button>`).join("")}</div></div></div>` : ""}
+    ${wxHTML()}
     <div data-fold="week" class="card wide"><h3>이번 주<button class="lnk" data-go="week">주간 보기 ›</button></h3><div class="body"><div class="strip">${strip}</div></div></div>
     <div data-fold="mine" class="card"><h3>내 다음 일정<button class="lnk" id="myCal">📅 폰 캘린더로</button><button class="lnk" data-go="mine">전체 ›</button></h3><div class="body">${mine.length ? mine.map(e => row(e, staffOf(e).includes(S.me.name) ? "담당" : "")).join("") :
       `<div class="empty" style="padding:14px 6px">다가오는 내 출장·휴가·담당 교육이 없습니다.</div>`}</div></div>
@@ -1869,7 +1910,7 @@ function renderWeek(){
   days.forEach((ds, i) => {
     const d = pd(ds), dow = d.getDay(), hol = HOLIDAYS[ds];
     const cls = ["wh", ds === TODAY && "today", dow === 0 && "sun", dow === 6 && "sat", hol && "hol"].filter(Boolean).join(" ");
-    html += `<button class="${cls}" style="grid-column:${i+2};grid-row:1" data-wday="${ds}">${WD[dow]}<b>${d.getDate()}</b><em>${esc(hol || "")}</em>${teamTag(ds, "tmw")}</button>`;
+    html += `<button class="${cls}" style="grid-column:${i+2};grid-row:1" data-wday="${ds}">${WD[dow]}<b>${d.getDate()}</b><em>${esc(hol || "")}</em>${wxDay(ds) ? `<span class="wxw" title="${WX_CODE(wxDay(ds).code)[1]} ${Math.round(wxDay(ds).max)}°/${Math.round(wxDay(ds).min)}° 강수 ${wxDay(ds).pop ?? 0}%">${WX_CODE(wxDay(ds).code)[0]}${Math.round(wxDay(ds).max)}°</span>` : ""}${teamTag(ds, "tmw")}</button>`;
     html += `<div class="colbg ${ds === TODAY ? "today" : ""}" style="grid-column:${i+2}"></div>`;
   });
   row = 2;
@@ -2279,7 +2320,7 @@ const BK_KEY = "ictc-hamkke-lastbackup";
 function backupData(){
   const strip = o => Object.fromEntries(Object.entries(o).filter(([k]) => !k.startsWith("_")));
   return { app: "ICTC 함께", version: 1, at: new Date().toISOString(), by: S.me?.name || "",
-    events: S.events.map(strip), notices: S.notices.map(strip), ledger: S.ledger.map(strip), library: S.library.map(strip), todos: S.todos.map(strip), comments: S.comments.map(strip),
+    events: S.events.map(strip), notices: S.notices.map(strip), ledger: S.ledger.map(strip), library: S.library.map(strip), todos: S.todos.map(strip), polls: (S.polls || []).map(strip), comments: S.comments.map(strip),
     settings: { links: S.links || null, colors: S.colors || {}, resources: S.resources || null, checklist: { sets: S.ckSets || {}, removed: S.ckRemoved || [] } },
     photos: S.photos.map(p => ({ id: p.id, album: p.album, caption: p.caption, by: p.by, at: p.at, date: p.date })) };
 }
@@ -2322,6 +2363,7 @@ function openBackup(){
           for (const x of d.ledger || []) await store.saveLedger(x);
           for (const x of d.library || []) await store.saveLib(x);
           for (const x of d.todos || []) await store.saveTodo(x);
+          for (const x of d.polls || []) await store.savePoll(x);
           if (d.settings?.links) await store.setLinks(d.settings.links);
           if (d.settings?.resources) await store.setResources(d.settings.resources);
           if (d.settings?.checklist) await store.setChecklist(d.settings.checklist);
@@ -3130,15 +3172,17 @@ function openAnnual(){
     const days = e => { let n = 0; for (let d = pd(e.start); ymd(d) <= e.end; d = addDays(d, 1)) if (isWork(ymd(d))) n++; return n || 1; };
     const paint = () => {
       q("#anY").textContent = `${year}년`;
-      const cs = courses(), tot = cs.reduce((s, e) => s + (e.trainees || 0), 0), miss = cs.filter(e => !e.trainees).length;
-      q("#anSum").innerHTML = `<div class="ansum"><span><small>운영 과정</small><b>${cs.length}회</b></span><span><small>교육생 합계</small><b>${tot.toLocaleString("ko-KR")}명</b></span><span><small>교육일수</small><b>${cs.reduce((s, e) => s + days(e), 0)}일</b></span></div>
+      const cs = courses(), tot = cs.reduce((s, e) => s + (e.trainees || 0), 0), miss = cs.filter(e => !e.trainees).length, noRes = cs.filter(e => e.end < TODAY && !e.result).length;
+      const evs = cs.filter(isEvalEv), tk = evs.reduce((s, e) => s + (e.result?.takers || 0), 0), ps = evs.reduce((s, e) => s + (e.result?.pass || 0), 0), dn = cs.filter(e => !isEvalEv(e)).reduce((s, e) => s + (e.result?.done || 0), 0);
+      q("#anSum").innerHTML = `<div class="ansum"><span><small>운영 과정</small><b>${cs.length}회</b></span><span><small>교육생 합계</small><b>${tot.toLocaleString("ko-KR")}명</b></span><span><small>교육일수</small><b>${cs.reduce((s, e) => s + days(e), 0)}일</b></span><span><small>수료</small><b>${dn.toLocaleString("ko-KR")}명</b></span><span><small>평가 합격률</small><b>${tk ? Math.round(ps / tk * 100) + "%" : "-"}</b><small>${tk ? `${ps}/${tk}명` : ""}</small></span></div>
+        ${noRes ? `<p class="hint" style="color:var(--trip)">📝 끝난 과정 중 결과(수료·합격)를 아직 안 넣은 과정 ${noRes}건 — '전체 목록'에서 눌러 넣어 주세요.</p>` : ""}
         ${miss ? `<p class="hint" style="color:var(--trip)">⚠ 교육생 수가 비어 있는 과정 ${miss}건 — '전체 목록'에서 넣어 주세요.</p>` : ""}`;
       let html = "";
       if (tab === "group"){
-        const g = new Map(); cs.forEach(e => { const k = tone(e).name + (e.cat === "eval" ? " 평가" : ""); if (!g.has(k)) g.set(k, { k, c: tone(e).c, n: 0, t: 0, d: 0 }); const r = g.get(k); r.n++; r.t += e.trainees || 0; r.d += days(e); });
-        html = `<table><thead><tr><th>과정</th><th>운영</th><th>교육생</th><th>교육일수</th><th>평균 인원</th></tr></thead><tbody>${[...g.values()].map(r => `<tr><th><i class="dotc" style="--c:${r.c}"></i>${esc(r.k)}</th><td>${r.n}회</td><td><b>${r.t.toLocaleString("ko-KR")}</b>명</td><td>${r.d}일</td><td>${r.t ? Math.round(r.t / r.n) : "-"}</td></tr>`).join("")}</tbody></table>`;
+        const g = new Map(); cs.forEach(e => { const k = tone(e).name + (e.cat === "eval" ? " 평가" : ""); if (!g.has(k)) g.set(k, { k, c: tone(e).c, n: 0, t: 0, d: 0, dn: 0, tk: 0, ps: 0 }); const r = g.get(k); r.n++; r.t += e.trainees || 0; r.d += days(e); r.dn += e.result?.done || 0; r.tk += e.result?.takers || 0; r.ps += e.result?.pass || 0; });
+        html = `<table><thead><tr><th>과정</th><th>운영</th><th>교육생</th><th>교육일수</th><th>평균 인원</th><th>수료</th><th>합격률</th></tr></thead><tbody>${[...g.values()].map(r => `<tr><th><i class="dotc" style="--c:${r.c}"></i>${esc(r.k)}</th><td>${r.n}회</td><td><b>${r.t.toLocaleString("ko-KR")}</b>명</td><td>${r.d}일</td><td>${r.t ? Math.round(r.t / r.n) : "-"}</td><td>${r.dn || ""}</td><td>${r.tk ? `${Math.round(r.ps / r.tk * 100)}% <small>(${r.ps}/${r.tk})</small>` : ""}</td></tr>`).join("")}</tbody></table>`;
       } else if (tab === "list"){
-        html = `<table><thead><tr><th>기간</th><th>과정명</th><th>교육생</th><th>교육장</th></tr></thead><tbody>${cs.map(e => `<tr><td>${md(e.start)}${e.end !== e.start ? "~" + md(e.end) : ""}</td><th style="white-space:normal;text-align:left">${esc(e.title)}</th><td><input class="antr" data-id="${esc(e.id)}" type="number" min="0" inputmode="numeric" value="${e.trainees || ""}" placeholder="?"></td><td>${esc(e.room || "")}</td></tr>`).join("")}</tbody></table>`;
+        html = `<table><thead><tr><th>기간</th><th>과정명</th><th>교육생</th><th>결과</th></tr></thead><tbody>${cs.map(e => `<tr><td>${md(e.start)}${e.end !== e.start ? "~" + md(e.end) : ""}</td><th style="white-space:normal;text-align:left">${esc(e.title)}</th><td><input class="antr" data-id="${esc(e.id)}" type="number" min="0" inputmode="numeric" value="${e.trainees || ""}" placeholder="?"></td><td><button class="btn btn-line btn-sm anres ${e.result ? "" : e.end < TODAY ? "need" : ""}" data-res="${esc(e.id)}">${resultText(e) || (e.end < TODAY ? "📝 입력" : "-")}</button></td></tr>`).join("")}</tbody></table>`;
       } else if (tab === "month"){
         html = `<table><thead><tr><th>월</th><th>과정 수</th><th>교육생</th></tr></thead><tbody>${Array.from({ length: 12 }, (_, i) => { const m = `${year}-${pad(i + 1)}`, ms = cs.filter(e => e.start.startsWith(m)); return `<tr><th>${i + 1}월</th><td>${ms.length || ""}</td><td>${ms.reduce((s, e) => s + (e.trainees || 0), 0) || ""}</td></tr>`; }).join("")}</tbody></table>`;
       } else {
@@ -3146,6 +3190,7 @@ function openAnnual(){
         html = t.size ? `<table><thead><tr><th>교관</th><th>강의 시간</th><th>교시 수</th><th>맡은 과정</th></tr></thead><tbody>${[...t.values()].sort((a, b) => b.h - a.h).map(r => `<tr><th>${esc(r.who)}</th><td><b>${+r.h.toFixed(1)}</b>시간</td><td>${r.n}</td><td>${r.cs.size}개</td></tr>`).join("")}</tbody></table>` : `<div class="empty">과정 상세에 시간표(시간·교관)를 넣으면 교관별 강의 시간이 계산됩니다.</div>`;
       }
       q("#anBody").innerHTML = html;
+      q("#anBody").querySelectorAll("[data-res]").forEach(b => b.onclick = () => openResult(S.events.find(x => x.id === b.dataset.res)));
       q("#anBody").querySelectorAll(".antr").forEach(inp => inp.addEventListener("change", async () => {
         const e = S.events.find(x => x.id === inp.dataset.id); if (!e) return;
         try { await store.saveEvent({ ...e, trainees: Math.max(0, parseInt(inp.value, 10) || 0), editedBy: S.me.name, updatedAt: new Date().toISOString() }); paint(); } catch(err){ toast("저장하지 못했습니다."); }
@@ -3155,7 +3200,7 @@ function openAnnual(){
     q("#anNext").addEventListener("click", () => { year++; paint(); });
     q("#anTab").addEventListener("click", ev => { const b = ev.target.closest("[data-v]"); if (!b) return; tab = b.dataset.v; q("#anTab").querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", x === b)); paint(); });
     q("#anCsv").addEventListener("click", () => {
-      const rows = [["시작일", "종료일", "분류", "과정", "과정명", "교육생", "교육일수", "교육장", "계획(안)"], ...courses().map(e => [e.start, e.end, CATS[e.cat], tone(e).name, e.title, e.trainees || "", days(e), e.room || "", ""])];
+      const rows = [["시작일", "종료일", "분류", "과정", "과정명", "교육생", "교육일수", "교육장", "수료", "응시", "합격", "합격률", "특이사항"], ...courses().map(e => [e.start, e.end, CATS[e.cat], tone(e).name, e.title, e.trainees || "", days(e), e.room || "", e.result?.done ?? "", e.result?.takers ?? "", e.result?.pass ?? "", e.result?.takers ? Math.round((e.result.pass || 0) / e.result.takers * 100) + "%" : "", e.result?.note || ""])];
       const csv = "\ufeff" + rows.map(r => r.map(c => `"${String(c).replace(/"/g, '""')}"`).join(",")).join("\r\n");
       const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" })); a.download = `ICTC함께_${year}년_교육실적.csv`; document.body.append(a); a.click(); a.remove();
     });
@@ -3275,18 +3320,21 @@ function alertBoardHTML(notices){
   const todos = myTodos();
   let tab = (() => { try { return localStorage.getItem(BOARD_KEY) || ""; } catch(e){ return ""; } })();
   if (!tab) tab = todos.length ? "todo" : "notice";
+  const polls = (S.polls || []).filter(pollOpen).sort((a, b) => String(b.at).localeCompare(String(a.at))), pollNew = polls.filter(p => !(myVote(p) || []).length).length;
   const MAX = 3, shownN = notices.slice(0, MAX), shownT = todos.slice(0, MAX);
   return `<div class="card wide notice"><h3>📢 알림판
-      <div class="seg btab" id="bTab"><button data-v="todo" aria-pressed="${tab === "todo"}">할 일${todos.length ? ` <i>${todos.length}</i>` : ""}</button><button data-v="notice" aria-pressed="${tab === "notice"}">공지${notices.length ? ` <i>${notices.length}</i>` : ""}</button></div>
+      <div class="seg btab" id="bTab"><button data-v="todo" aria-pressed="${tab === "todo"}">할 일${todos.length ? ` <i>${todos.length}</i>` : ""}</button><button data-v="notice" aria-pressed="${tab === "notice"}">공지${notices.length ? ` <i>${notices.length}</i>` : ""}</button><button data-v="poll" aria-pressed="${tab === "poll"}">투표${pollNew ? ` <i>${pollNew}</i>` : ""}</button></div>
       <button class="lnk" id="bAdd" title="올리기" style="color:var(--fire)">＋ 올리기</button></h3>
-    <div class="body">${tab === "todo"
+    <div class="body">${tab === "poll" ? (polls.length ? polls.slice(0, MAX).map(pollRowHTML).join("") : `<div class="empty" style="padding:10px 6px">진행 중인 투표가 없습니다.</div>`) + `<button class="bmore" id="bMoreP">투표 전체 보기 ›</button>` : tab === "todo"
       ? (shownT.length ? shownT.map(t => todoRowHTML(t, true)).join("") : `<div class="empty" style="padding:10px 6px">내가 해야 할 일이 없습니다 🎉</div>`) + `<button class="bmore" id="bMoreT">할 일 전체 보기${S.todos.length > shownT.length ? ` (${S.todos.filter(t => !t.closed).length})` : ""} ›</button>`
       : (shownN.length ? shownN.map(n => `<div class="nrow"><div><div class="ntext" data-ne="${esc(n.id)}">${esc(n.text)}</div><div class="m">${esc(n.by || "")} · ${ago(n.at)}${n.until ? ` · ${md(n.until)}까지` : ""}</div></div><button class="x" data-dn="${esc(n.id)}" aria-label="공지 내리기" title="내리기 (지난 공지로 옮김)">✕</button></div>`).join("") : `<div class="empty" style="padding:10px 6px">올라온 공지가 없습니다.</div>`)
         + `<button class="bmore" id="pastNotice">${notices.length > MAX ? `공지 ${notices.length - MAX}건 더 · ` : ""}지난 공지 포함 전체 보기 ›</button>`}</div></div>`;
 }
 function bindAlertBoard(box){
   box.querySelector("#bTab")?.addEventListener("click", ev => { const b = ev.target.closest("[data-v]"); if (!b) return; try { localStorage.setItem(BOARD_KEY, b.dataset.v); } catch(e){} renderHome(); });
-  box.querySelector("#bAdd")?.addEventListener("click", () => { let tab = "notice"; try { tab = localStorage.getItem(BOARD_KEY) || (myTodos().length ? "todo" : "notice"); } catch(e){} tab === "todo" ? openTodoForm() : openNotice(); });
+  box.querySelector("#bAdd")?.addEventListener("click", () => { let tab = "notice"; try { tab = localStorage.getItem(BOARD_KEY) || (myTodos().length ? "todo" : "notice"); } catch(e){} tab === "todo" ? openTodoForm() : tab === "poll" ? openPollForm() : openNotice(); });
+  box.querySelector("#bMoreP")?.addEventListener("click", openPollList);
+  box.querySelectorAll("[data-po]").forEach(b => b.onclick = () => openPoll(b.dataset.po));
   box.querySelector("#bMoreT")?.addEventListener("click", openTodoList);
   box.querySelectorAll("[data-td]").forEach(b => b.onclick = () => openTodo(b.dataset.td));
   box.querySelectorAll("[data-tdc]").forEach(b => b.onclick = () => toggleTodo(b.dataset.tdc));
@@ -3305,6 +3353,213 @@ function applyFolds(root){
     h.prepend(b);
   });
 }
+
+/* =========================================================
+   지난 접속 이후 새로 올라온 것
+   ========================================================= */
+function newSince(){
+  if (!PREV_SEEN) return { ev: [], no: [], td: [], po: [], cm: [], ph: [] };
+  const me = S.me?.name, nw = (at, by) => at && String(at) > PREV_SEEN && by !== me;
+  return {
+    ev: sortEv(S.events.filter(e => nw(e.updatedAt, e.editedBy) && (PERSONAL.includes(e.cat) || e.editedBy))).reverse(),
+    no: S.notices.filter(n => nw(n.at, n.by) && !n.archived),
+    td: S.todos.filter(t => nw(t.at, t.by)),
+    po: (S.polls || []).filter(p => nw(p.at, p.by)),
+    cm: S.comments.filter(c => c.type === "comment" && nw(c.at, c.name)),
+    ph: S.photos.filter(p => nw(p.at, p.by))
+  };
+}
+function openNewSince(){
+  const n = newSince();
+  const evGroups = []; n.ev.forEach(e => { const last = evGroups[evGroups.length - 1], k = `${e.editedBy}|${e.updatedAt}|${e.cat}`; if (last && last.k === k) last.l.push(e); else evGroups.push({ k, l: [e] }); });
+  sheet(`<h3>🆕 지난 접속 이후 새로 올라온 것<button class="x" data-close aria-label="닫기">✕</button></h3>
+    <p class="hint" style="margin:-6px 0 10px">마지막 접속: ${new Date(PREV_SEEN).toLocaleString("ko-KR", { month:"numeric", day:"numeric", hour:"2-digit", minute:"2-digit" })} (${ago(PREV_SEEN)})</p>
+    ${evGroups.length ? `<div class="nsh">📅 일정 ${n.ev.length}건</div>${evGroups.map(g => g.l.length >= 4
+      ? `<button class="nsrow" data-nbulk="${esc(g.l[0].start.slice(0, 7))}"><b>📋 ${g.l[0].cat === "duty" ? dutyKind(g.l[0]) + "표" : CATS[g.l[0].cat]} ${g.l.length}건 한꺼번에</b><small>${md(sortEv([...g.l])[0].start)}~ · ${esc(g.l[0].editedBy || "")} · ${ago(g.l[0].updatedAt)}</small></button>`
+      : g.l.map(e => `<button class="nsrow" data-nid="${esc(e.id)}"><b><i style="${tst(e)}"></i>${esc(label(e))}</b><small>${rangeText(e)} · ${esc(e.editedBy || e.ownerName || "")} · ${ago(e.updatedAt)}</small></button>`).join("")).join("")}` : ""}
+    ${n.no.length ? `<div class="nsh">📢 공지 ${n.no.length}건</div>${n.no.map(x => `<div class="nsrow"><b>${esc(x.text)}</b><small>${esc(x.by || "")} · ${ago(x.at)}</small></div>`).join("")}` : ""}
+    ${n.td.length ? `<div class="nsh">📌 할 일 ${n.td.length}건</div>${n.td.map(x => `<button class="nsrow" data-ntd="${esc(x.id)}"><b>${todoIcon(x)} ${esc(x.title)}</b><small>${md(x.due)}까지 · ${esc(x.by || "")}</small></button>`).join("")}` : ""}
+    ${n.po.length ? `<div class="nsh">🗳 투표 ${n.po.length}건</div>${n.po.map(x => `<button class="nsrow" data-npo="${esc(x.id)}"><b>${esc(x.title)}</b><small>${esc(x.by || "")} · ${ago(x.at)}</small></button>`).join("")}` : ""}
+    ${n.cm.length ? `<div class="nsh">💬 댓글 ${n.cm.length}건</div>${n.cm.map(c => { const e = S.events.find(x => x.id === c.eventId); return `<button class="nsrow" data-nid="${esc(c.eventId)}"><b>${esc(c.name)}: ${esc(c.text)}</b><small>${e ? esc(label(e)) + " · " : ""}${ago(c.at)}</small></button>`; }).join("")}` : ""}
+    ${n.ph.length ? `<div class="nsh">📷 사진 ${n.ph.length}장</div><button class="nsrow" data-nph="1"><b>${[...new Set(n.ph.map(p => p.album || "기타"))].map(esc).join(", ")}</b><small>사진첩에서 보기 ›</small></button>` : ""}
+    ${!(n.ev.length + n.no.length + n.td.length + n.po.length + n.cm.length + n.ph.length) ? `<div class="empty">새로 올라온 것이 없습니다.</div>` : ""}`,
+  (root, close) => {
+    root.querySelectorAll("[data-nid]").forEach(b => b.onclick = () => openDetail(b.dataset.nid));
+    root.querySelectorAll("[data-ntd]").forEach(b => b.onclick = () => openTodo(b.dataset.ntd));
+    root.querySelectorAll("[data-npo]").forEach(b => b.onclick = () => openPoll(b.dataset.npo));
+    root.querySelectorAll("[data-nbulk]").forEach(b => b.onclick = () => { close(); S.month = pd(b.dataset.nbulk + "-01"); S.sel = b.dataset.nbulk + "-01"; setView("month"); });
+    root.querySelector("[data-nph]")?.addEventListener("click", () => { close(); setView("photo"); });
+  });
+}
+
+/* =========================================================
+   글씨 크기
+   ========================================================= */
+const FONT_KEY = "ictc-hamkke-font";
+function applyFont(v){
+  const z = { "1": 1, "2": 1.12, "3": 1.25 }[v] || 1;
+  document.documentElement.style.zoom = z === 1 ? "" : z;
+  try { v && v !== "1" ? localStorage.setItem(FONT_KEY, v) : localStorage.removeItem(FONT_KEY); } catch(e){}
+}
+try { applyFont(localStorage.getItem(FONT_KEY) || "1"); } catch(e){}
+
+/* =========================================================
+   과정 결과 기록 (수료·합격)
+   ========================================================= */
+const isEvalEv = e => e.cat === "eval" && !/사전연습|대비/.test(e.title || "");
+function resultText(e){
+  const r = e.result; if (!r) return "";
+  if (isEvalEv(e)) return r.takers ? `합격 ${r.pass || 0}/${r.takers}명 (${Math.round((r.pass || 0) / r.takers * 100)}%)` : "";
+  return r.done != null ? `수료 ${r.done}${e.trainees ? "/" + e.trainees : ""}명` : "";
+}
+function openResult(e0){
+  const e = S.events.find(x => x.id === e0.id) || e0, r = e.result || {}, ev = isEvalEv(e);
+  sheet(`<h3>📝 과정 결과<button class="x" data-close aria-label="닫기">✕</button></h3>
+    <p class="hint" style="margin:-6px 0 12px"><b>${esc(e.title)}</b> · ${rangeText(e)}</p>
+    ${ev ? `<div class="two"><div class="f"><label for="rsT">응시 인원</label><input id="rsT" type="number" min="0" inputmode="numeric" value="${r.takers ?? e.trainees ?? ""}"></div>
+             <div class="f"><label for="rsP">합격 인원</label><input id="rsP" type="number" min="0" inputmode="numeric" value="${r.pass ?? ""}"></div></div><div class="dinfo" id="rsRate"></div>`
+      : `<div class="two"><div class="f"><label for="rsT">입교 인원 (교육생)</label><input id="rsT" type="number" min="0" inputmode="numeric" value="${e.trainees || ""}"></div>
+             <div class="f"><label for="rsD">수료 인원</label><input id="rsD" type="number" min="0" inputmode="numeric" value="${r.done ?? ""}"></div></div>`}
+    <div class="f"><label for="rsN">특이사항 (선택)</label><textarea id="rsN" maxlength="300" style="min-height:70px" placeholder="예: 중도 퇴교 1명(병가), 우수 교육생 표창 2명">${esc(r.note || "")}</textarea></div>
+    ${r.by ? `<p class="hint">마지막 기록: ${esc(r.by)} · ${ago(r.at)}</p>` : ""}
+    <div class="actions"><button class="btn btn-line" data-close>취소</button><button class="btn btn-fire grow" id="rsSave">저장</button></div>`,
+  (root, close) => {
+    const q = s => root.querySelector(s), num = s => q(s) && q(s).value !== "" ? Math.max(0, parseInt(q(s).value, 10) || 0) : null;
+    const rate = () => { const t = num("#rsT"), p = num("#rsP"); if (q("#rsRate")) q("#rsRate").textContent = t ? `합격률 ${Math.round((p || 0) / t * 100)}%` : "응시 인원을 넣으면 합격률이 계산됩니다."; };
+    ["#rsT", "#rsP"].forEach(s => q(s)?.addEventListener("input", rate)); rate();
+    q("#rsSave").addEventListener("click", async () => {
+      const result = ev ? { takers: num("#rsT"), pass: num("#rsP") } : { done: num("#rsD") };
+      if (ev && result.pass != null && result.takers != null && result.pass > result.takers) return toast("합격 인원이 응시 인원보다 많습니다.");
+      const trainees = ev ? (e.trainees || result.takers || 0) : (num("#rsT") ?? e.trainees ?? 0);
+      if (!ev && result.done != null && trainees && result.done > trainees) return toast("수료 인원이 입교 인원보다 많습니다.");
+      try { await store.saveEvent({ ...e, trainees, result: { ...result, note: q("#rsN").value.trim(), by: S.me.name, at: new Date().toISOString() }, editedBy: S.me.name, updatedAt: new Date().toISOString() }); close(); toast("과정 결과를 저장했습니다."); }
+      catch(err){ console.error(err); toast("저장하지 못했습니다."); }
+    });
+  });
+}
+
+/* =========================================================
+   투표
+   ========================================================= */
+const pollOpen = p => !p.closed && (!p.until || p.until >= TODAY);
+const myVote = p => (p.votes || {})[S.me.name] || null;
+const pollVoters = p => Object.keys(p.votes || {}).filter(n => (p.votes[n] || []).length);
+function pollRowHTML(p){
+  const v = pollVoters(p).length, mine = myVote(p), [dd, cls] = p.until ? todoDday({ due: p.until }) : ["", ""];
+  return `<div class="tdrow"><span class="dd ${cls}">${p.until ? dd : "투표"}</span><div class="tdb" data-po="${esc(p.id)}"><b>${esc(p.title)}</b><small>${v}명 참여${p.until ? ` · ${md(p.until)}까지` : ""}${p.closed ? " · 마감" : ""}</small></div>
+    <button class="tdchk ${mine && mine.length ? "on" : ""}" data-po="${esc(p.id)}">${mine && mine.length ? "✓ 투표함" : "투표"}</button></div>`;
+}
+function openPollForm(){
+  sheet(`<h3>🗳 투표 만들기<button class="x" data-close aria-label="닫기">✕</button></h3>
+    <div class="f"><label for="pfT">무엇을 정할까요?</label><input id="pfT" maxlength="60" placeholder="예: 11월 회식 날짜, 체육대회 종목"></div>
+    <div class="f"><label for="pfO">선택지 (한 줄에 하나, 2~10개)</label><textarea id="pfO" style="min-height:120px" placeholder="11월 20일(금)&#10;11월 24일(화)&#10;11월 27일(금)"></textarea>
+      <div class="quick"><button type="button" id="pfDates">📅 날짜 후보 넣기</button><button type="button" id="pfYN">찬성 / 반대</button></div></div>
+    <div class="f"><label for="pfU">마감일 (선택)</label><input id="pfU" type="date" style="max-width:200px"></div>
+    <div class="picks" style="margin-bottom:14px"><button type="button" class="pick plain" id="pfM" aria-pressed="false">여러 개 고르기</button><button type="button" class="pick plain" id="pfA" aria-pressed="false">익명 (이름 숨김)</button></div>
+    <div class="actions"><button class="btn btn-line" data-close>취소</button><button class="btn btn-fire grow" id="pfSave">올리기</button></div>`,
+  (root, close) => {
+    const q = s => root.querySelector(s); let multi = false, anon = false;
+    q("#pfM").onclick = () => { multi = !multi; q("#pfM").setAttribute("aria-pressed", multi); };
+    q("#pfA").onclick = () => { anon = !anon; q("#pfA").setAttribute("aria-pressed", anon); };
+    q("#pfYN").onclick = () => { q("#pfO").value = "찬성\n반대"; };
+    q("#pfDates").onclick = () => { const d0 = addDays(pd(TODAY), 7), out = []; for (let i = 0; out.length < 5 && i < 21; i++){ const d = addDays(d0, i), ds = ymd(d); if (isWork(ds)) out.push(`${d.getMonth() + 1}월 ${d.getDate()}일(${WD[d.getDay()]})`); } q("#pfO").value = out.join("\n"); multi = true; q("#pfM").setAttribute("aria-pressed", true); };
+    q("#pfSave").addEventListener("click", async () => {
+      const title = q("#pfT").value.trim(), options = [...new Set(q("#pfO").value.split("\n").map(s => s.trim()).filter(Boolean))].slice(0, 10);
+      if (!title) return toast("무엇을 정할지 적어 주세요.");
+      if (options.length < 2) return toast("선택지를 2개 이상 적어 주세요.");
+      const p = { id: "P" + Date.now().toString(36), title, options, multi, anon, until: q("#pfU").value || "", votes: {}, by: S.me.name, at: new Date().toISOString(), closed: false };
+      try { await store.savePoll(p); close(); toast("투표를 올렸습니다.", { label: "💬 카톡으로 알리기", fn: () => shareOut(`[ICTC 함께] 🗳 투표\n${title}\n${options.map((o, i) => `${i + 1}. ${o}`).join("\n")}${p.until ? `\n${md(p.until)}까지` : ""}\n\n앱에서 투표하기: ${appUrl()}`) }); }
+      catch(e){ console.error(e); toast("올리지 못했습니다. 보안 규칙을 확인해 주세요."); }
+    });
+  });
+}
+function openPoll(id){
+  const p = (S.polls || []).find(x => x.id === id); if (!p) return;
+  let pick = new Set(myVote(p) || []);
+  const voters = pollVoters(p), counts = p.options.map((_, i) => voters.filter(n => p.votes[n].includes(i)));
+  const max = Math.max(1, ...counts.map(c => c.length)), open = pollOpen(p);
+  sheet(`<h3>🗳 ${esc(p.title)}<button class="x" data-close aria-label="닫기">✕</button></h3>
+    <p class="hint" style="margin:-6px 0 12px">${esc(p.by)} · ${ago(p.at)} · ${p.multi ? "여러 개 고르기" : "하나만 고르기"}${p.anon ? " · 익명" : ""}${p.until ? ` · ${mdw(p.until)}까지` : ""}${!open ? " · <b>마감</b>" : ""} · ${voters.length}명 참여</p>
+    <div class="polls">${p.options.map((o, i) => `<button type="button" class="popt ${pick.has(i) ? "on" : ""} ${counts[i].length === max && voters.length ? "top" : ""}" data-i="${i}" ${open ? "" : "disabled"}>
+      <span class="pbar" style="width:${voters.length ? Math.round(counts[i].length / max * 100) : 0}%"></span>
+      <span class="pl"><i>${pick.has(i) ? "✓" : ""}</i>${esc(o)}</span><span class="pc">${counts[i].length}표</span>
+      ${!p.anon && counts[i].length ? `<small>${counts[i].map(esc).join(", ")}</small>` : ""}</button>`).join("")}</div>
+    <div class="actions" style="flex-wrap:wrap;margin-top:12px">${open ? `<button class="btn btn-fire grow" id="pvGo">${myVote(p)?.length ? "투표 바꾸기" : "투표하기"}</button>` : ""}
+      <button class="btn btn-line" id="pvShare">💬 알리기</button><button class="btn btn-line" id="pvClose">${p.closed ? "다시 열기" : "마감"}</button><button class="btn btn-danger" id="pvDel">삭제</button></div>`,
+  (root, close) => {
+    root.querySelectorAll(".popt").forEach(b => b.onclick = () => { const i = +b.dataset.i; if (p.multi) pick.has(i) ? pick.delete(i) : pick.add(i); else pick = new Set(pick.has(i) ? [] : [i]);
+      root.querySelectorAll(".popt").forEach(x => { const on = pick.has(+x.dataset.i); x.classList.toggle("on", on); x.querySelector("i").textContent = on ? "✓" : ""; }); });
+    root.querySelector("#pvGo")?.addEventListener("click", async () => {
+      try { await store.vote(p, [...pick].sort()); close(); toast(pick.size ? "투표했습니다." : "투표를 취소했습니다."); setTimeout(() => openPoll(p.id), 350); } catch(e){ console.error(e); toast("투표하지 못했습니다. 보안 규칙을 확인해 주세요."); }
+    });
+    root.querySelector("#pvShare").onclick = () => shareOut(`[ICTC 함께] 🗳 투표${open ? "" : " 결과"}\n${p.title}\n${p.options.map((o, i) => `${i + 1}. ${o} — ${counts[i].length}표`).join("\n")}\n(${voters.length}명 참여)${open ? `\n\n앱에서 투표하기: ${appUrl()}` : ""}`);
+    root.querySelector("#pvClose").onclick = async () => { try { await store.savePoll({ ...p, closed: !p.closed }); close(); setTimeout(() => openPoll(p.id), 350); } catch(e){ toast("저장하지 못했습니다."); } };
+    root.querySelector("#pvDel").onclick = async () => { if (!confirm("이 투표를 지울까요?")) return; try { await store.delPoll(p.id); close(); toast("지웠습니다."); } catch(e){ toast("지우지 못했습니다."); } };
+  });
+}
+function openPollList(){
+  let f = "on";
+  sheet(`<h3>🗳 투표<button class="x" data-close aria-label="닫기">✕</button></h3>
+    <div class="seg" id="plF" style="margin:-4px 0 10px"><button data-v="on" aria-pressed="true">진행 중</button><button data-v="past" aria-pressed="false">지난 투표</button></div>
+    <div id="plList"></div><button class="btn btn-fire" id="plAdd" style="width:100%;margin-top:10px">＋ 투표 만들기</button>`,
+  (root) => {
+    const q = s => root.querySelector(s);
+    const paint = () => { const l = [...(S.polls || [])].filter(p => f === "on" ? pollOpen(p) : !pollOpen(p)).sort((a, b) => String(b.at).localeCompare(String(a.at)));
+      q("#plList").innerHTML = l.length ? l.map(pollRowHTML).join("") : `<div class="empty">없습니다.</div>`;
+      q("#plList").querySelectorAll("[data-po]").forEach(b => b.onclick = () => openPoll(b.dataset.po)); };
+    q("#plF").addEventListener("click", ev => { const b = ev.target.closest("[data-v]"); if (!b) return; f = b.dataset.v; q("#plF").querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", x === b)); paint(); });
+    q("#plAdd").onclick = openPollForm; paint();
+  });
+}
+
+/* =========================================================
+   날씨 (Open-Meteo, 무료·키 없음)
+   ========================================================= */
+const WX_HOME = { name: "부산", lat: 35.1796, lon: 129.0756 };
+const WX_CODE = c => c === 0 ? ["☀️","맑음"] : c <= 2 ? ["🌤","구름 조금"] : c === 3 ? ["☁️","흐림"] : c <= 48 ? ["🌫","안개"] : c <= 57 ? ["🌦","이슬비"] : c <= 67 ? ["🌧","비"] : c <= 77 ? ["🌨","눈"] : c <= 82 ? ["🌦","소나기"] : c <= 86 ? ["🌨","눈"] : ["⛈","뇌우"];
+const WXC = new Map();
+async function wxFetch(lat, lon){
+  const k = `${lat.toFixed(2)},${lon.toFixed(2)}`, hit = WXC.get(k); if (hit && Date.now() - hit.t < 30 * 60e3) return hit.d;
+  try { const c = JSON.parse(sessionStorage.getItem("wx:" + k) || "null"); if (c && Date.now() - c.t < 30 * 60e3){ WXC.set(k, c); return c.d; } } catch(e){}
+  const u = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,wind_speed_10m_max&timezone=Asia%2FSeoul&forecast_days=7&wind_speed_unit=ms`;
+  const j = await (await fetch(u)).json();
+  const d = { cur: j.current, days: Object.fromEntries((j.daily?.time || []).map((t, i) => [t, { code: j.daily.weather_code[i], max: j.daily.temperature_2m_max[i], min: j.daily.temperature_2m_min[i], pop: j.daily.precipitation_probability_max[i], wind: j.daily.wind_speed_10m_max[i] }])) };
+  const rec = { t: Date.now(), d }; WXC.set(k, rec); try { sessionStorage.setItem("wx:" + k, JSON.stringify(rec)); } catch(e){}
+  return d;
+}
+async function geocode(name){
+  const k = "geo:" + name; try { const c = JSON.parse(localStorage.getItem(k) || "null"); if (c) return c; } catch(e){}
+  const j = await (await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(name)}&count=1&language=ko&countryCode=KR`)).json();
+  const r = j.results?.[0]; const v = r ? { name: r.name, lat: r.latitude, lon: r.longitude } : { none: true };
+  try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){} return v;
+}
+function wxSample(){ const days = {}; [[1, 22, 14, 10, 4], [61, 19, 15, 80, 9], [3, 18, 12, 30, 6], [0, 21, 11, 0, 3], [2, 23, 13, 10, 5], [80, 20, 15, 60, 8], [0, 22, 12, 0, 4]].forEach(([c, mx, mn, p, w], i) => days[ymd(addDays(pd(TODAY), i))] = { code: c, max: mx, min: mn, pop: p, wind: w }); return { cur: { temperature_2m: 19, weather_code: 1, wind_speed_10m: 3 }, days, sample: true }; }
+S.wx = null; S.wxTrips = [];
+async function loadWeather(){
+  try { S.wx = await wxFetch(WX_HOME.lat, WX_HOME.lon); }
+  catch(e){ S.wx = wxSample(); }
+  // 앞으로 3일 출장지 날씨
+  const to = ymd(addDays(pd(TODAY), 3)), trips = S.events.filter(e => e.cat === "trip" && e.place && e.start <= to && e.end >= TODAY);
+  const out = [];
+  for (const e of trips.slice(0, 6)){
+    try { if (S.wx.sample) throw 0; const g = await geocode(e.place.split(/[ ,(]/)[0]); if (g.none) continue; const w = await wxFetch(g.lat, g.lon); const ds = e.start < TODAY ? TODAY : e.start; out.push({ e, place: g.name, d: w.days[ds], ds }); }
+    catch(err){ if (S.wx.sample){ const ds = e.start < TODAY ? TODAY : e.start; out.push({ e, place: e.place, d: S.wx.days[ds], ds }); } }
+  }
+  S.wxTrips = out;
+  if (S.view === "home") renderHome(); else if (S.view === "week") renderWeek();
+}
+function wxHTML(){
+  if (!S.wx) return `<div class="card wide" data-fold="wx"><h3>🌤 날씨</h3><div class="body"><div class="empty" style="padding:8px">불러오는 중…</div></div></div>`;
+  const d3 = [0, 1, 2].map(i => ymd(addDays(pd(TODAY), i))), lbl = ["오늘", "내일", "모레"];
+  const warn = d3.slice(0, 2).map((ds, i) => { const w = S.wx.days[ds]; if (!w) return ""; return w.pop >= 60 ? `${lbl[i]} 비 ${w.pop}%` : w.wind >= 9 ? `${lbl[i]} 강풍 ${Math.round(w.wind)}m/s` : w.max >= 33 ? `${lbl[i]} 폭염 ${Math.round(w.max)}°` : w.min <= -5 ? `${lbl[i]} 한파 ${Math.round(w.min)}°` : ""; }).filter(Boolean);
+  return `<div class="card wide" data-fold="wx"><h3>🌤 ${WX_HOME.name} 날씨${S.wx.sample ? ` <small class="wxs">체험판 예시</small>` : ""}${S.wx.cur ? `<span class="wxnow">지금 ${WX_CODE(S.wx.cur.weather_code)[0]} ${Math.round(S.wx.cur.temperature_2m)}°</span>` : ""}</h3><div class="body">
+    <div class="wx3">${d3.map((ds, i) => { const w = S.wx.days[ds]; if (!w) return ""; const [ic, tx] = WX_CODE(w.code);
+      return `<div class="wxd"><small>${lbl[i]} ${WD[pd(ds).getDay()]}</small><b>${ic}</b><span>${tx}</span><em><i class="hi">${Math.round(w.max)}°</i> / <i class="lo">${Math.round(w.min)}°</i></em><small>☔ ${w.pop ?? 0}% · 💨 ${Math.round(w.wind)}m/s</small></div>`; }).join("")}</div>
+    ${warn.length ? `<div class="wxwarn">⚠ 야외 훈련 주의: ${warn.join(" · ")}</div>` : ""}
+    ${S.wxTrips.length ? `<div class="wxtrip">${S.wxTrips.filter(x => x.d).map(x => `<span>🚗 ${esc(x.e.person)} · ${esc(x.place)} ${md(x.ds)} ${WX_CODE(x.d.code)[0]} ${Math.round(x.d.max)}° ☔${x.d.pop ?? 0}%</span>`).join("")}</div>` : ""}
+    </div></div>`;
+}
+const wxDay = ds => S.wx?.days?.[ds];
 
 const DEMO_PHOTO = new Map(), PHOTO_CACHE = new Map();
 const renderPhotoIfOpen = () => { if (S.view === "photo") renderPhotos(); };
@@ -3517,6 +3772,7 @@ function openDetail(id){
     e.cat === "duty" && ["근무 시간", dutyTimeText(dutyKind(e))],
     e.person && [PERSONAL.includes(e.cat) ? "이름" : "담당", e.person],
     staffOf(e).length && ["담당 교관", staffOf(e).join(", ")],
+    resultText(e) && ["결과", resultText(e) + (e.result?.note ? " · " + e.result.note : "")],
     e.res && ["예약 대상", e.res],
     e.place && ["장소", e.place],
     (e.title && (e.cat === "trip" || e.cat === "leave")) && ["내용", e.title],
@@ -3528,7 +3784,7 @@ function openDetail(id){
     <dl class="dl">${rows.map(([k,v]) => `<dt>${k}</dt><dd>${esc(v)}</dd>`).join("")}</dl>
     ${courseHTML(e)}
     <div id="social" class="social"></div>
-    <div class="more-act"><button class="btn btn-line btn-sm" id="ics">📅 내 폰 캘린더에 추가</button><button class="btn btn-line btn-sm" id="cpy">💬 카톡으로 알리기</button>${e.cat === "duty" ? `<button class="btn btn-line btn-sm" id="swap">🔁 맞교대</button>` : ""}${e.cat === "edu" || e.cat === "eval" ? `<button class="btn btn-line btn-sm" id="crs">📚 과정 상세</button><button class="btn btn-line btn-sm" id="libB">📚 자료 ${S.library.filter(l => l.course === tone(e).name).length || ""}</button><button class="btn btn-line btn-sm" id="ckl">✅ 준비${checkProg(e) ? ` ${checkProg(e)[0]}/${checkProg(e)[1]}` : ""}</button>` : ""}<button class="btn btn-line btn-sm" id="hist">🕘 기록</button>${canEdit(e) ? `<button class="btn btn-line btn-sm" id="dup">복제</button>` : ""}</div>
+    <div class="more-act"><button class="btn btn-line btn-sm" id="ics">📅 내 폰 캘린더에 추가</button><button class="btn btn-line btn-sm" id="cpy">💬 카톡으로 알리기</button>${e.cat === "duty" ? `<button class="btn btn-line btn-sm" id="swap">🔁 맞교대</button>` : ""}${e.cat === "edu" || e.cat === "eval" ? `<button class="btn btn-line btn-sm" id="crs">📚 과정 상세</button><button class="btn btn-line btn-sm" id="resB">📝 결과${e.result ? " ✓" : ""}</button><button class="btn btn-line btn-sm" id="libB">📚 자료 ${S.library.filter(l => l.course === tone(e).name).length || ""}</button><button class="btn btn-line btn-sm" id="ckl">✅ 준비${checkProg(e) ? ` ${checkProg(e)[0]}/${checkProg(e)[1]}` : ""}</button>` : ""}<button class="btn btn-line btn-sm" id="hist">🕘 기록</button>${canEdit(e) ? `<button class="btn btn-line btn-sm" id="dup">복제</button>` : ""}</div>
     ${e.seriesId ? `<p class="hint" style="margin:-6px 0 12px">반복 일정입니다. (모두 ${S.events.filter(x => x.seriesId === e.seriesId).length}건)</p>` : ""}
     ${canEdit(e) ? `<div class="actions"><button class="btn btn-danger" id="del">삭제</button><button class="btn btn-ink grow" id="edit">수정</button></div>`
       : `<p class="hint">등록한 사람이 아니어도 누구나 고칠 수 있습니다.</p>`}`,
@@ -3542,6 +3798,7 @@ function openDetail(id){
     root.querySelector("#crs")?.addEventListener("click", () => openCourse(e));
     root.querySelector("#ckl")?.addEventListener("click", () => openChecklist(e));
     root.querySelector("#rotB")?.addEventListener("click", () => openRotation(e));
+    root.querySelector("#resB")?.addEventListener("click", () => openResult(e));
     root.querySelector("#libB")?.addEventListener("click", () => openLibrary({ course: tone(e).name }));
     root.querySelector("#hist").addEventListener("click", () => openHistory({ eventId: e.id }));
     root.querySelector("#dup")?.addEventListener("click", () => { close(); const { id, seriesId, ...rest } = e; openForm(null, e.start, { ...rest, ownerName: "" }); });
@@ -3821,6 +4078,7 @@ const commonSettings = () => `<div class="setgrid">
     <button class="btn btn-line" data-set="res">🚗 예약 대상 관리</button>
     <button class="btn btn-line" data-set="img">🖼 주간 공유 이미지</button>
     <button class="btn btn-line" data-set="todo">📌 할 일·기한 알림</button>
+    <button class="btn btn-line" data-set="poll">🗳 투표</button>
     <button class="btn btn-line" data-set="lib">📚 훈련 자료실</button>
     <button class="btn btn-line" data-set="ann">📈 연간 교육 실적</button>
     <button class="btn btn-line" data-set="links">🔗 바로가기 고치기</button>
@@ -3842,6 +4100,7 @@ function bindCommon(root, close){
     else if (k === "mycal") openMyCal();
     else if (k === "rot") openRotation(null);
     else if (k === "todo") openTodoList();
+    else if (k === "poll") openPollList();
     else if (k === "lib") openLibrary();
     else if (k === "ann") openAnnual();
     else if (k === "links") openLinks();
@@ -3989,6 +4248,7 @@ function openAccount(){
     <div class="f"><span class="lbl">근무 팀 표시 <span style="font-weight:500;color:var(--muted)">· 오늘 ${teamOf(TODAY)}팀</span></span>
       <div class="picks" id="tmPick">${[["off","끄기"],["0","켜기"],["1","내 팀 1팀"],["2","내 팀 2팀"],["3","내 팀 3팀"]].map(([k,x]) => { const p = teamPref(); const on = k === "off" ? !p.show : (p.show && String(p.mine) === k); return `<button type="button" class="pick plain" data-v="${k}" aria-pressed="${on}">${x}</button>`; }).join("")}</div>
       <p class="hint">내 팀을 고르면 그 팀 근무일이 빨갛게 표시됩니다. 이 기기에만 기억합니다.</p></div>
+    <div class="f"><span class="lbl">글씨 크기</span><div class="picks" id="fzPick">${[["1","보통"],["2","크게"],["3","아주 크게"]].map(([k, x]) => { let cur = "1"; try { cur = localStorage.getItem(FONT_KEY) || "1"; } catch(e){} return `<button type="button" class="pick plain" data-v="${k}" aria-pressed="${cur === k}" style="font-size:${[0, 14, 16, 18][+k]}px">${x}</button>`; }).join("")}</div></div>
     <div class="f"><span class="lbl">화면 밝기</span><div class="picks" id="thPick">${[["auto","기기 설정 따라"],["light","밝게"],["dark","어둡게"]].map(([k,t]) => `<button type="button" class="pick plain" data-v="${k}" aria-pressed="${(document.documentElement.dataset.theme || "auto") === k}">${t}</button>`).join("")}</div></div>
     <dl class="dl"><dt>접속</dt><dd>${S.mode === "demo" ? "체험 모드 (이 기기에만 저장)" : "직원 공용 접속"} · ${MODE_TEXT[accessMode()]}</dd><dt>권한</dt><dd>누구나 일정 등록·수정·삭제${isAdmin() ? " · 접속 설정 열림" : ""}</dd></dl>
     <div class="actions"><button class="btn btn-line" id="out">로그아웃</button><button class="btn btn-ink grow" id="saveName">이름 저장</button></div>
@@ -3999,6 +4259,7 @@ function openAccount(){
       setTeamPref(v === "off" ? { show:false, mine: teamPref().mine } : { show:true, mine: +v });
       root.querySelectorAll("#tmPick .pick").forEach(x => x.setAttribute("aria-pressed", x === b)); render();
     });
+    root.querySelector("#fzPick").addEventListener("click", ev => { const b = ev.target.closest(".pick"); if (!b) return; applyFont(b.dataset.v); root.querySelectorAll("#fzPick .pick").forEach(x => x.setAttribute("aria-pressed", x === b)); });
     root.querySelector("#thPick").addEventListener("click", ev => {
       const b = ev.target.closest(".pick"); if (!b) return; applyTheme(b.dataset.v);
       root.querySelectorAll("#thPick .pick").forEach(x => x.setAttribute("aria-pressed", x === b));
@@ -4018,7 +4279,9 @@ function openAccount(){
 /* =========================================================
    9) 시작: 로그인 화면 → 체험 모드 또는 Firebase 공유 모드
    ========================================================= */
+let wxTimer = null;
 function showApp(){
+  if (!wxTimer){ setTimeout(loadWeather, 400); wxTimer = setInterval(loadWeather, 30 * 60e3); }
   $("gate").classList.add("hide"); $("app").classList.remove("hide"); $("fab").classList.remove("hide"); render();
 }
 function showGate(html){
@@ -4056,7 +4319,7 @@ function showLogin(msg){
 
 /* --- 체험 모드 --- */
 function enterDemo(){
-  S.events = local.data.events; S.colors = local.data.colors || {}; S.notices = local.data.notices || []; S.comments = local.data.comments || []; S.homeBg = local.data.homeBg || ""; S.resources = local.data.resources || null; S.ckSets = local.data.ckSets?.sets || null; S.ckRemoved = local.data.ckSets?.removed || []; S.ledger = local.data.ledger || []; S.library = local.data.library || []; S.todos = local.data.todos || []; S.links = local.data.links || null; S.ledgerCfg = local.data.ledgerCfg || null; S.me = { name: myName() };
+  S.events = local.data.events; S.colors = local.data.colors || {}; S.notices = local.data.notices || []; S.comments = local.data.comments || []; S.homeBg = local.data.homeBg || ""; S.resources = local.data.resources || null; S.ckSets = local.data.ckSets?.sets || null; S.ckRemoved = local.data.ckSets?.removed || []; S.ledger = local.data.ledger || []; S.library = local.data.library || []; S.todos = local.data.todos || []; S.polls = local.data.polls || []; S.links = local.data.links || null; S.ledgerCfg = local.data.ledgerCfg || null; S.me = { name: myName() };
   S.adminUntil = local.data.adminUntil || 0;
   showApp();
 }
@@ -4081,6 +4344,7 @@ async function enterShared(){
     unsubs.push(fs.onSnapshot(fs.doc(db, "homeBg", "main"), d => {
       S.homeBg = d.exists() ? (d.data().bg || "") : ""; if (!first && S.view === "home") renderHome();
     }, err => console.warn("홈 배경을 불러오지 못했습니다(보안 규칙 확인)", err)));
+    unsubs.push(fs.onSnapshot(fs.collection(db, "polls"), snap => { S.polls = snap.docs.map(d => ({ ...d.data(), id: d.id })); if (!first && S.view === "home") renderHome(); }, err => console.warn("투표를 불러오지 못했습니다(보안 규칙 확인)", err)));
     unsubs.push(fs.onSnapshot(fs.collection(db, "todos"), snap => { S.todos = snap.docs.map(d => ({ ...d.data(), id: d.id })); if (!first && S.view === "home") renderHome(); }, err => console.warn("할 일을 불러오지 못했습니다(보안 규칙 확인)", err)));
     unsubs.push(fs.onSnapshot(fs.collection(db, "library"), snap => { S.library = snap.docs.map(d => ({ ...d.data(), id: d.id })); if (!first && S.view === "home") renderHome(); }, err => console.warn("자료실을 불러오지 못했습니다(보안 규칙 확인)", err)));
     unsubs.push(fs.onSnapshot(fs.doc(db, "settings", "links"), d => { S.links = d.exists() ? (d.data().list || null) : null; if (!first && S.view === "home") renderHome(); }, err => console.warn(err)));
