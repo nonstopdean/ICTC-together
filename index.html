@@ -1422,10 +1422,20 @@ function renderHome(){
   // 다가오는 교육·평가
   const crs = sortEv(all.filter(e => (e.cat === "edu" || e.cat === "eval") && e.end >= TODAY)).slice(0, 6);
   // 최근 올라온 일정
-  const recentAll = all.filter(e => e.updatedAt && e.cat !== "duty" && (PERSONAL.includes(e.cat) || e.editedBy)).sort((a, b) => String(b.updatedAt).localeCompare(String(a.updatedAt)));
+  const recentAll = all.filter(e => e.updatedAt && (PERSONAL.includes(e.cat) || e.editedBy)).sort((a, b) => String(b.updatedAt).localeCompare(String(a.updatedAt)));
   const isNew = e => PREV_SEEN && String(e.updatedAt) > PREV_SEEN && e.editedBy !== S.me.name;
   const newCount = recentAll.filter(isNew).length;
-  const recent = recentAll.slice(0, 6);
+  // 당직표처럼 한꺼번에 저장한 것은 한 줄로 묶음 (같은 사람이 같은 순간에 4건 이상)
+  const feed = [];
+  recentAll.forEach(e => {
+    const last = feed[feed.length - 1];
+    if (last && last.bulk !== undefined && last.key === `${e.editedBy}|${e.updatedAt}|${e.cat}`){ last.list.push(e); return; }
+    feed.push({ key: `${e.editedBy}|${e.updatedAt}|${e.cat}`, bulk: 0, list: [e] });
+  });
+  const recent = feed.flatMap(g => g.list.length >= 4 ? [{ _bulk: true, list: g.list }] : g.list).slice(0, 6);
+  const bulkRow = g => { const l = sortEv([...g.list]), e0 = l[0], m = pd(e0.start);
+    return `<button class="hrow" data-bulk="${esc(e0.start.slice(0, 7))}"><span class="dd">📋</span><span style="min-width:0"><span class="t"><i style="${tst(e0)}"></i>${m.getMonth() + 1}월 ${e0.cat === "duty" ? dutyKind(e0) + "표" : CATS[e0.cat] + " 일정"} ${l.length}건</span><span class="m">${md(l[0].start)} ~ ${md(l[l.length - 1].end)} · 한꺼번에 저장</span></span>
+      <span class="r">${isNew(e0) ? `<span class="newt">NEW</span> ` : ""}${esc(e0.editedBy || "")} · ${ago(e0.updatedAt)}</span></button>`; };
   const notices = S.notices.filter(n => !n.archived && (!n.until || n.until >= TODAY)).sort((a, b) => String(b.at).localeCompare(String(a.at)));
 
   const row = (e, right) => { const [dt, cls] = dday(e.start, e.end); return `<button class="hrow" data-id="${esc(e.id)}"><span class="dd ${cls}">${dt}</span>
@@ -1446,11 +1456,12 @@ ${showInstall ? `<div class="card wide install"><img src="icon-192.png" alt="" o
       `<div class="empty" style="padding:14px 6px">예정된 교육이 없습니다.</div>`}</div></div>
     ${linksHTML()}
     ${toolsHTML()}
-    <div data-fold="recent" class="card wide"><h3>최근 올라온 일정</h3><div class="body">${recent.length ? recent.map(e => row(e, `${isNew(e) ? `<span class="newt">NEW</span> ` : ""}${esc(e.editedBy || e.ownerName || "")} · ${ago(e.updatedAt)}`)).join("") :
-      `<div class="empty" style="padding:14px 6px">아직 등록된 출장·휴가가 없습니다. 맨 아래 빠른 등록으로 첫 일정을 올려 보세요.</div>`}</div></div>`;
+    <div data-fold="recent" class="card wide"><h3>최근 올라온 일정</h3><div class="body">${recent.length ? recent.map(e => e._bulk ? bulkRow(e) : row(e, `${isNew(e) ? `<span class="newt">NEW</span> ` : ""}${esc(e.editedBy || e.ownerName || "")} · ${ago(e.updatedAt)}`)).join("") :
+      `<div class="empty" style="padding:14px 6px">아직 등록된 출장·휴가·당직이 없습니다. 맨 아래 빠른 등록으로 첫 일정을 올려 보세요.</div>`}</div></div>`;
   $("homeTop").innerHTML = alertBoardHTML(notices);
   const g = $("homeGrid");
   g.querySelectorAll("[data-id]").forEach(b => b.addEventListener("click", () => openDetail(b.dataset.id)));
+  g.querySelectorAll("[data-bulk]").forEach(b => b.addEventListener("click", () => { S.month = pd(b.dataset.bulk + "-01"); S.sel = b.dataset.bulk + "-01"; setView("month"); }));
   g.querySelectorAll("[data-hp]").forEach(b => b.addEventListener("click", () => openViewer(b.dataset.hp, [...S.photos])));
   g.querySelectorAll("[data-wk]").forEach(b => b.addEventListener("click", () => { S.sel = b.dataset.wk; setView("week"); }));
   $("myCal")?.addEventListener("click", openMyCal);
