@@ -16,7 +16,7 @@
 <title>ICTC 함께 · 지휘역량강화센터 일정</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
 <style>
 /* =========================================================
    색과 글꼴
@@ -233,6 +233,10 @@ body.locked{overflow:hidden}
 .pick[data-v="etc"][aria-pressed="true"]{background:var(--etc)}
 .pick[data-v="duty"][aria-pressed="true"]{background:#4338ca}
 .pick[data-v="resv"][aria-pressed="true"]{background:#0e7490}
+.pick[data-v="school"][aria-pressed="true"]{background:#6b7785}
+.chip[data-c="school"][aria-pressed="true"]{color:#5f6b78;border-color:currentColor}
+.ev.cc.sch{background:repeating-linear-gradient(135deg,color-mix(in srgb,var(--c) 12%,var(--card)) 0 7px,color-mix(in srgb,var(--c) 20%,var(--card)) 7px 9px);color:var(--ink2);box-shadow:inset 3px 0 0 var(--c);font-weight:500}
+.tag.cc.sch{font-weight:500;color:var(--ink2)}
 .chip[data-c="resv"][aria-pressed="true"]{color:#0e7490;border-color:currentColor}
 .pick.plain[aria-pressed="true"]{background:var(--ink)}
 .quick{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
@@ -510,7 +514,15 @@ body.locked{overflow:hidden}
 .lkrow{display:grid;grid-template-columns:110px 1fr 30px 30px;gap:6px;margin-bottom:6px}
 .lkrow input{border:1px solid var(--line);border-radius:8px;padding:8px 9px;background:var(--card);min-width:0}
 .lkrow .x{border:0;background:var(--soft);border-radius:7px;height:36px}
-.tools{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.tools{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.lwsg{margin-top:6px} .lwsg > small{font-size:11.5px;font-weight:700;color:var(--muted)} .lwsg .quick{margin-top:2px} .lwsg button.have{opacity:.45}
+.wk .sec.sch{color:#6b7785} .wk .sec small{font-weight:500;margin-left:6px}
+.legend i.sch{background:repeating-linear-gradient(135deg,color-mix(in srgb,var(--c) 15%,var(--card)) 0 3px,color-mix(in srgb,var(--c) 35%,var(--card)) 3px 5px)}
+.lwg{border:1px solid var(--line2);border-radius:12px;padding:8px 10px;margin-bottom:8px}
+.lwh{display:flex;align-items:baseline;gap:8px;margin-bottom:4px} .lwh b{font-size:15px} .lwh small{color:var(--muted);font-size:11.5px;white-space:nowrap} .lwh .lnk{margin-left:auto;text-decoration:none;white-space:nowrap}
+.lwrow{display:grid;grid-template-columns:1fr auto auto;gap:4px 6px;align-items:center;padding:6px 0;border-top:1px solid var(--line2)}
+.lwrow a{grid-column:1/-1;text-decoration:none;color:var(--ink);display:flex;gap:8px;align-items:baseline;flex-wrap:wrap} .lwrow a b{color:var(--edu)} .lwrow a span{font-size:13px;color:var(--ink2)}
+.lwrow small{font-size:11.5px;color:var(--muted)} .lwrow .old{color:var(--fire);font-weight:700}
 .cktpl{display:flex;align-items:center;gap:6px;flex-wrap:wrap;background:var(--soft);border-radius:10px;padding:8px 10px;margin-bottom:10px;font-size:13.5px}
 .cktpl > span{margin-right:auto}
 .cksec{display:flex;justify-content:space-between;font-size:12.5px;font-weight:700;color:var(--ink2);background:var(--soft);border-radius:6px;padding:4px 8px;margin-top:10px}
@@ -532,7 +544,7 @@ body.locked{overflow:hidden}
 .ansum small{display:block;font-size:12px;color:var(--muted)} .ansum b{font-size:19px}
 .antr{width:70px;border:1px solid var(--line);border-radius:7px;padding:5px 6px;text-align:right;background:var(--card)}
 .dotc{display:inline-block;width:9px;height:9px;border-radius:2px;background:var(--c);margin-right:6px}
-@media (max-width:600px){ .tools{grid-template-columns:repeat(4,minmax(0,1fr));gap:5px} .cktpl > span{width:100%} .tool{padding:9px 2px;font-size:11px;word-break:keep-all;text-align:center} .tool b{font-size:19px} .lkgrid{grid-template-columns:repeat(2,minmax(0,1fr))} .lkrow{grid-template-columns:1fr 1fr 30px 30px} .lbrow{grid-template-columns:46px 1fr} .lba{grid-column:2;justify-content:flex-start} #anTab button{padding:6px 9px;font-size:12.5px} }
+@media (max-width:600px){ .tools{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px} .cktpl > span{width:100%} .tool{padding:9px 2px;font-size:11px;word-break:keep-all;text-align:center} .tool b{font-size:19px} .lkgrid{grid-template-columns:repeat(2,minmax(0,1fr))} .lkrow{grid-template-columns:1fr 1fr 30px 30px} .lbrow{grid-template-columns:46px 1fr} .lba{grid-column:2;justify-content:flex-start} #anTab button{padding:6px 9px;font-size:12.5px} }
 .btab{margin-left:8px;padding:2px}
 .btab button{padding:4px 10px;font-size:12.5px}
 .btab i{font-style:normal;display:inline-block;min-width:16px;border-radius:9px;background:var(--fire);color:#fff;font-size:10.5px;padding:0 4px;margin-left:2px}
@@ -953,6 +965,10 @@ const MIN_PW = 8;            // 비밀번호 최소 길이
    ========================================================= */
 // [id, 시작, 종료, 분류, 제목, 메모, 계획(안) 여부]
 const SEED = [["sb517da81","2026-01-22","2026-01-22","edu","신규(구급)","",0],["s12056053","2026-01-29","2026-01-29","edu","신규(화재)","",0],["s36be6060","2026-02-13","2026-02-13","edu","팀단위(경남)","연간계획 달력 표기: 경남",0],["sbfc1a191","2026-02-23","2026-02-27","edu","8기 초급현장지휘관 양성과정","",0],["sb3ab2af1","2026-03-04","2026-03-06","edu","1기 지휘교육","",0],["s12683df6","2026-03-09","2026-03-20","edu","2기 고급현장지휘관 양성 과정","",0],["sab64d815","2026-03-30","2026-04-03","edu","9기 초급현장지휘관 양성과정","",0],["sadc3259d","2026-04-06","2026-04-10","edu","10기 초급현장지휘관 양성과정","",0],["sa0ac6ff3","2026-04-13","2026-04-17","edu","11기 초급현장지휘관 양성과정","",0],["sb8c19bf8","2026-04-27","2026-04-29","edu","5기 실무교육","",0],["s1d43f0af","2026-05-11","2026-05-15","edu","평가대비 사전연습","",0],["s164d980f","2026-05-18","2026-05-22","eval","1회 고급현장지휘관 자격인증 평가","",0],["s2c7de1f7","2026-06-08","2026-06-12","edu","팀단위(부산-50명/일 4개팀)","",0],["s43a050fa","2026-06-16","2026-06-19","edu","팀단위(부산-50명/일 4개팀)","",0],["scc7b8188","2026-06-22","2026-06-26","edu","12기 초급현장지휘관 양성과정","",0],["s8652e1f8","2026-06-29","2026-07-03","edu","평가대비 사전연습","",0],["sab4a1b02","2026-07-06","2026-07-10","eval","3회 초급현장지휘관 자격인증 평가","",0],["s1183c441","2026-07-27","2026-07-31","edu","평가대비 사전연습","",0],["sadd9aacc","2026-08-03","2026-08-07","eval","3회 중급현장지휘관 자격인증 평가","",0],["saa98e2d8","2026-08-31","2026-09-11","edu","5기 중급현장지휘관 양성과정","",0],["s3b5d3066","2026-09-16","2026-09-16","edu","팀단위(경남)","연간계획 달력 표기: 경남",0],["s563b10d5","2026-09-21","2026-09-22","edu","팀단위(경남)","",0],["s7f3f215c","2026-09-28","2026-09-28","edu","팀단위(경남)","연간계획 달력 표기: 경남",0],["s241cef7a","2026-09-29","2026-09-29","edu","팀단위(울산)","연간계획 달력 표기: 울산",0],["s71715cf9","2026-09-30","2026-09-30","edu","팀단위(창원)","연간계획 달력 표기: 창원",0],["s6177c93d","2026-10-12","2026-10-14","edu","6기 실무교육","",0],["s0472fa7c","2026-10-19","2026-10-21","edu","7기 실무교육","",0],["s267dbfd3","2026-10-26","2026-11-06","edu","6기 중급현장지휘관 자격인증 과정","",0],["sd6eebbad","2026-11-09","2026-11-13","edu","평가대비 사전연습","",0],["sa51d15d1","2026-11-16","2026-11-20","eval","4회 초급현장지휘관 자격인증 평가","",0],["s7fb40414","2026-11-23","2026-11-24","edu","신규","",0],["s8b5da911","2026-11-25","2026-11-25","edu","팀단위(경남)","연간계획 달력 표기: 경남",0],["sbe3d86e9","2026-11-26","2026-11-27","edu","신규","",0],["s76ec05b2","2026-11-30","2026-12-04","edu","평가대비 사전연습","",0],["sd4ebf21e","2026-12-07","2026-12-11","eval","4회 중급현장지휘관 자격인증 평가","",0],["sc7f701f1","2027-02-01","2027-02-03","edu","소방령 지휘대장과정 1기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s809a496e","2027-02-04","2027-02-05","eval","소방령 지휘대장 평가 1~2회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s4b23ec51","2027-02-15","2027-02-17","edu","소방령 지휘대장과정 2기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s8bb80809","2027-02-18","2027-02-19","eval","소방령 지휘대장 평가 3~4회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s9466c502","2027-02-22","2027-02-24","edu","소방령 지휘대장과정 3기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["seb10435b","2027-02-25","2027-02-26","eval","소방령 지휘대장 평가 5~6회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s8abdb7c0","2027-03-08","2027-03-10","edu","소방령 지휘대장과정 4기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s78f1fac8","2027-03-11","2027-03-12","eval","소방령 지휘대장 평가 7~8회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s7a35ceb6","2027-03-15","2027-03-17","edu","소방령 지휘대장과정 5기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sd3b9f863","2027-03-18","2027-03-26","eval","소방령 지휘대장 평가 9~15회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sa106e58e","2027-03-29","2027-03-31","edu","소방령 지휘대장과정 6기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s7e6ad3d9","2027-04-01","2027-04-02","eval","소방령 지휘대장 평가 16~17회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s6b288dbb","2027-04-05","2027-04-07","edu","소방령 지휘대장과정 7기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s55bec0f0","2027-04-08","2027-04-09","eval","소방령 지휘대장 평가 18~19회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s2d9e5699","2027-04-12","2027-04-14","edu","소방령 지휘대장과정 8기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sd3581ccb","2027-04-15","2027-04-21","eval","소방령 지휘대장 평가 20~24회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s6ab2e8e3","2027-04-26","2027-04-28","edu","소방경 지휘대장과정 1기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s1872f8a7","2027-04-29","2027-04-30","eval","소방경 지휘대장 평가 1~2회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s4b7fbaa1","2027-05-03","2027-05-05","edu","소방경 지휘대장과정 2기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s6ac47f8c","2027-05-06","2027-05-07","eval","소방경 지휘대장 평가 3~4회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s9eff7c30","2027-05-17","2027-05-19","edu","소방경 지휘대장과정 3기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s48a9f614","2027-05-20","2027-05-21","eval","소방경 지휘대장 평가 5~6회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s29b1bd0f","2027-05-24","2027-05-26","edu","소방경 지휘대장과정 4기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sc4c3b3f9","2027-05-27","2027-05-28","eval","소방경 지휘대장 평가 7~8회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sc1482e92","2027-06-14","2027-06-16","edu","소방경 지휘대장과정 5기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sfbb44c0c","2027-06-17","2027-06-25","eval","소방경 지휘대장 평가 9~15회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sa0c73020","2027-06-28","2027-06-30","edu","소방경 지휘대장과정 6기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sb148b31d","2027-07-01","2027-07-02","eval","소방경 지휘대장 평가 16~17회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s6d7d549e","2027-07-05","2027-07-07","edu","소방경 지휘대장과정 7기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s240694a3","2027-07-08","2027-07-09","eval","소방경 지휘대장 평가 18~19회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sde76637a","2027-08-02","2027-08-04","edu","소방경 지휘대장과정 8기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s8b75f7c4","2027-08-05","2027-08-06","eval","소방경 지휘대장 평가 20~21회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s7e9ddc52","2027-08-09","2027-08-11","edu","소방경 지휘대장과정 9기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sd3e9529c","2027-08-12","2027-08-13","eval","소방경 지휘대장 평가 22~23회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sfcf86e99","2027-08-30","2027-09-01","edu","소방경 지휘대장과정 10기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s98d87fb2","2027-09-02","2027-09-10","eval","소방경 지휘대장 평가 24~30회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s6419aa05","2027-09-20","2027-09-22","edu","소방경 지휘대장과정 11기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s2613597c","2027-09-23","2027-09-27","eval","소방경 지휘대장 평가 31~33회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s45f5d86d","2028-02-07","2028-02-09","edu","소방경 지휘대장과정 12기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sb398724d","2028-02-10","2028-02-11","eval","소방경 지휘대장 평가 1~2회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s748e9e22","2028-02-14","2028-02-16","edu","소방경 지휘대장과정 13기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sd7d3ac23","2028-02-17","2028-02-18","eval","소방경 지휘대장 평가 3~4회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sa4bde040","2028-02-28","2028-03-01","edu","소방경 지휘대장과정 14기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s887e6714","2028-03-02","2028-03-03","eval","소방경 지휘대장 평가 5~6회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s83eed734","2028-03-06","2028-03-08","edu","소방경 지휘대장과정 15기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sd79d2fa5","2028-03-09","2028-03-10","eval","소방경 지휘대장 평가 7~8회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s1157b295","2028-03-20","2028-03-22","edu","소방경 지휘대장과정 16기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s812bef18","2028-03-23","2028-03-31","eval","소방경 지휘대장 평가 9~15회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s05ab73ef","2028-04-03","2028-04-05","edu","소방경 지휘대장과정 17기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s039d47c4","2028-04-06","2028-04-07","eval","소방경 지휘대장 평가 16~17회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s0155c1b0","2028-04-17","2028-04-19","edu","소방경 지휘대장과정 18기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sf30cf644","2028-04-20","2028-04-21","eval","소방경 지휘대장 평가 18~19회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s684a3e9b","2028-05-08","2028-05-10","edu","소방경 지휘대장과정 19기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s08207c10","2028-05-11","2028-05-12","eval","소방경 지휘대장 평가 20~21회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s389a772a","2028-05-15","2028-05-17","edu","소방경 지휘대장과정 20기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sf91be328","2028-05-18","2028-05-19","eval","소방경 지휘대장 평가 22~23회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sd80941f4","2028-05-29","2028-05-31","edu","소방경 지휘대장과정 21기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s681adb82","2028-06-01","2028-06-02","eval","소방경 지휘대장 평가 24~25회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sfb8fc01c","2028-06-12","2028-06-16","eval","소방경 지휘대장 평가 26~30회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s1eb64608","2028-06-19","2028-06-21","edu","소방경 지휘대장과정 22기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sd7759582","2028-06-22","2028-06-23","eval","소방경 지휘대장 평가 31~32회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["se98ca60a","2028-06-26","2028-06-28","edu","소방경 지휘대장과정 23기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sf0ffee01","2028-06-29","2028-06-30","eval","소방경 지휘대장 평가 33~34회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s31ed0996","2028-07-10","2028-07-12","edu","소방경 지휘대장과정 24기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sb87c9e56","2028-07-13","2028-07-14","eval","소방경 지휘대장 평가 35~36회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s6f759e5f","2028-07-31","2028-08-02","edu","소방경 지휘대장과정 25기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s43cb9a21","2028-08-03","2028-08-04","eval","소방경 지휘대장 평가 37~38회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s9e76f0db","2028-08-21","2028-08-23","edu","소방경 지휘대장과정 26기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s920af8f9","2028-08-24","2028-09-01","eval","소방경 지휘대장 평가 39~45회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["seafb856e","2028-09-04","2028-09-06","edu","소방경 지휘대장과정 27기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sf21b3874","2028-09-07","2028-09-08","eval","소방경 지휘대장 평가 46~47회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sb2bd4446","2028-09-11","2028-09-13","edu","소방경 지휘대장과정 28기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s42e58303","2028-09-14","2028-09-15","eval","소방경 지휘대장 평가 48~49회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s44d0e85a","2028-09-25","2028-09-27","edu","소방경 지휘대장과정 29기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s4996bec6","2028-09-28","2028-09-29","eval","소방경 지휘대장 평가 50~51회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1],["sa0e05100","2028-10-16","2028-10-18","edu","소방경 지휘대장과정 30기","인원 20명 · 2027~2028 편성표(3안) 기준, 확정 전",1],["s35784947","2028-10-19","2028-10-26","eval","소방경 지휘대장 평가 52~57회","인원 8명/회 · 2027~2028 편성표(3안) 기준, 확정 전",1]];
+// [id, 시작, 종료, "school", 과정명, 대상·인원, 0, 부서] — 2026년도 부산소방학교 교육훈련계획 일람표
+// 지휘·긴급구조 관련 과정은 우리 센터 일정에 이미 있어 넣지 않음
+const SCHOOL_DROP = /지휘|긴급구조|통제단/;
+const SCHOOL_SEED = [["hs42221ace","2026-02-09","2026-02-13","school","수중구조 기본","소방경 이하 · 20명 · 2026 부산소방학교 교육훈련계획",0,"구조"],["hs7f47e0e6","2026-02-09","2026-04-10","school","응급구조사 2급 양성","소방경 이하 · 40명 · 2026 부산소방학교 교육훈련계획",0,"구급"],["hs6765f931","2026-02-11","2026-02-13","school","화재진압·구조대원 자가생존","소방경 이하 · 25명 · 2026 부산소방학교 교육훈련계획",0,"화재"],["hs1d512283","2026-02-23","2026-02-25","school","화학사고대응능력 2급","소방경 이하 · 25명 · 2026 부산소방학교 교육훈련계획",0,"구조"],["hsba835a5c","2026-03-03","2026-03-05","school","소방위 관리역량 1회","소방위 · 45명 · 2026 부산소방학교 교육훈련계획",0,"기본"],["hs2174d83b","2026-03-09","2026-03-13","school","화재진압전술 1회","소방경 이하 · 25명 · 2026 부산소방학교 교육훈련계획",0,"화재"],["hs9cd974d3","2026-03-16","2026-03-18","school","예산회계","소방경 이하 · 40명 · 2026 부산소방학교 교육훈련계획",0,"예산"],["hs2e83efd3","2026-03-18","2026-03-20","school","소방위 관리역량 2회","소방위 · 45명 · 2026 부산소방학교 교육훈련계획",0,"기본"],["hsa163e27c","2026-03-23","2026-04-03","school","화재대응능력 1급","소방경 이하 · 25명 · 2026 부산소방학교 교육훈련계획",0,"화재"],["hsa117c7f6","2026-03-23","2026-03-27","school","화재조사 실무 심화","화재조사관 · 40명 · 2026 부산소방학교 교육훈련계획",0,"조사"],["hs2782a556","2026-04-08","2026-04-10","school","소방위 관리역량 3회","소방위 · 45명 · 2026 부산소방학교 교육훈련계획",0,"기본"],["hs936b60d8","2026-04-20","2026-04-22","school","화재대응능력 2급 취득 1회","소방경 이하 · 25명 · 2026 부산소방학교 교육훈련계획",0,"화재"],["hs46f752a8","2026-04-20","2026-04-24","school","수상라이프가드(수구대)","소방경 이하 · 30명 · 2026 부산소방학교 교육훈련계획",0,"구조"],["hs9607b089","2026-04-20","2026-04-24","school","현장응급처치(심화)","1급, 간호사 · 30명 · 2026 부산소방학교 교육훈련계획",0,"구급"],["hs6fedd91a","2026-04-27","2026-04-29","school","로프접근구조(기초)","소방경 이하 · 25명 · 2026 부산소방학교 교육훈련계획",0,"구조"],["hs2ea4c141","2026-05-06","2026-05-08","school","소방위 관리역량 4회","소방위 · 45명 · 2026 부산소방학교 교육훈련계획",0,"기본"],["hs37ce5195","2026-05-06","2026-05-08","school","선착대 소방시설 활용 1회","소방경 이하 안전센터 근무자 · 30명 · 2026 부산소방학교 교육훈련계획",0,"예방"],["hsc00737b5","2026-05-11","2026-05-15","school","일반조종면허 2급 1회","수상구조대원 · 12명 · 2026 부산소방학교 교육훈련계획",0,"구조"],["hs1900d423","2026-05-11","2026-05-22","school","펌뷸런스대원 역량강화","안전센터(구조대) · 30명 · 2026 부산소방학교 교육훈련계획",0,"구급"],["hsdab2ec62","2026-05-11","2026-05-13","school","소방시설 기계·전기 1회","소방경 이하 · 30명 · 2026 부산소방학교 교육훈련계획",0,"예방"],["hs9c52d826","2026-05-11","2026-05-15","school","구급대원 보직변경 실무","구급대원 보직변경예정자 · 20명 · 2026 부산소방학교 교육훈련계획",0,"정책"],["hs50cd71a3","2026-05-18","2026-05-22","school","신속동료구조팀 양성","소방경 이하 · 25명 · 2026 부산소방학교 교육훈련계획",0,"화재"],["hs06971b89","2026-05-18","2026-05-22","school","일반조종면허 2급 2회","수상구조대원 · 12명 · 2026 부산소방학교 교육훈련계획",0,"구조"],["hs9da489d3","2026-05-26","2026-05-28","school","소방위 관리역량 5회","소방위 · 45명 · 2026 부산소방학교 교육훈련계획",0,"기본"],["hs847c92c7","2026-05-27","2026-05-29","school","소방차량 조작","소방위 이하 안전센터(구조대) · 30명 · 2026 부산소방학교 교육훈련계획",0,"장비"],["hs982228da","2026-05-29","2026-05-29","school","HRD 역량향상","소방경 이하 · 23명 · 2026 부산소방학교 교육훈련계획",0,"공공"],["hsa701a17c","2026-06-01","2026-06-02","school","의용소방대 전문교육","의용소방대원 · 30명 · 2026 부산소방학교 교육훈련계획",0,"민관"],["hse8bbaad3","2026-06-05","2026-06-05","school","생성형 AI 업무활용 1회","소방경 이하 · 40명 · 2026 부산소방학교 교육훈련계획",0,"정책"],["hsc237aa1c","2026-06-08","2026-06-12","school","전술배연","소방경 이하 · 25명 · 2026 부산소방학교 교육훈련계획",0,"화재"],["hsf9b0413f","2026-06-08","2026-06-10","school","다수사상자 구급대응","소방경 이하 · 30명 · 2026 부산소방학교 교육훈련계획",0,"구급"],["hs1c542998","2026-06-08","2026-06-10","school","현장소방활동 안전관리","소방경·위 · 40명 · 2026 부산소방학교 교육훈련계획",0,"직무"],["hs741e877c","2026-06-15","2026-07-03","school","해난구조·구급","경 이하(테스트) · 16명 · 2026 부산소방학교 교육훈련계획",0,"특성화"],["hsb8c9492e","2026-06-15","2026-06-19","school","소방예방실무 1회","소방경 이하 · 40명 · 2026 부산소방학교 교육훈련계획",0,"예방"],["hsab367bcc","2026-06-24","2026-06-26","school","화재대응능력 2급 취득 2회","소방경 이하 · 25명 · 2026 부산소방학교 교육훈련계획",0,"화재"],["hs08e5ce35","2026-06-29","2026-07-03","school","화재진압전술 2회","소방경 이하 · 25명 · 2026 부산소방학교 교육훈련계획",0,"화재"],["hs80889f48","2026-06-29","2026-06-30","school","수사실무","소방경 이하 · 40명 · 2026 부산소방학교 교육훈련계획",0,"수사"],["hs46296bf6","2026-07-06","2026-12-18","school","신규임용자 과정","채용후보자 · 180명 · 2026 부산소방학교 교육훈련계획",0,"기본"],["hs9dd7db0a","2026-07-08","2026-07-10","school","소방위 관리역량 6회","소방위 · 45명 · 2026 부산소방학교 교육훈련계획",0,"기본"],["hs48ff10d2","2026-07-13","2026-07-24","school","수상구조사","경 이하(수영가능자) · 20명 · 2026 부산소방학교 교육훈련계획",0,"특성화"],["hsb264ba5e","2026-07-13","2026-07-15","school","선박화재","소방경 이하 · 25명 · 2026 부산소방학교 교육훈련계획",0,"화재"],["hs8b6cfc38","2026-07-13","2026-07-15","school","소방시설 기계·전기 2회","소방경 이하 · 30명 · 2026 부산소방학교 교육훈련계획",0,"예방"],["hs8493ffd3","2026-07-27","2026-07-28","school","해상생환 1회","119항공대원 · 25명 · 2026 부산소방학교 교육훈련계획",0,"특성화"],["hse3da9bb9","2026-07-30","2026-07-31","school","해상생환 2회","119항공대원 · 25명 · 2026 부산소방학교 교육훈련계획",0,"특성화"],["hsee4f6de5","2026-08-10","2026-08-14","school","예비 화재조사관 실무","소방경 이하(화재감식자격자 등) · 40명 · 2026 부산소방학교 교육훈련계획",0,"조사"],["hs4d859ef5","2026-08-18","2026-08-19","school","직장훈련 운영관리자 1회","소방경 이하(팀장 우선) · 50명 · 2026 부산소방학교 교육훈련계획",0,"정책"],["hs79324fe8","2026-08-19","2026-08-21","school","선착대 소방시설 활용 2회","소방경 이하 안전센터 근무자 · 30명 · 2026 부산소방학교 교육훈련계획",0,"예방"],["hs2d2f67de","2026-09-03","2026-09-04","school","감사감찰","소방경 이하 · 40명 · 2026 부산소방학교 교육훈련계획",0,"감사"],["hsab1f8453","2026-09-03","2026-09-04","school","직장훈련 운영관리자 2회","소방경 이하(팀장 우선) · 50명 · 2026 부산소방학교 교육훈련계획",0,"정책"],["hs992d6df7","2026-09-14","2026-09-18","school","소방예방실무 2회","소방경 이하 · 40명 · 2026 부산소방학교 교육훈련계획",0,"예방"],["hs04ede5e4","2026-09-21","2026-09-21","school","생성형 AI 업무활용 2회","소방경 이하 · 40명 · 2026 부산소방학교 교육훈련계획",0,"정책"],["hsd9a740e3","2026-10-02","2026-10-02","school","소방정보통신 운영관리","통신업무 담당자 · 40명 · 2026 부산소방학교 교육훈련계획",0,"공공"],["hs6e9971a2","2026-10-12","2026-10-12","school","화재조사관 보수 1회","전담부서 배치자 · 40명 · 2026 부산소방학교 교육훈련계획",0,"보수"],["hs06915375","2026-10-13","2026-10-13","school","화재조사관 보수 2회","전담부서 배치자 · 40명 · 2026 부산소방학교 교육훈련계획",0,"보수"],["hs8e91b5f3","2026-10-15","2026-10-15","school","소방사다리차 보수 1회","운용사 · 40명 · 2026 부산소방학교 교육훈련계획",0,"보수"],["hsa52fc473","2026-10-16","2026-10-16","school","소방사다리차 보수 2회","운용사 · 40명 · 2026 부산소방학교 교육훈련계획",0,"보수"],["hs6e7ddf6b","2026-10-19","2026-10-23","school","제2의 인생설계","퇴직 예정자 · 35명 · 2026 부산소방학교 교육훈련계획",0,"공공"],["hsad028a3d","2026-11-30","2026-12-02","school","소방위 관리역량 7회","소방위 · 45명 · 2026 부산소방학교 교육훈련계획",0,"기본"]];
 const HOLIDAYS = {
   "2026-01-01":"신정","2026-02-16":"설날","2026-02-17":"설날","2026-02-18":"설날","2026-03-01":"삼일절","2026-03-02":"대체휴일",
   "2026-05-01":"노동절","2026-05-05":"어린이날","2026-05-24":"부처님오신날","2026-05-25":"대체휴일","2026-06-03":"지방선거","2026-06-06":"현충일",
@@ -966,7 +982,7 @@ const HOLIDAYS = {
   "2028-05-01":"노동절","2028-05-02":"부처님오신날","2028-05-05":"어린이날","2028-06-06":"현충일","2028-07-17":"제헌절","2028-08-15":"광복절",
   "2028-10-02":"추석","2028-10-03":"추석·개천절","2028-10-04":"추석","2028-10-05":"대체휴일","2028-10-09":"한글날","2028-12-25":"성탄절"
 };
-const CATS = { edu:"교육", eval:"평가", trip:"출장", leave:"휴가", duty:"당직", resv:"예약", etc:"기타" };
+const CATS = { edu:"교육", eval:"평가", trip:"출장", leave:"휴가", duty:"당직", resv:"예약", etc:"기타", school:"학교" };
 const DUTY_KINDS = ["일직","숙직"];
 const DUTY_TIME = { "일직": ["09:00","18:00"], "숙직": ["18:00","09:00"] };   // 숙직은 다음 날 09시까지
 const dutyTimeText = k => k === "숙직" ? "18:00 ~ 다음 날 09:00" : "09:00 ~ 18:00";
@@ -979,6 +995,9 @@ const kindOf = e => e.kind || "휴가";
 const leaveText = e => `${kindOf(e)}${e.half === "am" || e.half === "pm" ? `(${HALF[e.half]})` : ""}`;
 const seedEvents = () => SEED.map(([id,start,end,cat,title,memo,plan]) => ({
   id, start, end, cat, title, memo: memo || "2026년 연간 교육계획", plan: !!plan, person:"", place:"", half:"full", ownerName:"센터 연간계획"
+}));
+const schoolSeed = () => SCHOOL_SEED.map(([id,start,end,cat,title,memo,plan,dept]) => ({
+  id, start, end, cat, title, memo, dept, plan: false, person:"", place:"", half:"full", ownerName:"부산소방학교 교육훈련계획"
 }));
 
 /* =========================================================
@@ -1002,8 +1021,8 @@ const TODAY = ymd(new Date());
 const S = {
   mode: "demo", fb: null, me: null, adminUntil: 0, events: [], access: { open:false, numeric:false }, colors: {},
   view: "home", month: pd(TODAY.slice(0,8)+"01"), year: pd(TODAY).getFullYear(), sel: TODAY,
-  on: new Set(Object.keys(CATS)), person: "", q: "", range: "next",
-  week: null, weekend: true, todos: [], polls: [], library: [], links: null, ledger: [], ledgerCfg: null, mTab: "list", notices: [], printing: false, homeBg: "", comments: [], photos: [], detailId: null, album: ""
+  on: new Set(Object.keys(CATS).filter(k => k !== "school")), person: "", q: "", range: "next",
+  week: null, weekend: true, photoLimit: 24, todos: [], polls: [], library: [], links: null, ledger: [], ledgerCfg: null, mTab: "list", notices: [], printing: false, homeBg: "", comments: [], photos: [], detailId: null, album: ""
 };
 const PERSONAL = ["trip","leave","duty","resv","etc"];
 const SEEN_KEY = "ictc-hamkke-seen", THEME_KEY = "ictc-hamkke-theme", TEAM_KEY = "ictc-hamkke-team";
@@ -1029,6 +1048,7 @@ const label0 = e => {
   if (e.cat === "trip") return `${e.person} 출장${e.place ? " · " + e.place : (e.title ? " · " + e.title : "")}`;
   if (e.cat === "leave") return `${e.person} ${leaveText(e)}`;
   if (e.cat === "duty") return `${e.person} ${dutyKind(e)}`;
+  if (e.cat === "school") return `🏫 ${e.dept ? "[" + e.dept + "] " : ""}${e.title}`;
   if (e.cat === "resv") return `${e.res || "예약"} · ${e.person || ""}${e.title ? " (" + e.title + ")" : ""}`;
   if (e.cat === "etc" && e.person) return `${e.person} · ${e.title}`;
   return e.title + (e.plan ? " (안)" : "");
@@ -1039,7 +1059,7 @@ const visible = () => S.events.filter(e =>
 const people = () => { const s = new Set(S.events.filter(e => PERSONAL.includes(e.cat) && e.person).map(e => e.person)); if (S.me?.name) s.add(S.me.name); return [...s].sort((a,b) => a.localeCompare(b, "ko")); };
 const monday = d => addDays(d, -((d.getDay()+6)%7));
 const onDay = (list, ds) => list.filter(e => e.start <= ds && e.end >= ds);
-const ORDER = { eval:0, edu:1, duty:2, trip:3, leave:4, resv:5, etc:6 };
+const ORDER = { eval:0, edu:1, duty:2, trip:3, leave:4, resv:5, etc:6, school:7 };
 // [찾는 단어, 색 이름표 id, 이름, 기본 색]  — 관리자 모드에서 색을 바꿀 수 있습니다.
 const COURSE = [
   [/평가대비|사전연습/, "prep",   "평가 사전연습",   "#66707a"],
@@ -1055,17 +1075,18 @@ const COURSE = [
 ];
 const OTHER = ["other", "기타 교육", "#5b6672"];
 const PCOL = { trip:["출장","#a86400"], leave:["휴가","#1f7a4a"], duty:["당직","#4338ca"], resv:["예약","#0e7490"], etc:["기타 일정","#4d5b69"] };
-const DEFAULT_COLORS = Object.fromEntries([...COURSE.map(c => [c[1], c[3]]), [OTHER[0], OTHER[2]], ...Object.entries(PCOL).map(([k,v]) => [k, v[1]])]);
-const COLOR_NAMES = Object.fromEntries([...COURSE.map(c => [c[1], c[2]]), [OTHER[0], OTHER[1]], ...Object.entries(PCOL).map(([k,v]) => [k, v[0]])]);
+const DEFAULT_COLORS = Object.fromEntries([...COURSE.map(c => [c[1], c[3]]), [OTHER[0], OTHER[2]], ["school", "#8a96a3"], ...Object.entries(PCOL).map(([k,v]) => [k, v[1]])]);
+const COLOR_NAMES = Object.fromEntries([...COURSE.map(c => [c[1], c[2]]), [OTHER[0], OTHER[1]], ["school", "소방학교 다른 교육"], ...Object.entries(PCOL).map(([k,v]) => [k, v[0]])]);
 const HEX = /^#[0-9a-f]{6}$/i;
 const colorOf = id => (S.colors && HEX.test(S.colors[id] || "") ? S.colors[id] : DEFAULT_COLORS[id]);
 function tone(e){
+  if (e.cat === "school") return { c: colorOf("school"), name: "소방학교 교육", solid:false, out:false, school:true };
   if (PCOL[e.cat]) return { c: colorOf(e.cat), name: CATS[e.cat], solid:false, out:true };
   const g = COURSE.find(([re]) => re.test(e.title || ""));
   const id = g ? g[1] : OTHER[0];
   return { c: colorOf(id), name: COLOR_NAMES[id], solid: e.cat === "eval", out:false };
 }
-const tcls = e => { const x = tone(e); return `cc${x.solid ? " solid" : ""}${x.out ? " out" : ""}`; };
+const tcls = e => { const x = tone(e); return `cc${x.solid ? " solid" : ""}${x.out ? " out" : ""}${x.school ? " sch" : ""}`; };
 const tst = e => `--c:${tone(e).c}`;
 const sortEv = a => a.sort((x,y) => x.start.localeCompare(y.start) || ORDER[x.cat]-ORDER[y.cat] || y.end.localeCompare(x.end) || (x.time || "99").localeCompare(y.time || "99") || label(x).localeCompare(label(y)));
 const staffOf = e => [...new Set([...(Array.isArray(e.staff) ? e.staff : []), ...(Array.isArray(e.sched) ? e.sched.map(s => s.who).filter(Boolean) : [])])];
@@ -1100,7 +1121,7 @@ const local = {
   data: null,
   async init(){
     try { const v = JSON.parse(localStorage.getItem(LS)); if (v && Array.isArray(v.events) && v.k && v.a) { this.data = { access: { open:false, numeric:false }, demoStaff: DEMO_PW.staff, notices: [], comments: [], ...v }; return; } } catch(e){}
-    this.data = { events: seedEvents(), k: await pwKey(DEMO_PW.staff, "staff"), a: await pwKey(DEMO_PW.admin, "admin"), session: null, adminUntil: 0, access: { open:false, numeric:false }, demoStaff: DEMO_PW.staff, notices: [{ id:"n1", text:"체험 모드 공지 예시입니다. 관리자 모드에서 공지를 올리고 지울 수 있습니다.", until:"", by:"센터", at:new Date().toISOString() }] };
+    this.data = { events: [...seedEvents(), ...schoolSeed()], k: await pwKey(DEMO_PW.staff, "staff"), a: await pwKey(DEMO_PW.admin, "admin"), session: null, adminUntil: 0, access: { open:false, numeric:false }, demoStaff: DEMO_PW.staff, notices: [{ id:"n1", text:"체험 모드 공지 예시입니다. 관리자 모드에서 공지를 올리고 지울 수 있습니다.", until:"", by:"센터", at:new Date().toISOString() }] };
     this.save();
   },
   save(){ try { localStorage.setItem(LS, JSON.stringify(this.data)); } catch(e){} }
@@ -1347,16 +1368,21 @@ const store = {
     const { fs, db } = S.fb;
     for (let i = 0; i < ids.length; i += 20){ const b = fs.writeBatch(db); ids.slice(i, i+20).forEach(id => b.delete(fs.doc(db, "events", id))); await b.commit(); }
   },
-  async importSeed(){
-    const list = seedEvents();
-    if (S.mode === "demo"){ const have = new Set(S.events.map(e=>e.id)); list.forEach(e => have.has(e.id) || S.events.push(e)); local.data.events = S.events; local.save(); render(); return list.length; }
+  // 이미 있는 일정은 기간·이름만 맞추고, 시간표·체크리스트·결과 등 직접 넣은 내용은 그대로 둠
+  async importSeed(which = "ours"){
+    const list = which === "school" ? schoolSeed() : seedEvents();
+    if (which === "school"){ // 예전에 넣었던 지휘 관련 학교 일정은 정리
+      const keep = new Set(list.map(e => e.id)), old = S.events.filter(e => e.cat === "school" && e.id.startsWith("hs") && !keep.has(e.id)).map(e => e.id);
+      if (old.length) await this._deleteMany(old);
+    }
+    if (S.mode === "demo"){ list.forEach(e => { const i = S.events.findIndex(x => x.id === e.id); i >= 0 ? S.events[i] = { ...S.events[i], ...e } : S.events.push(e); }); local.data.events = S.events; local.save(); render(); return list.length; }
     const { fs, db } = S.fb;
     for (let i = 0; i < list.length; i += 20){
       const b = fs.writeBatch(db);
-      list.slice(i, i+20).forEach(e => b.set(fs.doc(db, "events", e.id), { ...e, updatedAt: new Date().toISOString() }));
+      list.slice(i, i+20).forEach(e => b.set(fs.doc(db, "events", e.id), { ...e, updatedAt: new Date().toISOString() }, { merge: true }));
       await b.commit();
     }
-    this.log([histEntry("bulk", null, { label: `연간 교육계획 불러오기 (${list.length}건)` })]);
+    this.log([histEntry("bulk", null, { label: `${which === "school" ? "부산소방학교 교육계획" : "연간 교육계획"} 불러오기 (${list.length}건)` })]);
     return list.length;
   }
 };
@@ -1400,6 +1426,7 @@ function renderBoard(){
   const d = pd(TODAY);
   const today = onDay(S.events, TODAY);
   const training = sortEv(today.filter(e => e.cat === "edu" || e.cat === "eval"));
+  const schoolT = sortEv(today.filter(e => e.cat === "school"));
   const away = sortEv(today.filter(e => e.cat === "trip" || e.cat === "leave"));
   const etc = today.filter(e => e.cat === "etc");
   const dutyT = dutyOn(S.events, TODAY), dutyN = dutyOn(S.events, ymd(addDays(pd(TODAY), 1)));
@@ -1411,6 +1438,7 @@ function renderBoard(){
     <div class="board-body">
       ${teamPref().show ? `<span class="btm ${teamPref().mine === teamOf(TODAY) ? "mine" : ""}" title="근무 팀은 내 이름 → 근무 팀 표시에서 바꿀 수 있습니다">오늘 <b>${teamOf(TODAY)}팀</b> 근무</span>` : ""}
       <div class="board-row"><b>교육</b><div class="val">${training.length ? training.map(tag).join("") : `<span class="none">진행 중인 교육·평가 없음</span>`}</div></div>
+      ${schoolT.length ? `<div class="board-row"><b>학교</b><div class="val">${schoolT.slice(0, 4).map(e => `<button class="tag cc sch" style="${tst(e)}" data-id="${esc(e.id)}">${esc(e.dept ? e.dept + " · " : "")}${esc(e.title)}</button>`).join("")}${schoolT.length > 4 ? `<span class="none">외 ${schoolT.length - 4}</span>` : ""}</div></div>` : ""}
       <div class="board-row"><b>부재</b><div class="val">${away.length ? away.map(tag).join("") : `<span class="none">오늘 등록된 출장·휴가 없음</span>`}</div></div>
       ${dutyT.length || dutyN.length ? `<div class="board-row"><b>당직</b><div class="val">${dutyT.length ? dutyT.map(tag).join("") : `<span class="none">오늘 없음</span>`}${dutyN.length ? `<span class="none" style="padding-top:3px">내일 ${esc(dutyN.map(e => e.person).join("·"))}</span>` : ""}</div></div>` : ""}
       ${etc.length ? `<div class="board-row"><b>기타</b><div class="val">${etc.map(tag).join("")}</div></div>` : ""}
@@ -1666,7 +1694,7 @@ function openRecent(){
 }
 
 function renderFilters(){
-  const chips = Object.entries(CATS).map(([k,v]) => `<button class="chip" data-c="${k}" aria-pressed="${S.on.has(k)}">${v}</button>`).join("");
+  const chips = Object.entries(CATS).map(([k,v]) => `<button class="chip" data-c="${k}" aria-pressed="${S.on.has(k)}">${k === "school" ? "🏫 학교교육" : v}</button>`).join("");
   const ps = people();
   if (S.person && !ps.includes(S.person)) S.person = "";
   $("filters").innerHTML = chips + `<select class="psel ${S.person ? "on" : ""}" id="pSel" aria-label="직원 고르기"><option value="">모든 직원</option>${ps.map(n => `<option value="${esc(n)}" ${n === S.person ? "selected" : ""}>${esc(n)}${n === S.me?.name ? " (나)" : ""}</option>`).join("")}</select>`;
@@ -1950,6 +1978,7 @@ function renderWeek(){
   row = 2;
   // 교육·평가
   const courses = sortEv(vis.filter(e => (e.cat === "edu" || e.cat === "eval") && e.start <= last && e.end >= first));
+  const schoolW = sortEv(vis.filter(e => e.cat === "school" && e.start <= last && e.end >= first));
   html += `<div class="sec" style="grid-row:${row++}">교육·평가</div>`;
   const pack = list => { const lanes = []; list.forEach(e => { const [a,b] = span(e); let l = lanes.findIndex(x => x < a); if (l < 0){ l = lanes.length; lanes.push(-1); } lanes[l] = b; e._l = l; e._a = a; e._b = b; }); return Math.max(1, lanes.length); };
   const bar = (e, r, lbl) => `<button class="ev ${e.cat} ${tcls(e)} ${e.plan ? "plan" : ""} ${e.start < first ? "cont-l" : ""} ${e.end > last ? "cont-r" : ""}" style="${tst(e)};grid-column:${e._a+2}/${e._b+3};grid-row:${r + e._l}" data-id="${esc(e.id)}" title="${esc(label(e))}">${esc(lbl)}</button>`;
@@ -1958,6 +1987,10 @@ function renderWeek(){
     courses.forEach(e => html += bar(e, row, label(e)));
     row += n;
   } else { html += `<div class="hint empty" style="grid-row:${row++};padding:4px 2px">교육·평가 없음</div>`; }
+  if (schoolW.length){
+    html += `<div class="sec sch" style="grid-row:${row++}">🏫 소방학교 다른 교육 <small>우리 센터 교육 아님</small></div>`;
+    const n = pack(schoolW); schoolW.forEach(e => html += bar(e, row, label(e))); row += n;
+  }
   // 부재 인원
   html += `<div class="nm" style="grid-row:${row};color:var(--muted)">부재</div>`;
   days.forEach((ds, i) => {
@@ -2049,7 +2082,7 @@ function renderLegend(){
   visible().filter(e => (e.cat === "edu" || e.cat === "eval") && e.start <= to && e.end >= from).forEach(e => { const x = tone(e); if (!seen.has(x.name)) seen.set(x.name, x.c); });
   const items = [...seen].map(([n,c]) => `<span><i style="--c:${c}"></i>${esc(n)}</span>`).join("");
   $("legend").innerHTML = items + (items ? `<span class="sep"></span>` : "") +
-    `<span><i class="solid" style="--c:${colorOf("other")}"></i>진한 색 = 평가</span><span><i class="out" style="--c:${colorOf("trip")}"></i>테두리 = 출장·휴가</span>` +
+    `<span><i class="solid" style="--c:${colorOf("other")}"></i>진한 색 = 평가</span><span><i class="out" style="--c:${colorOf("trip")}"></i>테두리 = 출장·휴가</span>${S.on.has("school") ? `<span><i class="sch" style="--c:${colorOf("school")}"></i>🏫 회색 빗금 = 학교 다른 교육</span>` : ""}` +
     (true ? `<button class="btn btn-line btn-sm" id="lgEdit" style="padding:2px 8px;font-size:12px">색 바꾸기</button>` : "");
   $("lgEdit")?.addEventListener("click", openColors);
 }
@@ -2666,7 +2699,7 @@ function parseDateAny(v){
   const m = String(v).trim().match(/(\d{4})\D+(\d{1,2})\D+(\d{1,2})/);
   return m ? `${m[1]}-${pad(+m[2])}-${pad(+m[3])}` : "";
 }
-const PLAN_COLS = { title:["과정명","과정","교육명","제목","일정"], start:["시작일","시작","시작 날짜","교육 시작"], end:["종료일","종료","끝","끝날","교육 종료"],
+const PLAN_COLS = { dept:["부서","담당부서","교육과","주관","운영부서"], title:["과정명","과정","교육명","제목","일정"], start:["시작일","시작","시작 날짜","교육 시작"], end:["종료일","종료","끝","끝날","교육 종료"],
   cat:["분류","구분","종류"], plan:["계획안","안","확정"], staff:["담당교관","담당 교관","교관","담당"], room:["교육장","장소"], trainees:["인원","교육생","교육생 수"], memo:["메모","비고"] };
 function downloadPlanTemplate(){
   const rows = [["과정명","시작일","종료일","분류","계획안","담당교관","교육장","인원","메모"],
@@ -2698,10 +2731,14 @@ async function readSheet(file){
 function openPlanImport(){
   sheet(`<h3>📥 연간 계획 불러오기<button class="x" data-close aria-label="닫기">✕</button></h3>
     <p class="hint" style="margin:-6px 0 12px">엑셀(.xlsx)이나 CSV 파일의 첫 줄에 <b>과정명, 시작일, 종료일</b> 칸이 있으면 됩니다. 분류(교육/평가), 계획안(O), 담당교관, 교육장, 인원, 메모는 있으면 함께 들어갑니다.</p>
+    <div class="f"><span class="lbl">어디에 넣을까요?</span><div class="picks" id="plTo"><button type="button" class="pick plain" data-v="ours" aria-pressed="true">우리 센터 교육</button><button type="button" class="pick plain" data-v="school" aria-pressed="false">🏫 소방학교 다른 교육</button></div>
+      <p class="hint">소방학교 다른 부서 교육은 회색 빗금으로 따로 표시되고, 필터의 '학교'를 켜야 달력에 보입니다. '부서' 칸이 있으면 함께 들어갑니다.</p></div>
     <div class="actions" style="flex-wrap:wrap"><button class="btn btn-line grow" id="plTpl">⬇ 양식 내려받기</button><label class="btn btn-ink grow" for="plFile">📂 파일 고르기</label><input id="plFile" type="file" accept=".xlsx,.xls,.csv" class="hide"></div>
     <div id="plPrev" style="margin-top:12px"></div>`,
   (root, close) => {
     const q = s => root.querySelector(s);
+    let target = "ours";
+    q("#plTo").addEventListener("click", ev => { const b = ev.target.closest(".pick"); if (!b) return; target = b.dataset.v; q("#plTo").querySelectorAll(".pick").forEach(x => x.setAttribute("aria-pressed", x === b)); });
     q("#plTpl").addEventListener("click", downloadPlanTemplate);
     q("#plFile").addEventListener("change", async ev => {
       const f = ev.target.files[0]; if (!f) return;
@@ -2717,8 +2754,8 @@ function openPlanImport(){
         const catTxt = C.cat >= 0 ? String(r[C.cat]) : "", plan = C.plan >= 0 && /^(o|O|○|예|안|y|Y|true)$/.test(String(r[C.plan]).trim());
         const err = !title ? "과정명 없음" : !start ? "시작일 확인" : end < start ? "종료일이 빠름" : "";
         const id = "i" + Array.from(title + start).reduce((h, ch) => (h * 31 + ch.charCodeAt(0)) >>> 0, 7).toString(36);
-        const dup = S.events.find(e => (e.cat === "edu" || e.cat === "eval") && e.title === title && e.start === start);
-        return { err, dup, ev: { id: dup ? dup.id : id, cat: /평가/.test(catTxt + title) && !/사전연습|대비/.test(title) ? "eval" : "edu", title, start, end, plan,
+        const dup = S.events.find(e => (target === "school" ? e.cat === "school" : (e.cat === "edu" || e.cat === "eval")) && e.title === title && e.start === start);
+        return { err, dup, ev: { id: dup ? dup.id : (target === "school" ? "h" : "") + id, cat: target === "school" ? "school" : /평가/.test(catTxt + title) && !/사전연습|대비/.test(title) ? "eval" : "edu", title, start, end, plan, dept: C.dept >= 0 ? String(r[C.dept]).trim() : "",
           staff: C.staff >= 0 ? String(r[C.staff]).split(/[,·\/\s]+/).map(s => s.trim()).filter(Boolean) : (dup?.staff || []),
           room: C.room >= 0 ? String(r[C.room]).trim() : (dup?.room || ""), trainees: C.trainees >= 0 ? (parseInt(r[C.trainees], 10) || 0) : (dup?.trainees || 0),
           memo: C.memo >= 0 ? String(r[C.memo]).trim() : (dup?.memo || `${f.name}에서 불러옴`), person: "", place: "", half: "full",
@@ -2998,7 +3035,7 @@ function openRotation(course){
 }
 
 /* ---------- 자료실 ---------- */
-const LIB_KINDS = ["교안", "시나리오", "평가표", "체크리스트", "영상", "서식", "기타"];
+const LIB_KINDS = ["교안", "시나리오", "평가표", "체크리스트", "영상", "서식", "기타"];   // 법령은 '법령·조문'에서 따로 관리
 const isUrl = u => /^https?:\/\//i.test(u || "");
 function openLibrary(filter = {}){
   let kind = filter.kind || "", course = filter.course || "";
@@ -3016,7 +3053,7 @@ function openLibrary(filter = {}){
         + (course ? `<button class="chip on" data-c="">${esc(course)} ✕</button>` : "");
       q("#lbK").querySelectorAll("[data-k]").forEach(b => b.onclick = () => { kind = b.dataset.k; paint(); });
       q("#lbK").querySelector("[data-c]")?.addEventListener("click", () => { course = ""; paint(); });
-      const list = [...S.library].sort((a, b) => String(b.at).localeCompare(String(a.at)))
+      const list = [...S.library].filter(l => l.kind !== "법령").sort((a, b) => String(b.at).localeCompare(String(a.at)))
         .filter(l => (!kind || l.kind === kind) && (!course || l.course === course) && (!k || `${l.title} ${l.course} ${l.desc} ${l.kind}`.toLowerCase().includes(k)));
       const groups = new Map(); list.forEach(l => { const g = l.course || "공통"; if (!groups.has(g)) groups.set(g, []); groups.get(g).push(l); });
       q("#lbList").innerHTML = list.length ? [...groups].map(([g, ls]) => `<div class="month-h" style="padding:10px 2px 4px">${esc(g)}</div>${ls.map(l => `<div class="lbrow">
@@ -3154,6 +3191,82 @@ async function openFileViewer(item){
   draw();
 }
 
+/* =========================================================
+   법령·조문 바로가기 (국가법령정보센터 최신 조문으로 연결)
+   ========================================================= */
+const LAW_TYPES = ["법령", "행정규칙", "자치법규"];
+// [종류, 정식 명칭, 묶음]
+const LAW_SUGGEST = [
+  ["법령", "소방기본법", "소방·재난"], ["법령", "재난 및 안전관리 기본법", "소방·재난"], ["법령", "화재의 예방 및 안전관리에 관한 법률", "소방·재난"],
+  ["법령", "긴급구조대응활동 및 현장지휘에 관한 규칙", "현장지휘"], ["행정규칙", "현장지휘관 자격인증제 운영규정", "현장지휘"],
+  ["법령", "소방공무원법", "인사·복무"], ["법령", "소방공무원 복무규정", "인사·복무"], ["법령", "국가공무원 복무규정", "인사·복무"], ["자치법규", "부산광역시 공무원 복무 조례", "인사·복무"], ["법령", "소방공무원 복제 규칙", "인사·복무"],
+  ["법령", "소방공무원 교육훈련규정", "교육훈련"], ["법령", "공무원 인재개발법", "교육훈련"], ["자치법규", "부산광역시 소방학교 교육훈련 학칙", "교육훈련"]
+];
+const normArticle = a => { const m = String(a || "").replace(/\s/g, "").match(/^제?(\d+)조(?:의(\d+))?$/); return m ? `제${m[1]}조${m[2] ? "의" + m[2] : ""}` : ""; };
+const lawUrl = (type, name, art) => `https://www.law.go.kr/${encodeURIComponent(type || "법령")}/${encodeURIComponent(String(name).replace(/\s+/g, ""))}${normArticle(art) ? "/" + encodeURIComponent(normArticle(art)) : ""}`;
+const laws = () => S.library.filter(l => l.kind === "법령");
+function openLaws(){
+  sheet(`<h3>📜 법령·조문<button class="x" data-close aria-label="닫기">✕</button></h3>
+    <p class="hint" style="margin:-6px 0 10px">누르면 <b>국가법령정보센터의 현재 시행 중인 조문</b>이 열립니다. 법이 개정되면 링크는 그대로이고 내용만 최신으로 바뀝니다.</p>
+    <div class="f"><input id="lwQ" type="search" placeholder="법령명, 조문, 메모로 찾기"></div>
+    <div id="lwList"></div>
+    <div class="actions" style="margin-top:10px"><button class="btn btn-line" id="lwAll">📚 추천 법령 한꺼번에 넣기</button><button class="btn btn-fire grow" id="lwAdd">＋ 법령·조문 추가</button></div>`,
+  (root) => {
+    const q = s => root.querySelector(s);
+    const paint = () => {
+      const k = q("#lwQ").value.trim().toLowerCase();
+      const list = laws().filter(l => !k || `${l.lawName} ${l.article} ${l.desc}`.toLowerCase().includes(k))
+        .sort((a, b) => (a.lawName || "").localeCompare(b.lawName || "", "ko") || (parseInt(String(a.article).replace(/\D/g, "")) || 0) - (parseInt(String(b.article).replace(/\D/g, "")) || 0));
+      const g = new Map(); list.forEach(l => { const n = l.lawName || l.title; if (!g.has(n)) g.set(n, []); g.get(n).push(l); });
+      q("#lwList").innerHTML = list.length ? [...g].map(([n, ls]) => `<div class="lwg"><div class="lwh"><b>${esc(n)}</b><small>${esc(ls[0].lawType || "법령")}</small><a class="lnk" href="${esc(lawUrl(ls[0].lawType, n, ""))}" target="_blank" rel="noopener">전문 ↗</a></div>
+        ${ls.map(l => `<div class="lwrow"><a href="${esc(l.url)}" target="_blank" rel="noopener" data-chk="${esc(l.id)}"><b>${esc(normArticle(l.article) || "법령 전체")}</b>${l.desc ? `<span>${esc(l.desc)}</span>` : ""}</a>
+          <small>${l.checkedAt ? `확인 ${ago(l.checkedAt)}${l.checkedBy ? " · " + esc(l.checkedBy) : ""}` : "아직 확인 안 함"}${l.checkedAt && (Date.now() - new Date(l.checkedAt)) > 90 * 864e5 ? ` <span class="old">3달 넘음</span>` : ""}</small>
+          <button class="btn btn-line btn-sm" data-ok="${esc(l.id)}">✓ 확인</button><button class="btn btn-line btn-sm" data-ed="${esc(l.id)}">수정</button></div>`).join("")}</div>`).join("")
+        : `<div class="empty">${laws().length ? "찾는 법령이 없습니다." : "자주 보는 법령·조문을 모아 두세요. 아래 추가 버튼에 자주 쓰는 법령이 준비돼 있습니다."}</div>`;
+      q("#lwList").querySelectorAll("[data-ok]").forEach(b => b.onclick = async () => { const l = S.library.find(x => x.id === b.dataset.ok); try { await store.saveLib({ ...l, checkedAt: new Date().toISOString(), checkedBy: S.me.name }); setTimeout(paint, 250); toast("확인한 날짜를 남겼습니다."); } catch(e){ toast("저장하지 못했습니다."); } });
+      q("#lwList").querySelectorAll("[data-ed]").forEach(b => b.onclick = () => openLawForm(S.library.find(x => x.id === b.dataset.ed)));
+    };
+    q("#lwQ").addEventListener("input", paint);
+    q("#lwAdd").onclick = () => openLawForm();
+    q("#lwAll")?.addEventListener("click", async () => {
+      const have = new Set(laws().map(l => l.lawName)), add = LAW_SUGGEST.filter(x => !have.has(x[1]));
+      if (!add.length) return toast("추천 법령이 모두 들어 있습니다.");
+      if (!confirm(`추천 법령 ${add.length}개를 한꺼번에 넣을까요?\n${add.map(x => "· " + x[1]).join("\n")}`)) return;
+      try { for (const [tp, n, g] of add) await store.saveLib({ id: "B" + Date.now().toString(36) + Math.random().toString(36).slice(2, 5), kind: "법령", lawType: tp, lawName: n, article: "", desc: g, title: n, url: lawUrl(tp, n, ""), course: "법령", by: S.me.name, at: new Date().toISOString(), editedBy: S.me.name });
+        setTimeout(paint, 300); toast(`${add.length}개를 넣었습니다. 조문은 '수정'에서 붙일 수 있습니다.`); } catch(e){ toast("넣지 못했습니다."); }
+    });
+    paint();
+  });
+}
+function openLawForm(l0){
+  const l = l0 ? { ...l0 } : { lawType: "법령", lawName: "", article: "", desc: "" };
+  sheet(`<h3>${l0 ? "법령·조문 수정" : "법령·조문 추가"}<button class="x" data-close aria-label="닫기">✕</button></h3>
+    <div class="f"><span class="lbl">종류</span><div class="picks" id="lfT2">${LAW_TYPES.map(t => `<button type="button" class="pick plain" data-v="${t}" aria-pressed="${l.lawType === t}">${t}</button>`).join("")}</div>
+      <p class="hint">법률·시행령·시행규칙은 '법령', 훈령·예규·고시는 '행정규칙', 부산시 조례·규칙은 '자치법규'입니다.</p></div>
+    <div class="f"><label for="lfN">법령 이름 (정식 명칭)</label><input id="lfN" value="${esc(l.lawName)}" placeholder="예: 소방기본법">${[...new Set(LAW_SUGGEST.map(x => x[2]))].map(g => `<div class="lwsg"><small>${g}</small><div class="quick">${LAW_SUGGEST.filter(x => x[2] === g).map(([t, n]) => `<button type="button" data-sg="${esc(n)}" data-st="${t}" ${laws().some(l => l.lawName === n) ? 'class="have"' : ""}>${esc(n)}</button>`).join("")}</div></div>`).join("")}</div>
+    <div class="f"><label for="lfA">조문 (선택)</label><input id="lfA" value="${esc(l.article)}" placeholder="예: 제16조, 제16조의2 — 비우면 법령 전체" style="max-width:260px"></div>
+    <div class="f"><label for="lfD2">메모 (선택)</label><input id="lfD2" value="${esc(l.desc)}" maxlength="80" placeholder="예: 소방활동 — 현장지휘 근거"></div>
+    <div class="dinfo" id="lfPrev"></div>
+    <div class="actions" style="margin-top:12px">${l0 ? `<button class="btn btn-danger" id="lfDel2">삭제</button>` : `<button class="btn btn-line" data-close>취소</button>`}<button class="btn btn-line" id="lfTry">열어 보기</button><button class="btn btn-fire grow" id="lfSave2">저장</button></div>`,
+  (root, close) => {
+    const q = s => root.querySelector(s);
+    const prev = () => { const a = q("#lfA").value.trim(); q("#lfPrev").innerHTML = q("#lfN").value.trim() ? `연결 주소: <small style="word-break:break-all">${esc(decodeURI(lawUrl(l.lawType, q("#lfN").value.trim(), a)))}</small>${a && !normArticle(a) ? `<br><span style="color:var(--fire)">조문은 '제16조', '제16조의2'처럼 적어 주세요.</span>` : ""}` : "법령 이름을 넣으면 연결 주소가 만들어집니다."; };
+    q("#lfT2").addEventListener("click", ev => { const b = ev.target.closest(".pick"); if (!b) return; l.lawType = b.dataset.v; q("#lfT2").querySelectorAll(".pick").forEach(x => x.setAttribute("aria-pressed", x === b)); prev(); });
+    root.querySelectorAll("[data-sg]").forEach(b => b.onclick = () => { q("#lfN").value = b.dataset.sg; l.lawType = b.dataset.st; q("#lfT2").querySelectorAll(".pick").forEach(x => x.setAttribute("aria-pressed", x.dataset.v === l.lawType)); prev(); });
+    ["#lfN", "#lfA"].forEach(s => q(s).addEventListener("input", prev)); prev();
+    q("#lfTry").onclick = () => { const n = q("#lfN").value.trim(); if (!n) return toast("법령 이름을 넣어 주세요."); window.open(lawUrl(l.lawType, n, q("#lfA").value), "_blank", "noopener"); };
+    q("#lfSave2").addEventListener("click", async () => {
+      const name = q("#lfN").value.trim(), art = q("#lfA").value.trim();
+      if (!name) return toast("법령 이름을 넣어 주세요.");
+      if (art && !normArticle(art)) return toast("조문은 '제16조', '제16조의2'처럼 적어 주세요.");
+      const rec = { ...l, id: l.id || "B" + Date.now().toString(36), kind: "법령", lawName: name, article: normArticle(art), desc: q("#lfD2").value.trim(),
+        title: `${name}${normArticle(art) ? " " + normArticle(art) : ""}`, url: lawUrl(l.lawType, name, art), course: "법령", by: l.by || S.me.name, at: l.at || new Date().toISOString(), editedBy: S.me.name };
+      try { await store.saveLib(rec); close(); openLaws(); toast("저장했습니다."); } catch(e){ console.error(e); toast("저장하지 못했습니다. 보안 규칙을 확인해 주세요."); }
+    });
+    q("#lfDel2")?.addEventListener("click", async () => { if (!confirm("이 항목을 지울까요?")) return; try { await store.delLib(l.id); close(); openLaws(); } catch(e){ toast("지우지 못했습니다."); } });
+  });
+}
+
 /* ---------- 업무 사이트 바로가기 ---------- */
 const LINK_SUGGEST = ["ICTC 지휘포털", "행정포털", "EIMS", "시도소방통합포털", "전자 전술상황판", "지휘통제절차"];
 const linkList = () => S.links || [];
@@ -3243,7 +3356,8 @@ function openAnnual(){
 }
 function toolsHTML(){
   return `<div class="card wide" data-fold="tools"><h3>🧰 교육 도구</h3><div class="body"><div class="tools">
-    <button class="tool" data-tool="lib"><b>📚</b>훈련 자료실 <small>${S.library.length || ""}</small></button>
+    <button class="tool" data-tool="lib"><b>📚</b>훈련 자료실 <small>${S.library.filter(l => l.kind !== "법령").length || ""}</small></button>
+    <button class="tool" data-tool="law"><b>📜</b>법령·조문</button>
     <button class="tool" data-tool="ann"><b>📈</b>연간 교육 실적</button>
     <button class="tool" data-tool="ckl"><b>✅</b>준비 체크리스트</button>
     <button class="tool" data-tool="ckt"><b>📋</b>과정별 템플릿</button></div></div></div>`;
@@ -3253,6 +3367,7 @@ function bindTools(g){
     const k = b.dataset.tool;
     if (k === "rot") openRotation(null);
     else if (k === "lib") openLibrary();
+    else if (k === "law") openLaws();
     else if (k === "ann") openAnnual();
     else if (k === "ckl") openPrepBoard();
     else if (k === "ckt") openCkTemplates();
@@ -3599,6 +3714,7 @@ const DEMO_PHOTO = new Map(), PHOTO_CACHE = new Map();
 const renderPhotoIfOpen = () => { if (S.view === "photo") renderPhotos(); };
 const canDelPhoto = p => true;
 function renderPhotos(){
+  if (S.mode === "shared" && S.photoLimit < 400){ S.photoLimit = 400; subPhotos(); }
   const bytes = S.photos.reduce((s, p) => s + (p.size || 330000), 0), mb = bytes / 1048576;
   $("pInfo").innerHTML = S.photos.length ? `사진 ${S.photos.length}장 · ${mb < 0.1 ? "0.1MB 미만" : "약 " + (mb < 10 ? mb.toFixed(1) : Math.round(mb)) + "MB"} 사용 <span>(무료 저장공간 1GB 중 ${bytes / 1073741824 * 100 < 1 ? "1% 미만" : "약 " + Math.round(bytes / 1073741824 * 100) + "%"})</span>` : "";
   const albums = [...new Map(S.photos.map(p => [p.album || "기타", p.at])).keys()];
@@ -3807,6 +3923,7 @@ function openDetail(id){
     e.person && [PERSONAL.includes(e.cat) ? "이름" : "담당", e.person],
     staffOf(e).length && ["담당 교관", staffOf(e).join(", ")],
     resultText(e) && ["결과", resultText(e) + (e.result?.note ? " · " + e.result.note : "")],
+    e.cat === "school" && ["구분", `부산소방학교 ${e.dept ? e.dept + " 분야 " : ""}교육 (우리 센터 교육 아님)`],
     e.res && ["예약 대상", e.res],
     e.place && ["장소", e.place],
     (e.title && (e.cat === "trip" || e.cat === "leave")) && ["내용", e.title],
@@ -3856,7 +3973,7 @@ function openDetail(id){
 function openForm(e, day, preset){
   const isNew = !e;
   const v = e ? { ...e } : { cat:"trip", half:"full", person: S.person || S.me.name, place:"", title:"", memo:"", ...(preset || {}), start: day || S.sel, end: preset?.end || day || S.sel };
-  const cats = ["trip","leave","duty","resv","edu","eval","etc"];
+  const cats = ["trip","leave","duty","resv","edu","eval","etc","school"];
   const names = [...new Set([S.me.name, ...S.events.map(x => x.person)].filter(Boolean))].sort();
   sheet(`<h3>${isNew ? "일정 등록" : "일정 수정"}<button class="x" data-close aria-label="닫기">✕</button></h3>
     <div class="f"><span class="lbl">분류</span><div class="picks" id="fCat">${cats.map(c => `<button type="button" class="pick" data-v="${c}" aria-pressed="${v.cat===c}">${CATS[c]}</button>`).join("")}</div></div>
@@ -3906,7 +4023,7 @@ function openForm(e, day, preset){
       q("#wRes").classList.toggle("hide", c !== "resv");
       q("#wHalf").classList.toggle("hide", c !== "leave");
       q("#wPlace").classList.toggle("hide", !(c === "trip" || c === "edu" || c === "eval" || c === "etc"));
-      q("#lTitle").textContent = personal ? "내용 (선택)" : (c === "etc" ? "무엇을" : "과정명");
+      q("#lTitle").textContent = personal ? "내용 (선택)" : (c === "etc" ? "무엇을" : c === "school" ? "과정명 (소방학교 다른 교육)" : "과정명");
       q("#fTitle").placeholder = c === "trip" ? "예: 팀단위 전술훈련 지원" : c === "leave" ? "사유는 적지 않아도 됩니다" : c === "etc" ? "예: 센터 회의, 장비 점검" : "예: 7기 초급현장지휘관 양성과정";
       q("#fEnd").disabled = c === "leave" && v.half !== "full";
       q("#wKind").classList.toggle("hide", c !== "leave");
@@ -4059,7 +4176,7 @@ function openForm(e, day, preset){
         const cl = resvClash(ev);
         if (cl.length) return toast(`이미 예약되어 있습니다: ${cl.map(x => `${md(x.start)} ${x.time ? x.time + "~" + (x.timeEnd || "") : "종일"} ${x.person}`).join(", ")}`);
       }
-      if ((ev.cat === "edu" || ev.cat === "eval" || ev.cat === "etc") && !ev.title) return toast(v.cat === "etc" ? "무엇을 하는지 적어 주세요." : "과정명을 적어 주세요.");
+      if ((ev.cat === "edu" || ev.cat === "eval" || ev.cat === "etc" || ev.cat === "school") && !ev.title) return toast(v.cat === "etc" ? "무엇을 하는지 적어 주세요." : "과정명을 적어 주세요.");
       let list = [ev];
       if (isNew && rep !== "none" && v.cat !== "leave" && v.cat !== "duty"){
         const until = q("#fRepEnd").value;
@@ -4121,6 +4238,7 @@ const commonSettings = () => `<div class="setgrid">
     <button class="btn btn-line" data-set="ckdef">📋 과정별 준비 체크리스트</button>
     <button class="btn btn-line" data-set="backup">💾 백업 · 복원</button>
     ${S.mode === "shared" ? `<button class="btn btn-line" data-set="imp">📥 교육계획 다시 불러오기</button>` : ""}
+    <button class="btn btn-line" data-set="impS">🏫 학교 교육계획 넣기 (${SCHOOL_SEED.length}건)</button>
   </div>`;
 function bindCommon(root, close){
   root.querySelectorAll("[data-set]").forEach(b => b.addEventListener("click", async () => {
@@ -4143,6 +4261,10 @@ function bindCommon(root, close){
     else if (k === "backup") openBackup();
     else if (k === "img"){ close(); shareWeekImage().catch(e => { console.error(e); toast("이미지를 만들지 못했습니다."); }); }
     else if (k === "bg"){ close(); setView("home"); openBg(); }
+    else if (k === "impS"){
+      if (!confirm(`2026년도 부산소방학교 교육훈련계획의 다른 부서 교육 ${SCHOOL_SEED.length}건을 넣을까요?\n(지휘·긴급구조 관련 과정은 우리 일정과 겹쳐 넣지 않습니다)`)) return;
+      try { const n = await store.importSeed("school"); close(); S.on.add("school"); render(); toast(`학교 교육 ${n}건을 넣었습니다. 필터 '🏫 학교교육'으로 켜고 끌 수 있습니다.`); } catch(e){ console.error(e); toast("넣지 못했습니다."); }
+    }
     else if (k === "imp"){
       if (!confirm("연간 교육계획을 다시 불러올까요? 같은 일정은 원래 내용으로 덮어씁니다.")) return;
       try { const n = await store.importSeed(); close(); toast(`교육계획 ${n}건을 불러왔습니다.`); } catch(e){ console.error(e); toast("불러오지 못했습니다."); }
@@ -4242,7 +4364,7 @@ function openColors(){
     </div>`;
   sheet(`<h3>과정 색깔<button class="x" data-close aria-label="닫기">✕</button></h3>
     <p class="hint" style="margin:-6px 0 12px">색 칸을 눌러 고르세요. 저장하면 직원 모두의 화면에 바로 바뀝니다. 같은 과정의 평가는 이 색을 진하게 채워서 보여 줍니다.</p>
-    <div class="cgrid">${[...COURSE.map(c => c[1]), "other"].map(id => row(id, "")).join("")}</div>
+    <div class="cgrid">${[...COURSE.map(c => c[1]), "other", "school"].map(id => row(id, "")).join("")}</div>
     <div class="f" style="margin-top:14px"><span class="lbl">출장·휴가·기타 (테두리 색)</span></div>
     <div class="cgrid">${Object.keys(PCOL).map(id => row(id, "out")).join("")}</div>
     <div class="f" style="margin-top:14px"><span class="lbl">추천 색 <span style="font-weight:500;color:var(--muted)">· 위에서 바꿀 줄을 먼저 누른 뒤 고르세요</span></span>
@@ -4366,13 +4488,33 @@ async function startDemo(){
 
 /* --- 공유 모드 --- */
 let unsubs = [];
+let photoUnsub = null;
+function subPhotos(){
+  const { fs, db } = S.fb;
+  photoUnsub?.();
+  photoUnsub = fs.onSnapshot(fs.query(fs.collection(db, "photos"), fs.orderBy("at", "desc"), fs.limit(S.photoLimit)), snap => {
+    S.photos = snap.docs.map(d => ({ ...d.data(), id: d.id })); renderPhotoIfOpen(); if (S.view === "home") renderHome();
+  }, err => console.warn("사진을 불러오지 못했습니다(보안 규칙 확인)", err));
+}
 async function enterShared(){
   const { fs, db, authObj } = S.fb, uid = authObj.currentUser.uid;
-  unsubs.forEach(u => u()); unsubs = [];
+  unsubs.forEach(u => u()); unsubs = []; photoUnsub?.(); photoUnsub = null;
   S.me = { name: myName() };
-  try { const a = await fs.getDoc(fs.doc(db, "adminSessions", uid)); S.adminUntil = a.exists() ? a.data().exp.toMillis() : 0; } catch(e){ S.adminUntil = 0; }
+  // 관리자 모드 확인은 화면을 막지 않고 뒤에서
+  fs.getDoc(fs.doc(db, "adminSessions", uid)).then(a => { S.adminUntil = a.exists() ? a.data().exp.toMillis() : 0; if (S.adminUntil) renderTop(); }).catch(() => { S.adminUntil = 0; });
   await new Promise((resolve, reject) => {
     let first = true;
+    // ① 일정을 가장 먼저 받아 화면을 띄움
+    unsubs.push(fs.onSnapshot(fs.collection(db, "events"), snap => {
+      S.events = snap.docs.map(d => ({ half:"full", ...d.data(), id: d.id }));
+      if (first){ first = false; showApp(); resolve(); setTimeout(startSecondary, 150); } else render();
+    }, err => {
+      unsubs.forEach(u => u()); unsubs = []; photoUnsub?.(); photoUnsub = null;
+      if (first){ first = false; reject(err); }
+      else store.getAccess().then(a => { S.access = a; showLogin("접속 방식이나 공용 비밀번호가 바뀌었습니다. 다시 들어와 주세요."); });
+    }));
+    // ② 나머지(공지·할 일·댓글·사진·배경 등)는 화면이 뜬 뒤에 차례로
+    function startSecondary(){
     unsubs.push(fs.onSnapshot(fs.doc(db, "settings", "checklist"), d => { const v = d.exists() ? d.data() : {}; S.ckSets = v.sets || null; S.ckRemoved = v.removed || []; }, err => console.warn(err)));
     unsubs.push(fs.onSnapshot(fs.doc(db, "settings", "resources"), d => { S.resources = d.exists() ? (d.data().list || null) : null; }, err => console.warn(err)));
     unsubs.push(fs.onSnapshot(fs.doc(db, "homeBg", "main"), d => {
@@ -4387,23 +4529,14 @@ async function enterShared(){
     unsubs.push(fs.onSnapshot(fs.collection(db, "comments"), snap => {
       S.comments = snap.docs.map(d => ({ ...d.data(), id: d.id })); if (!first) onSocial();
     }, err => console.warn("댓글을 불러오지 못했습니다(보안 규칙 확인)", err)));
-    unsubs.push(fs.onSnapshot(fs.query(fs.collection(db, "photos"), fs.orderBy("at", "desc"), fs.limit(400)), snap => {
-      S.photos = snap.docs.map(d => ({ ...d.data(), id: d.id })); renderPhotoIfOpen(); if (!first && S.view === "home") renderHome();
-    }, err => console.warn("사진을 불러오지 못했습니다(보안 규칙 확인)", err)));
     unsubs.push(fs.onSnapshot(fs.collection(db, "notices"), snap => {
       S.notices = snap.docs.map(d => ({ ...d.data(), id: d.id })); if (!first) render();
     }, err => console.warn("공지를 불러오지 못했습니다(보안 규칙 확인)", err)));
     unsubs.push(fs.onSnapshot(fs.doc(db, "settings", "colors"), d => {
       S.colors = d.exists() ? (d.data().c || {}) : {}; if (!first) render();
     }, err => console.warn(err)));
-    unsubs.push(fs.onSnapshot(fs.collection(db, "events"), snap => {
-      S.events = snap.docs.map(d => ({ half:"full", ...d.data(), id: d.id }));
-      if (first){ first = false; showApp(); resolve(); } else render();
-    }, err => {
-      unsubs.forEach(u => u()); unsubs = [];
-      if (first){ first = false; reject(err); }
-      else store.getAccess().then(a => { S.access = a; showLogin("접속 방식이나 공용 비밀번호가 바뀌었습니다. 다시 들어와 주세요."); });
-    }));
+      setTimeout(subPhotos, 400);
+    }
   });
 }
 async function startShared(){
@@ -4421,7 +4554,8 @@ async function startShared(){
   catch(e){ console.warn("오프라인 저장 없이 진행", e); db = fs.getFirestore(app); }
   S.mode = "shared"; S.fb = { fs, db, auth, authObj };
   await authObj.authStateReady();
-  S.access = await store.getAccess();
+  const accessP = store.getAccess().then(a => (S.access = a));
+  if (!(authObj.currentUser && myName())) await accessP;
   if (authObj.currentUser && myName()){
     try { await enterShared(); return; } catch(e){ /* 세션 없음 또는 비밀번호 변경됨 */ }
   }
