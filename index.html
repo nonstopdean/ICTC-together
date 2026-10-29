@@ -531,6 +531,8 @@ body.locked{overflow:hidden}
 .sisub{font-weight:700;margin:10px 0 4px}
 .sinfo details{border-top:1px solid var(--line2);padding:6px 0} .sinfo summary{cursor:pointer;font-weight:600} .sinfo summary small{color:var(--muted);font-weight:500;margin-left:4px}
 .sigrid{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px} .sigrid span{background:var(--card);border-radius:6px;padding:3px 8px;font-size:12.5px} .sigrid i{font-style:normal;color:var(--muted);margin-left:4px;font-size:11px}
+.schhead .lnk{margin-left:auto;float:right;font-size:12px}
+details.sinfo > summary{list-style:none;cursor:pointer;margin:0} details.sinfo[open] > summary{margin-bottom:6px}
 .lwsg{margin-top:6px} .lwsg > small{font-size:11.5px;font-weight:700;color:var(--muted)} .lwsg .quick{margin-top:2px} .lwsg button.have{opacity:.45}
 .wk .sec.sch{color:#6b7785} .wk .sec small{font-weight:500;margin-left:6px}
 .legend i.sch{background:repeating-linear-gradient(135deg,color-mix(in srgb,var(--c) 15%,var(--card)) 0 3px,color-mix(in srgb,var(--c) 35%,var(--card)) 3px 5px)}
@@ -1068,7 +1070,7 @@ const label0 = e => {
   if (e.cat === "trip") return `${e.person} 출장${e.place ? " · " + e.place : (e.title ? " · " + e.title : "")}`;
   if (e.cat === "leave") return `${e.person} ${leaveText(e)}`;
   if (e.cat === "duty") return `${e.person} ${dutyKind(e)}`;
-  if (e.cat === "school") return `🏫 ${e.dept ? "[" + e.dept + "] " : ""}${e.title}`;
+  if (e.cat === "school") return e.daily ? `🏫 ${courseShort(e.course)}${courseShort(e.course) ? " · " : ""}${e.title}` : `🏫 ${e.dept ? "[" + e.dept + "] " : ""}${e.title}`;
   if (e.cat === "resv") return `${e.res || "예약"} · ${e.person || ""}${e.title ? " (" + e.title + ")" : ""}`;
   if (e.cat === "etc" && e.person) return `${e.person} · ${e.title}`;
   return e.title + (e.plan ? " (안)" : "");
@@ -1456,7 +1458,7 @@ function renderBoard(){
   const d = pd(TODAY);
   const today = onDay(S.events, TODAY);
   const training = sortEv(today.filter(e => e.cat === "edu" || e.cat === "eval"));
-  const schoolT = sortEv(today.filter(e => e.cat === "school"));
+  const schoolT0 = sortEv(today.filter(e => e.cat === "school")), schoolT = [...schoolT0.filter(e => e.daily), ...schoolT0.filter(e => !e.daily)];
   const away = sortEv(today.filter(e => e.cat === "trip" || e.cat === "leave"));
   const etc = today.filter(e => e.cat === "etc");
   const dutyT = dutyOn(S.events, TODAY), dutyN = dutyOn(S.events, ymd(addDays(pd(TODAY), 1)));
@@ -1468,7 +1470,7 @@ function renderBoard(){
     <div class="board-body">
       ${teamPref().show ? `<span class="btm ${teamPref().mine === teamOf(TODAY) ? "mine" : ""}" title="근무 팀은 내 이름 → 근무 팀 표시에서 바꿀 수 있습니다">오늘 <b>${teamOf(TODAY)}팀</b> 근무</span>` : ""}
       <div class="board-row"><b>교육</b><div class="val">${training.length ? training.map(tag).join("") : `<span class="none">진행 중인 교육·평가 없음</span>`}</div></div>
-      ${schoolT.length ? `<div class="board-row schrowb"><b>학교</b><div class="val">${schoolT.slice(0, 3).map(e => `<button class="tag cc sch" style="${tst(e)}" data-id="${esc(e.id)}">${esc(e.dept ? e.dept + " · " : "")}${esc(e.title)}</button>`).join("")}${schoolT.length > 3 ? `<button class="schsum" id="schToday">외 ${schoolT.length - 3}건 ›</button>` : ""}</div></div>` : ""}
+      ${schoolT.length ? `<div class="board-row schrowb"><b>학교</b><div class="val">${schoolT.slice(0, 3).map(e => `<button class="tag cc sch" style="${tst(e)}" data-id="${esc(e.id)}">${e.daily ? esc(label(e).replace("🏫 ", "")) : esc((e.dept ? e.dept + " · " : "") + e.title)}</button>`).join("")}${schoolT.length > 3 ? `<button class="schsum" id="schToday">외 ${schoolT.length - 3}건 ›</button>` : ""}</div></div>` : ""}
       <div class="board-row"><b>부재</b><div class="val">${away.length ? away.map(tag).join("") : `<span class="none">오늘 등록된 출장·휴가 없음</span>`}</div></div>
       ${dutyT.length || dutyN.length ? `<div class="board-row"><b>당직</b><div class="val">${dutyT.length ? dutyT.map(tag).join("") : `<span class="none">오늘 없음</span>`}${dutyN.length ? `<span class="none" style="padding-top:3px">내일 ${esc(dutyN.map(e => e.person).join("·"))}</span>` : ""}</div></div>` : ""}
       ${etc.length ? `<div class="board-row"><b>기타</b><div class="val">${etc.map(tag).join("")}</div></div>` : ""}
@@ -1883,6 +1885,7 @@ function openSchool(opt = {}){
   sheet(`<h3>🏫 소방학교 다른 교육<button class="x" data-close aria-label="닫기">✕</button></h3>
     <p class="hint" style="margin:-6px 0 10px">2026년도 부산소방학교 교육훈련계획 중 <b>우리 센터 외 다른 분야</b> 교육입니다. 우리 달력에는 날짜 옆 🏫 숫자로만 표시됩니다.</p>
     ${opt.day ? `<div class="dinfo" style="margin-bottom:10px"><b>${mdw(opt.day)}</b> 진행 중: ${schOn(all, opt.day).map(e => esc(e.title)).join(", ") || "없음"}</div>` : ""}
+    <button class="btn btn-fire" id="scAdd" style="width:100%;margin-bottom:10px">＋ 학교 일정 넣기 (그날 무엇을 하는지)</button>
     <div class="stbar"><button class="nav" id="scP">‹</button><b id="scM"></b><button class="nav" id="scN">›</button><button class="btn btn-line btn-sm" id="scAll">전체</button></div>
     <div class="albums" id="scD" style="padding:0 0 8px"></div>
     <div id="scList"></div>`,
@@ -1899,24 +1902,78 @@ function openSchool(opt = {}){
       q("#scList").querySelectorAll("[data-id]").forEach(b => b.onclick = () => openDetail(b.dataset.id));
     };
     const shiftM = d => { const base = month || TODAY.slice(0, 7), x = new Date(+base.slice(0, 4), +base.slice(5) - 1 + d, 1, 12); month = ymd(x).slice(0, 7); paint(); };
+    q("#scAdd").onclick = () => openSchoolDay(opt.day || TODAY);
     q("#scP").onclick = () => shiftM(-1); q("#scN").onclick = () => shiftM(1); q("#scAll").onclick = () => { month = ""; paint(); };
     paint();
   });
 }
+const courseShort = c => String(c || "").replace(/\s*\d+회$/, "").replace(/\s*(과정|교육과정)$/, "").replace(/^신규임용자$/, "신규");
+/* ---------- 학교 일일 일정 (예: 환자 분류 및 실습, 화재대응 2급 평가, 체력측정) ---------- */
+function activeSchool(ds){ return sortEv(S.events.filter(e => e.cat === "school" && !e.daily && e.start <= ds && e.end >= ds)); }
+function guessCourse(ds, text){
+  const act = activeSchool(ds);
+  const hit = act.find(e => { const k = courseShort(e.title).replace(/\s/g, ""); return k && String(text).replace(/\s/g, "").includes(k.slice(0, 2)); });
+  return hit ? hit.title : (act.length === 1 ? act[0].title : "");
+}
+function parseSchoolLines(txt, year){
+  const out = []; let lastDs = "";
+  String(txt || "").split("\n").map(s => s.trim()).filter(Boolean).forEach(line => {
+    const m = line.match(/^(?:(\d{4})[.\-\/년]\s*)?(\d{1,2})\s*[.\-\/월]\s*(\d{1,2})\s*일?\.?\s*(?:\([월화수목금토일]\))?\s*[:\-·]?\s*(.*)$/);
+    if (m){ lastDs = `${m[1] || year}-${pad(+m[2])}-${pad(+m[3])}`; if (m[4]) out.push({ ds: lastDs, text: m[4].trim() }); }
+    else if (lastDs) out.push({ ds: lastDs, text: line.replace(/^[-•·∙□○]\s*/, "") });
+  });
+  return out.filter(x => x.text);
+}
+function openSchoolDay(ds0){
+  const ds = ds0 || TODAY;
+  sheet(`<h3>🏫 학교 일정 넣기<button class="x" data-close aria-label="닫기">✕</button></h3>
+    <p class="hint" style="margin:-6px 0 10px">소방학교 다른 과정이 그날 무엇을 하는지 적어 두면 달력 아래쪽에 함께 보입니다. 예: 환자 분류 및 실습, 화재대응 2급 평가, 체력측정</p>
+    <div class="seg" id="sdT" style="margin-bottom:10px"><button data-v="one" aria-pressed="true">하나씩</button><button data-v="many" aria-pressed="false">여러 줄 붙여넣기</button></div>
+    <div id="sdOne">
+      <div class="two"><div class="f"><label for="sdD">날짜</label><input id="sdD" type="date" value="${ds}"></div>
+        <div class="f"><label for="sdC">과정</label><select id="sdC"></select></div></div>
+      <div class="f"><label for="sdX">무엇을 하나요</label><input id="sdX" maxlength="60" placeholder="예: 환자 분류 및 실습"><div class="quick" id="sdQ">${["체력측정","화재 분야 평가","구조 분야 평가","구급 분야 평가","현장학습","입교식","수료식"].map(x => `<button type="button" data-q="${x}">${x}</button>`).join("")}</div></div>
+    </div>
+    <div id="sdMany" class="hide">
+      <div class="f"><label for="sdP">주간 교육일정을 붙여 넣으세요</label><textarea id="sdP" style="min-height:160px" placeholder="10.27(화) 환자 분류 및 실습&#10;10.28(수) 화재대응 2급 평가&#10;10.29(목)&#10;- 체력측정&#10;- 로프하강"></textarea>
+        <p class="hint">날짜로 시작하는 줄, 또는 날짜 아래 줄마다 하나씩 들어갑니다. 과정은 그날 진행 중인 학교 과정으로 자동으로 붙습니다.</p></div>
+      <div id="sdPrev"></div>
+    </div>
+    <div class="actions"><button class="btn btn-line" data-close>취소</button><button class="btn btn-fire grow" id="sdSave">저장</button></div>`,
+  (root, close) => {
+    const q = s => root.querySelector(s); let mode = "one";
+    const fillC = () => { const d = q("#sdD").value || TODAY, act = activeSchool(d); q("#sdC").innerHTML = act.map(e => `<option value="${esc(e.title)}">${esc(courseShort(e.title))}</option>`).join("") + `<option value="">(과정 없이)</option>`; };
+    q("#sdD").addEventListener("change", fillC); fillC();
+    root.querySelectorAll("[data-q]").forEach(b => b.onclick = () => { q("#sdX").value = b.dataset.q; });
+    q("#sdT").addEventListener("click", ev => { const b = ev.target.closest("[data-v]"); if (!b) return; mode = b.dataset.v; q("#sdT").querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", x === b)); q("#sdOne").classList.toggle("hide", mode !== "one"); q("#sdMany").classList.toggle("hide", mode !== "many"); });
+    const parsed = () => parseSchoolLines(q("#sdP").value, ds.slice(0, 4)).map(x => ({ ...x, course: guessCourse(x.ds, x.text) }));
+    q("#sdP").addEventListener("input", () => { const l = parsed(); q("#sdPrev").innerHTML = l.length ? `<div class="dinfo">${l.map(x => `${md(x.ds)} · ${esc(courseShort(x.course) || "과정 없음")} · ${esc(x.text)}`).join("<br>")}</div>` : ""; });
+    q("#sdSave").addEventListener("click", async () => {
+      const mk = (d, course, text) => { const c = S.events.find(e => e.title === course && e.cat === "school"); return { id: "hd" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), cat: "school", daily: true, start: d, end: d, title: text, course, dept: c?.dept || "", memo: "", person: "", place: "", half: "full", ownerName: S.me.name, editedBy: S.me.name, updatedAt: new Date().toISOString() }; };
+      let list = [];
+      if (mode === "one"){ const x = q("#sdX").value.trim(), d = q("#sdD").value; if (!x || !d) return toast("날짜와 내용을 넣어 주세요."); list = [mk(d, q("#sdC").value, x)]; }
+      else { list = parsed().map(x => mk(x.ds, x.course, x.text)); if (!list.length) return toast("날짜가 들어간 줄을 찾지 못했습니다."); }
+      try { await (list.length > 1 ? store.saveMany(list, { note: `학교 일정 ${list.length}건` }) : store.saveEvent(list[0])); S.on.add("school"); close(); render(); toast(`학교 일정 ${list.length}건을 넣었습니다.`); }
+      catch(e){ console.error(e); toast("저장하지 못했습니다."); }
+    });
+  });
+}
 function schoolInfoHTML(e){
+  if (e.daily) return "";
   const x = schoolInfo(e); if (!x) return "";
   const groups = (x.groups || []).filter(g => g[1].length);
   const total = groups.reduce((s, g) => s + g[1].reduce((a, b) => a + b[1], 0), 0);
   const today = TODAY >= e.start && TODAY <= e.end ? `<div class="sinow">오늘은 이 과정의 <b>${workdays(e.start, TODAY)}일차</b>입니다. (전체 ${workdays(e.start, e.end)}일)</div>` : "";
-  return `<div class="sinfo"><div class="sih">📘 교육 내용 <small>2026 세부 운영계획 기준</small></div>${today}
+  return `<details class="sinfo"><summary class="sih">📘 과정 소개 <small>세부 운영계획 · 눌러서 보기</small></summary>${today}
     ${x.goal ? `<p><b>목표</b> ${esc(x.goal)}</p>` : ""}${x.target ? `<p><b>대상</b> ${esc(x.target)}</p>` : ""}${x.period ? `<p><b>기간</b> ${esc(x.period)}</p>` : ""}
     ${x.abil?.length ? `<ul>${x.abil.map(a => `<li>${esc(a)}</li>`).join("")}</ul>` : ""}
     ${groups.length ? `<div class="sisub">주요 교과목 <small style="font-weight:500;color:var(--muted)">분야를 누르면 펼쳐집니다</small></div>${groups.map((g, i) => `<details ${groups.length === 1 ? "open" : ""}><summary>${esc(g[0] || (groups.length > 1 ? "공통·소방실무" : "교과목"))} <small>${g[1].length}과목 · ${g[1].reduce((a, b) => a + b[1], 0)}시간</small></summary><div class="sigrid">${g[1].map(s => `<span>${esc(s[0])}<i>${s[1]}h</i></span>`).join("")}</div></details>`).join("")}` : ""}
-    <p class="hint" style="margin:8px 0 0">계획서에는 날짜별 시간표가 없어 과목 구성만 보여 드립니다.</p></div>`;
+    </details>`;
 }
 function schoolBlock(list){
   if (!list.length) return "";
-  return `<div class="schhead">🏫 소방학교 다른 교육 ${list.length}건 <small>우리 일정 아님 · 누르면 교육 내용</small></div>${list.map(itemHTML).join("")}`;
+  const daily = list.filter(e => e.daily), courses = list.filter(e => !e.daily);
+  return `<div class="schhead">🏫 소방학교 다른 교육 <small>우리 일정 아님</small><button class="lnk" data-sday2="1">＋ 이날 학교 일정</button></div>${daily.map(itemHTML).join("")}${courses.map(itemHTML).join("")}`;
   return `<details class="schblk"><summary>🏫 같은 날 소방학교 다른 교육 ${list.length}건 <small>우리 일정 아님</small></summary>
     <div class="schlist">${list.map(e => `<button class="schrow" data-id="${esc(e.id)}"><b>${esc(e.title)}</b><small>${esc(e.dept || "")} · ${md(e.start)}${e.end !== e.start ? "~" + md(e.end) : ""}${e.memo ? " · " + esc(e.memo.split(" · 2026")[0]) : ""}</small></button>`).join("")}</div></details>`;
 }
@@ -1936,6 +1993,7 @@ function renderDay(){
       `<div class="empty">이날 출장이나 휴가가 있다면 등록해 두세요.<br><button class="btn btn-ink btn-sm" id="addHere">＋ 이날 일정 등록</button></div>`}${schoolBlock(sch)}</div>`;
   $("dayPanel").querySelectorAll("[data-id]").forEach(b => b.addEventListener("click", () => openDetail(b.dataset.id)));
   $("addHere")?.addEventListener("click", () => openForm(null, S.sel));
+  $("dayPanel").querySelector("[data-sday2]")?.addEventListener("click", () => openSchoolDay(S.sel));
 }
 
 function renderYear(){
@@ -2070,7 +2128,7 @@ function renderWeek(){
     row += n;
   } else { html += `<div class="hint empty" style="grid-row:${row++};padding:4px 2px">교육·평가 없음</div>`; }
   if (schoolW.length){
-    html += `<div class="sec sch" style="grid-row:${row++}">🏫 소방학교 다른 교육 <small>우리 센터 교육 아님 · 누르면 교육 내용</small></div>`;
+    html += `<div class="sec sch" style="grid-row:${row++}">🏫 소방학교 다른 교육 <small>우리 센터 교육 아님</small><button class="lnk" data-sday="1" style="margin-left:8px">＋ 학교 일정 넣기</button></div>`;
     const n = pack(schoolW); schoolW.forEach(e => html += bar(e, row, label(e))); row += n;
   }
   // 부재 인원
@@ -2114,6 +2172,7 @@ function renderWeek(){
   g.style.gridTemplateColumns = `${narrow ? 50 : 72}px repeat(${N}, minmax(0,1fr))`;
   g.classList.toggle("fit", N === 5 || narrow);
   g.innerHTML = html;
+  g.querySelectorAll("[data-sday]").forEach(b => b.addEventListener("click", () => openSchoolDay(days.find(d => d >= TODAY) || days[0])));
   g.querySelectorAll("[data-schd]").forEach(b => b.addEventListener("click", () => openSchool({ day: b.dataset.schd })));
   g.querySelectorAll(".ev,.dbtn").forEach(b => b.addEventListener("click", () => openDetail(b.dataset.id)));
   g.querySelectorAll("[data-slot]").forEach(b => b.addEventListener("click", () => openForm(null, b.dataset.slot, { person: b.dataset.person })));
@@ -4008,7 +4067,7 @@ function openDetail(id){
     e.person && [PERSONAL.includes(e.cat) ? "이름" : "담당", e.person],
     staffOf(e).length && ["담당 교관", staffOf(e).join(", ")],
     resultText(e) && ["결과", resultText(e) + (e.result?.note ? " · " + e.result.note : "")],
-    e.cat === "school" && ["구분", `부산소방학교 ${e.dept ? e.dept + " 분야 " : ""}교육 (우리 센터 교육 아님)`],
+    e.cat === "school" && ["구분", e.daily ? `부산소방학교 ${esc(courseShort(e.course) || "")} 과정의 이날 일정 (우리 센터 교육 아님)` : `부산소방학교 ${e.dept ? e.dept + " 분야 " : ""}교육 (우리 센터 교육 아님)`],
     e.res && ["예약 대상", e.res],
     e.place && ["장소", e.place],
     (e.title && (e.cat === "trip" || e.cat === "leave")) && ["내용", e.title],
